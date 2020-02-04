@@ -14,6 +14,7 @@ import { BookingDatesForm } from '../../forms';
 
 import css from './BookingPanel.css';
 
+
 // This defines when ModalInMobile shows content as Modal
 const MODAL_BREAKPOINT = 1023;
 
@@ -93,6 +94,8 @@ const BookingPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.bookingTitle);
 
+  const { discount } = listing.attributes.publicData || {};
+
   return (
     <div className={classes}>
       <ModalInMobile
@@ -122,6 +125,7 @@ const BookingPanel = props => {
             unitType={unitType}
             onSubmit={onSubmit}
             price={price}
+            discount={discount}
             isOwnListing={isOwnListing}
             timeSlots={timeSlots}
             fetchTimeSlotsError={fetchTimeSlotsError}

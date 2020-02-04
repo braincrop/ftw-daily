@@ -8,7 +8,13 @@ import classNames from 'classnames';
 import config from '../../config';
 import routeConfiguration from '../../routeConfiguration';
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
-import { propTypes, LINE_ITEM_NIGHT, LINE_ITEM_DAY, DATE_TYPE_DATE } from '../../util/types';
+import {
+  propTypes,
+  LINE_ITEM_NIGHT,
+  LINE_ITEM_DAY,
+  LINE_ITEM_DISCOUNT,
+  DATE_TYPE_DATE
+} from '../../util/types';
 import {
   ensureListing,
   ensureCurrentUser,
@@ -505,28 +511,54 @@ export class CheckoutPageComponent extends Component {
 
   customPricingParams(params) {
     const { bookingStart, bookingEnd, listing, ...rest } = params;
-    const { amount, currency } = listing.attributes.price;
+    const { amount: priceAmount, currency } = listing.attributes.price;
+    const { discount } = listing.attributes.publicData || {};
+    const {
+      amount: discountPercentage,
+      breakpoint: discountBreakpoint,
+      unitType: discountUnitType
+    } = discount || {};
 
-    const unitType = config.bookingUnitType;
+    const unitType = config.bookingUnitType; // Change this to dynamic
     const isNightly = unitType === LINE_ITEM_NIGHT;
 
     const quantity = isNightly
       ? nightsBetween(bookingStart, bookingEnd)
       : daysBetween(bookingStart, bookingEnd);
 
-    return {
+    let tx = {
       listingId: listing.id,
       bookingStart,
       bookingEnd,
       lineItems: [
         {
           code: unitType,
-          unitPrice: new Money(amount, currency),
+          unitPrice: new Money(priceAmount, currency),
           quantity,
-        },
+        }
       ],
       ...rest,
     };
+
+    const breakpoint = parseInt(discountBreakpoint);
+    const discountBase = (quantity - breakpoint) * priceAmount;
+    const hasDiscount = discount && quantity > breakpoint;
+
+    if (hasDiscount) {
+      tx.lineItems.push({
+        code: LINE_ITEM_DISCOUNT,
+        includeFor: ['customer', 'provider'],
+        unitPrice: new Money(discountBase, currency),
+        percentage: parseInt(discountPercentage) * -1
+      });
+
+      tx.protectedData = {
+        ...tx.protectedData,
+        discountReason: `${discountPercentage}% off above ${discountBreakpoint} ${discountUnitType}`
+      }
+    }
+
+    return tx;
   }
 
   render() {
