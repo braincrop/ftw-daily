@@ -97,28 +97,13 @@ const Footer = props => {
                   </NamedLink>
                 </li>
                 <li className={css.listItem}>
-                  <NamedLink name="GuidelinesPage" className={css.link}>
-                    <FormattedMessage id="Community Guidelines" />
-                  </NamedLink>
-                </li>
-                <li className={css.listItem}>
-                  <NamedLink name="FeesPage" className={css.link}>
-                    <FormattedMessage id="Platform fees" />
-                  </NamedLink>
-                </li>
-                <li className={css.listItem}>
-                  <NamedLink name="CancellationPage" className={css.link}>
-                    <FormattedMessage id="Cancellations" />
-                  </NamedLink>
-                </li>
-                <li className={css.listItem}>
                   <NamedLink name="AboutPage" to={{ hash: '#contact' }} className={css.link}>
                     <FormattedMessage id="Footer.toContactPage" />
                   </NamedLink>
                 </li>
               </ul>
             </div>
-            
+
             <div className={css.extraLinks}>
               <div className={css.someLinks}>{socialMediaLinks}</div>
               <div className={css.legalMatters}>
@@ -131,6 +116,21 @@ const Footer = props => {
                   <li>
                     <NamedLink name="PrivacyPolicyPage" className={css.legalLink}>
                       <FormattedMessage id="Footer.privacyPolicy" />
+                    </NamedLink>
+                  </li>
+                  <li>
+                    <NamedLink name="CancellationPage" className={css.legalLink}>
+                      <FormattedMessage id="Footer.cancellations" />
+                    </NamedLink>
+                  </li>
+                  <li>
+                  <NamedLink name="GuidelinesPage" className={css.legalLink}>
+                    <FormattedMessage id="Footer.guidelines" />
+                  </NamedLink>
+                  </li>
+                  <li>
+                    <NamedLink name="FeesPage" className={css.legalLink}>
+                      <FormattedMessage id="Footer.fees" />
                     </NamedLink>
                   </li>
                 </ul>
