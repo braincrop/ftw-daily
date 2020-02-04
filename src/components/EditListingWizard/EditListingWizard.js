@@ -290,6 +290,7 @@ class EditListingWizard extends Component {
       intl,
       errors,
       fetchInProgress,
+      fetchExceptionsInProgress,
       payoutDetailsSaveInProgress,
       payoutDetailsSaved,
       onManageDisableScrolling,
@@ -414,6 +415,7 @@ class EditListingWizard extends Component {
                 handleCreateFlowTabScrolling={this.handleCreateFlowTabScrolling}
                 handlePublishListing={this.handlePublishListing}
                 fetchInProgress={fetchInProgress}
+                fetchExceptionsInProgress={fetchExceptionsInProgress}
                 onManageDisableScrolling={onManageDisableScrolling}
               />
             );
@@ -530,6 +532,7 @@ EditListingWizard.propTypes = {
     createStripeAccountError: object,
   }).isRequired,
   fetchInProgress: bool.isRequired,
+  fetchExceptionsInProgress: bool.isRequired,
   payoutDetailsSaveInProgress: bool.isRequired,
   payoutDetailsSaved: bool.isRequired,
   onPayoutDetailsFormChange: func.isRequired,
