@@ -250,9 +250,10 @@ const EditListingWizardTab = props => {
 
         <EditListingAvailabilityPanel
           {...panelProps(AVAILABILITY)}
+          availability={availability}
           fetchExceptionsInProgress={fetchExceptionsInProgress}
-          availabilityExceptions={availabilityExceptions}
           submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          availabilityExceptions={availabilityExceptions}
           onAddAvailabilityException={onAddAvailabilityException}
           onDeleteAvailabilityException={onDeleteAvailabilityException}
           onSubmit={values => {
@@ -260,9 +261,9 @@ const EditListingWizardTab = props => {
             // so that it doesn't close its modal if an error is thrown.
             return onCompleteEditListingWizardTab(tab, values, true);
           }}
-          onNextTab={() =>
-            redirectAfterDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history)
-          }
+          // onNextTab={() =>
+          //   redirectAfterDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history)
+          // }
         />
       );
     }

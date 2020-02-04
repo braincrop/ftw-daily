@@ -5,7 +5,7 @@ import { Form as FinalForm } from 'react-final-form';
 import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 import { propTypes } from '../../util/types';
-import { Form, Button } from '../../components';
+import { Form, Button, FieldSelect } from '../../components';
 
 import ManageAvailabilityCalendar from './ManageAvailabilityCalendar';
 import css from './EditListingAvailabilityForm.css';
@@ -22,7 +22,7 @@ export class EditListingAvailabilityFormComponent extends Component {
             disabled,
             ready,
             handleSubmit,
-            //intl,
+            intl,
             invalid,
             pristine,
             saveActionMsg,
@@ -32,6 +32,11 @@ export class EditListingAvailabilityFormComponent extends Component {
             availability,
             availabilityPlan,
             listingId,
+            values: {
+              availabilityPlan: {
+                type: planTypeValue
+              }
+            }
           } = formRenderProps;
 
           const errorMessage = updateError ? (
@@ -48,13 +53,29 @@ export class EditListingAvailabilityFormComponent extends Component {
           return (
             <Form className={classes} onSubmit={handleSubmit}>
               {errorMessage}
-              <div className={css.calendarWrapper}>
-                <ManageAvailabilityCalendar
-                  availability={availability}
-                  availabilityPlan={availabilityPlan}
-                  listingId={listingId}
-                />
-              </div>
+
+              <FieldSelect
+                id="availabilityPlan.type"
+                name="availabilityPlan.type"
+                label={intl.formatMessage({ id: 'EditListingAvailabilityForm.planMessage' })}
+              >
+                <option value="availability-plan/day">Days</option>
+                <option value="availability-plan/time">Hours</option>
+              </FieldSelect>
+
+              { planTypeValue === 'availability-plan/day' &&
+                <div className={css.calendarWrapper}>
+                  <ManageAvailabilityCalendar
+                    availability={availability}
+                    availabilityPlan={availabilityPlan}
+                    listingId={listingId}
+                  />
+                </div>
+              }
+
+              { planTypeValue === 'availability-plan/hour' &&
+                <div>Hour</div>
+              }
 
               <Button
                 className={css.submitButton}
