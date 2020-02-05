@@ -18,7 +18,7 @@ import {
 } from '../../components';
 import { EditListingAvailabilityPlanForm, EditListingAvailabilityExceptionForm } from '../../forms';
 
-import css from './EditListingAvailabilityPanel.css';
+import css from './EditListingAvailabilityPanelHour.css';
 
 const WEEKDAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
@@ -173,7 +173,7 @@ const sortExceptionsByStartTime = (a, b) => {
 //////////////////////////////////
 // EditListingAvailabilityPanel //
 //////////////////////////////////
-const EditListingAvailabilityPanel = props => {
+const EditListingAvailabilityPanelHour = props => {
   const {
     className,
     rootClassName,
@@ -425,14 +425,14 @@ const EditListingAvailabilityPanel = props => {
   );
 };
 
-EditListingAvailabilityPanel.defaultProps = {
+EditListingAvailabilityPanelHour.defaultProps = {
   className: null,
   rootClassName: null,
   listing: null,
   availabilityExceptions: [],
 };
 
-EditListingAvailabilityPanel.propTypes = {
+EditListingAvailabilityPanelHour.propTypes = {
   className: string,
   rootClassName: string,
 
@@ -452,4 +452,4 @@ EditListingAvailabilityPanel.propTypes = {
   errors: object.isRequired,
 };
 
-export default EditListingAvailabilityPanel;
+export default EditListingAvailabilityPanelHour;

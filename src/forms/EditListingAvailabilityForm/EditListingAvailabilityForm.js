@@ -5,8 +5,7 @@ import { Form as FinalForm } from 'react-final-form';
 import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 import { propTypes } from '../../util/types';
-import { Form, Button, FieldSelect } from '../../components';
-
+import { Form, Button, FieldSelect, EditListingAvailabilityPanelHour } from '../../components';
 import ManageAvailabilityCalendar from './ManageAvailabilityCalendar';
 import css from './EditListingAvailabilityForm.css';
 
@@ -73,8 +72,8 @@ export class EditListingAvailabilityFormComponent extends Component {
                 </div>
               }
 
-              { planTypeValue === 'availability-plan/hour' &&
-                <div>Hour</div>
+              { planTypeValue === 'availability-plan/time' &&
+                <EditListingAvailabilityPanelHour />
               }
 
               <Button
