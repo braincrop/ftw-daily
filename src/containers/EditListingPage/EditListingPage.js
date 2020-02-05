@@ -61,6 +61,7 @@ export const EditListingPageComponent = props => {
     getOwnListing,
     history,
     intl,
+    onAddAvailabilityException,
     onFetchAvailabilityExceptions,
     onCreateAvailabilityException,
     onDeleteAvailabilityException,
@@ -184,6 +185,8 @@ export const EditListingPageComponent = props => {
           history={history}
           images={images}
           listing={currentListing}
+          onAddAvailabilityException={onAddAvailabilityException}
+          onDeleteAvailabilityException={onDeleteAvailabilityException}
           availability={{
             calendar: page.availabilityCalendar,
             onFetchAvailabilityExceptions,
@@ -206,6 +209,8 @@ export const EditListingPageComponent = props => {
           stripeOnboardingReturnURL={params.returnURLType}
           updatedTab={page.updatedTab}
           updateInProgress={page.updateInProgress || page.createListingDraftInProgress}
+          fetchExceptionsInProgress={page.fetchExceptionsInProgress}
+          availabilityExceptions={page.availabilityExceptions}
           payoutDetailsSaveInProgress={page.payoutDetailsSaveInProgress}
           payoutDetailsSaved={page.payoutDetailsSaved}
           stripeAccountFetched={stripeAccountFetched}
@@ -240,6 +245,7 @@ EditListingPageComponent.propTypes = {
   currentUser: propTypes.currentUser,
   fetchInProgress: bool.isRequired,
   getOwnListing: func.isRequired,
+  onAddAvailabilityException: func.isRequired,
   onFetchAvailabilityExceptions: func.isRequired,
   onCreateAvailabilityException: func.isRequired,
   onCreateListingDraft: func.isRequired,
@@ -310,6 +316,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   onUpdateListing: (tab, values) => dispatch(requestUpdateListing(tab, values)),
   onFetchBookings: params => dispatch(requestFetchBookings(params)),
+  onAddAvailabilityException: params => dispatch(requestCreateAvailabilityException(params)),
   onFetchAvailabilityExceptions: params => dispatch(requestFetchAvailabilityExceptions(params)),
   onCreateAvailabilityException: params => dispatch(requestCreateAvailabilityException(params)),
   onDeleteAvailabilityException: params => dispatch(requestDeleteAvailabilityException(params)),

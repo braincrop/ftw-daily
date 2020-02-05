@@ -9,6 +9,23 @@ import { EditListingAvailabilityForm } from '../../forms';
 
 import css from './EditListingAvailabilityPanel.css';
 
+const defaultAvailabilityPlanDay = {
+  type: 'availability-plan/day',
+  entries: [
+    { dayOfWeek: 'mon', seats: 1 },
+    { dayOfWeek: 'tue', seats: 1 },
+    { dayOfWeek: 'wed', seats: 1 },
+    { dayOfWeek: 'thu', seats: 1 },
+    { dayOfWeek: 'fri', seats: 1 },
+    { dayOfWeek: 'sat', seats: 1 },
+    { dayOfWeek: 'sun', seats: 1 },
+  ],
+};
+
+const getAvailabilityPlan = currentListing => {
+  return currentListing.attributes.availabilityPlan || defaultAvailabilityPlanDay;
+};
+
 const EditListingAvailabilityPanel = props => {
   const {
     className,
@@ -28,32 +45,22 @@ const EditListingAvailabilityPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
-  const defaultAvailabilityPlan = {
-    type: 'availability-plan/day',
-    entries: [
-      { dayOfWeek: 'mon', seats: 1 },
-      { dayOfWeek: 'tue', seats: 1 },
-      { dayOfWeek: 'wed', seats: 1 },
-      { dayOfWeek: 'thu', seats: 1 },
-      { dayOfWeek: 'fri', seats: 1 },
-      { dayOfWeek: 'sat', seats: 1 },
-      { dayOfWeek: 'sun', seats: 1 },
-    ],
-  };
-  const availabilityPlan = currentListing.attributes.availabilityPlan || defaultAvailabilityPlan;
+
+  const availabilityPlan = getAvailabilityPlan(currentListing);
+
+  const panelTitle = isPublished ? (
+    <FormattedMessage
+      id="EditListingAvailabilityPanel.title"
+      values={{ listingTitle: <ListingLink listing={listing} /> }}
+    />
+  ) : (
+    <FormattedMessage id="EditListingAvailabilityPanel.createListingTitle" />
+  );
 
   return (
     <div className={classes}>
-      <h1 className={css.title}>
-        {isPublished ? (
-          <FormattedMessage
-            id="EditListingAvailabilityPanel.title"
-            values={{ listingTitle: <ListingLink listing={listing} /> }}
-          />
-        ) : (
-          <FormattedMessage id="EditListingAvailabilityPanel.createListingTitle" />
-        )}
-      </h1>
+      <h1 className={css.title}>{panelTitle}</h1>
+
       <EditListingAvailabilityForm
         className={css.form}
         listingId={currentListing.id}
@@ -82,6 +89,7 @@ const EditListingAvailabilityPanel = props => {
 EditListingAvailabilityPanel.defaultProps = {
   className: null,
   rootClassName: null,
+  errors: null,
   listing: null,
 };
 
