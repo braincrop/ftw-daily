@@ -224,6 +224,7 @@ export class BookingDatesFormComponent extends Component {
               <FieldDateRangeInput
                 className={css.bookingDates}
                 name="bookingDates"
+                bookingType={bookingType}
                 unitType={unitType}
                 minimumLength={minimumLength}
                 offsetLength={minimumLength}

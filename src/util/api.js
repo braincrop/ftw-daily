@@ -5,6 +5,7 @@
 import { types as sdkTypes, transit } from './sdkLoader';
 import config from '../config';
 import Decimal from 'decimal.js';
+import axios from 'axios';
 
 export const apiBaseUrl = () => {
   const port = process.env.REACT_APP_DEV_API_SERVER_PORT;
@@ -103,6 +104,10 @@ export const transitionPrivileged = body => {
   return post('/api/transition-privileged', body);
 };
 
+export const getTransactions = body => {
+  return post('/api/transactions', body);
+};
+
 // Create user with identity provider (e.g. Facebook or Google)
 //
 // If loginWithIdp api call fails and user can't authenticate to Flex with idp
@@ -115,3 +120,21 @@ export const transitionPrivileged = body => {
 export const createUserWithIdp = body => {
   return post('/api/auth/create-user-with-idp', body);
 };
+
+export const makeRequest = async (method, url, data, headers) => {
+  const NODE_API_URL = process.env.REACT_APP_NODE_API_URL;
+  const options = {
+    baseURL: NODE_API_URL,
+    method: method,
+    url: url,
+    data,
+    headers: headers ? headers : { 'Content-Type': 'application/transit+json' },
+  }
+
+  let res = await axios(options)
+  try {
+    return res
+  } catch (e) {
+    return new Error(e)
+  }
+}

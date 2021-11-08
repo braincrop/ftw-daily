@@ -3,12 +3,14 @@ const https = require('https');
 const Decimal = require('decimal.js');
 const log = require('../log');
 const sharetribeSdk = require('sharetribe-flex-sdk');
+const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const CLIENT_SECRET = process.env.SHARETRIBE_SDK_CLIENT_SECRET;
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 const TRANSIT_VERBOSE = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
-
+const CLIENT_ID_INTEGRATION = process.env.REACT_APP_SHARETRIBE_INTEGRATION_SDK_CLIENT_ID;
+const CLIENT_SECRET_INTEGRATION = process.env.REACT_APP_SHARETRIBE_INTEGRATION_SDK_CLIENT_SECRET;
 // Application type handlers for JS SDK.
 //
 // NOTE: keep in sync with `typeHandlers` in `src/util/api.js`
@@ -129,5 +131,11 @@ exports.getTrustedSdk = req => {
       typeHandlers,
       ...baseUrlMaybe,
     });
+  });
+};
+exports.getIntegrationSdk = (req, res) => {
+  return sharetribeIntegrationSdk.createInstance({
+    clientId: CLIENT_ID_INTEGRATION,
+    clientSecret: CLIENT_SECRET_INTEGRATION,
   });
 };

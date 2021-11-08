@@ -210,6 +210,7 @@ class DateRangeInputComponent extends Component {
       onBlur,
       onChange,
       onFocus,
+      bookingType,
       phrases,
       screenReaderInputMessage,
       useMobileMargins,
@@ -222,13 +223,16 @@ class DateRangeInputComponent extends Component {
       ...datePickerProps
     } = this.props;
     /* eslint-enable no-unused-vars */
-
+// console.log(bookingType, 'bookingType')
     const initialStartMoment = initialDates ? moment(initialDates.startDate) : null;
     const initialEndMoment = initialDates ? moment(initialDates.endDate) : null;
     const startDate =
       value && value.startDate instanceof Date ? moment(value.startDate) : initialStartMoment;
     const endDate =
       apiEndDateToPickerDateForDaily(value ? value.endDate : null) || initialEndMoment;
+// console.log(initialStartMoment, 'initialStartMoment')
+console.log(seats, 'seats')
+console.log(timeSlots, 'timeSlots')
 
     let isDayBlocked = isDayBlockedFn(
       timeSlots,
@@ -243,6 +247,15 @@ class DateRangeInputComponent extends Component {
       timeSlots,
       startDate,
       endDate,
+      this.state.focusedInput,
+      unitType,
+      seats
+    );
+
+    let isOutsideRangeNew = isDayBlockedFn(
+      timeSlots,
+      null,
+      null,
       this.state.focusedInput,
       unitType,
       seats
@@ -273,20 +286,21 @@ class DateRangeInputComponent extends Component {
     return (
       <div className={classes}>
         <DateRangePicker
-          {...omit(datePickerProps, ['checked'])}
-          focusedInput={this.state.focusedInput}
-          onFocusChange={this.onFocusChange}
-          startDate={startDate}
-          endDate={endDate}
-          minimumNights={minimumDays}
-          onDatesChange={this.onDatesChange}
-          startDatePlaceholderText={startDatePlaceholderTxt}
-          endDatePlaceholderText={endDatePlaceholderTxt}
-          screenReaderInputMessage={screenReaderInputText}
-          phrases={{ closeDatePicker: closeDatePickerText, clearDate: clearDateText }}
-          isDayBlocked={isDayBlocked}
-          isOutsideRange={isOutsideRange}
-        />
+        {...omit(datePickerProps, ['checked'])}
+        focusedInput={this.state.focusedInput}
+        onFocusChange={this.onFocusChange}
+        startDate={startDate}
+        endDate={endDate}
+        minimumNights={minimumDays}
+        onDatesChange={this.onDatesChange}
+        startDatePlaceholderText={startDatePlaceholderTxt}
+        endDatePlaceholderText={endDatePlaceholderTxt}
+        screenReaderInputMessage={screenReaderInputText}
+        phrases={{ closeDatePicker: closeDatePickerText, clearDate: clearDateText }}
+        isDayBlocked={isDayBlocked}
+        isOutsideRange={bookingType === 'pricePerMonth' ? isOutsideRangeNew : isOutsideRange}
+      />
+        
       </div>
     );
   }
@@ -303,6 +317,7 @@ DateRangeInputComponent.propTypes = {
   className: string,
   startDateId: string,
   endDateId: string,
+  bookingType: string,
   unitType: propTypes.bookingUnitType.isRequired,
   minimumLength: number,
   focusedInput: oneOf([START_DATE, END_DATE]),

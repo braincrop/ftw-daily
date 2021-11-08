@@ -158,7 +158,7 @@ const invalidDaySlot = (day, timeSlots, seats) => {
  * Returns an isDayBlocked function that can be passed to
  * a react-dates DateRangePicker component.
  */
-export const isDayBlockedFn = (timeSlots, startDate, endDate, focusedInput, unitType, seats) => {
+ export const isDayBlockedFn = (timeSlots, startDate, endDate, focusedInput, unitType, seats) => {
   const endOfRange = config.dayCountAvailableForBooking - 1;
   const lastBookableDate = moment().add(endOfRange, 'days');
 
@@ -192,6 +192,19 @@ export const isDayBlockedFn = (timeSlots, startDate, endDate, focusedInput, unit
     // otherwise return standard timeslots check
     return day => !!invalidDaySlot(day, timeSlots, seats) || !timeSlots.find(timeSlot => timeSlotEqualsDay(timeSlot, day));
   }
+};
+
+export const isDayBlockedForMonthFn = (timeSlots, startDate, endDate, focusedInput, unitType, seats) => {
+  const endOfRange = config.dayCountAvailableForBooking - 1;
+  const lastBookableDate = moment().add(endOfRange, 'days');
+
+  // start date selected, end date missing
+  const startDateSelected = isStartDateSelected(timeSlots, startDate, endDate, focusedInput);
+
+  // find the next booking after a start date
+  const nextBookingStarts = startDateSelected
+    ? firstBlockedBetween(timeSlots, startDate, moment(lastBookableDate).add(1, 'days'))
+    : null;
 };
 
 /**

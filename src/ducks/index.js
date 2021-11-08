@@ -16,12 +16,13 @@ import stripe from './stripe.duck';
 import stripeConnectAccount from './stripeConnectAccount.duck';
 import user from './user.duck';
 import Promocode from './Promocode.duck';
-
+import BookingPanel from '../components/BookingPanel/BookingPanel.duck';
 export {
   Auth,
   Promocode,
   EmailVerification,
   LocationFilter,
+  BookingPanel,
   Newsletter,
   Routing,
   UI,

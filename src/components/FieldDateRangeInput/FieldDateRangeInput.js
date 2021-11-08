@@ -80,6 +80,7 @@ class FieldDateRangeInputComponent extends Component {
       endDateLabel,
       input,
       meta,
+      bookingType,
       useMobileMargins,
       // Extract focusedInput and onFocusedInputChange so that
       // the same values will not be passed on to subcomponents.
@@ -142,6 +143,7 @@ class FieldDateRangeInputComponent extends Component {
     const inputProps = {
       unitType,
       minimumLength,
+      bookingType,
       onBlur: this.handleBlur,
       onFocus: this.handleFocus,
       useMobileMargins,
@@ -196,6 +198,7 @@ FieldDateRangeInputComponent.propTypes = {
   minimumLength: number,
   useMobileMargins: bool,
   endDateId: string,
+  bookingType: string,
   endDateLabel: string,
   endDatePlaceholderText: string,
   startDateId: string,

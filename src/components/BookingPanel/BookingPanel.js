@@ -5,6 +5,10 @@ import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import { arrayOf, array, bool, func, object, node, oneOfType, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
+import { connect } from 'react-redux';
+import {
+  fetchData
+} from './BookingPanel.duck';
 import {
   propTypes,
   LISTING_STATE_CLOSED,
@@ -25,7 +29,7 @@ import config from '../../config';
 import { ModalInMobile, Button, BookingTypes } from '../../components';
 import { BookingDatesForm, BookingTimeForm } from '../../forms';
 import { types as sdkTypes } from '../../util/sdkLoader';
-
+import { getMonthBoundries } from '../../util/dates';
 
 import css from './BookingPanel.module.css';
 
@@ -93,8 +97,11 @@ const BookingPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     bookingType,
-    toggleBookingType
+    toggleBookingType,
+    onFetchData, 
+    data
   } = props;
+  console.log(data?.data.data)
 
   const {
     price,
@@ -102,9 +109,8 @@ const BookingPanel = props => {
     state,
     publicData
   } = listing.attributes;
-
   const { discount, minimumLength } = publicData || {};
-
+  const [currentDates, setCurrentDates] = React.useState({});
   const timeZone = availabilityPlan && availabilityPlan.timezone;
   const isClosed = state && state === LISTING_STATE_CLOSED;
   const showClosedListingHelpText = listing.id && isClosed;
@@ -120,6 +126,11 @@ const BookingPanel = props => {
   const showBookingTimeForm = showBookingForm && availabilityPlan && bookingType === HOURLY_PRICE;
   const showBookingDatesForm = showBookingForm && availabilityPlan && !showBookingTimeForm;
 
+  const handleDates = (listing) => {
+    const weekBoundries = getMonthBoundries(new Date());
+    setCurrentDates(weekBoundries);
+    onFetchData(listing);
+  }
 
   // const subTitleMinLengthText = (
   //   showBookingDatesForm &&
@@ -134,33 +145,12 @@ const BookingPanel = props => {
     ? intl.formatMessage({ id: 'BookingPanel.subTitleClosedListing' })
     : null;
 
-  // let unitTranslationKey = 'BookingPanel.perHour';
-
-  // switch(bookingType){
-  //   case DAILY_PRICE:
-  //     unitTranslationKey = 'BookingPanel.perDay';
-  //     break;
-  //   case WEEKLY_PRICE:
-  //     unitTranslationKey = 'BookingPanel.perWeek';
-  //     break;
-  //   case MONTHLY_PRICE:
-  //     unitTranslationKey = 'BookingPanel.perMonth';
-  //     break;
-  // }
-
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.bookingTitle);
-
-  const getMinLength = bookingType => {
-    switch(bookingType){
-      case WEEKLY_PRICE:
-        return 7;
-      case MONTHLY_PRICE:
-        return 30;
-      default:
-        return null;
-    }
-  }
+console.log(bookingType, 'bookingType')
+  React.useEffect(() => {
+    handleDates(listing);
+  }, [])
 
   const seats = listing && listing.attributes && listing.attributes.publicData && listing.attributes.publicData.seats || 1;
 
@@ -283,6 +273,48 @@ BookingPanel.defaultProps = {
   fetchLineItemsError: null,
 };
 
+const mapStateToProps = state => {
+  // const {
+  //   fetchInProgress,
+  //   ownListing,
+  //   availabilityExceptions,
+  //   fetchExceptionsError,
+  //   fetchExceptionsInProgress,
+  //   bookings,
+  //   fetchBookingsError,
+  //   fetchBookingsInProgress,
+  //   ownBookings,
+  //   fetchOwnBookingsError,
+  //   fetchOwnBookingsInProgress,
+  //   allOwnBookings
+  // } = state.SchedulePage;
+
+
+  const { currentUser } = state.user;
+  const { data } = state.BookingPanel;
+  return {
+    data
+    // fetchInProgress,
+    // ownListing,
+    // availabilityExceptions,
+    // fetchExceptionsError,
+    // fetchExceptionsInProgress,
+    // bookings,
+    // fetchBookingsError,
+    // fetchBookingsInProgress,
+    // ownBookings,
+    // fetchOwnBookingsError,
+    // fetchOwnBookingsInProgress,
+    // allOwnBookings,
+    // currentUser,
+    // scrollingDisabled: isScrollingDisabled(state),
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  onFetchData: params => dispatch(fetchData(params))
+});
+
 BookingPanel.propTypes = {
   rootClassName: string,
   updateDiscount: func,
@@ -322,5 +354,9 @@ BookingPanel.propTypes = {
 
 export default compose(
   withRouter,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   injectIntl
 )(BookingPanel);

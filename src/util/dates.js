@@ -852,3 +852,12 @@ export const isDayMomentInsideRange = (dayMoment, start, end, timeZone) => {
   return false;
 };
 
+export const getMonthBoundries = (day = new Date()) => {
+  const start = moment(day).startOf('month');
+  const end = start.clone().add(30, 'days');
+
+  return {
+    start: start.toDate(),
+    end: end.toDate()
+  }
+}
