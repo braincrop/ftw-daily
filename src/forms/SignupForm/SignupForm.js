@@ -42,18 +42,6 @@ const SignupFormComponent = props => (
       });
       const emailValid = validators.emailFormatValid(emailInvalidMessage);
 
-      // phone number
-      const phoneLabel = intl.formatMessage({
-        id: 'SignupForm.phoneLabel',
-      });
-      const phonePlaceholder = intl.formatMessage({
-        id: 'SignupForm.phonePlaceholder',
-      });
-      const phoneRequiredMessage = intl.formatMessage({
-        id: 'SignupForm.phoneRequired',
-      });
-      const phoneRequired = validators.required(phoneRequiredMessage);
-      
       // password
       const passwordLabel = intl.formatMessage({
         id: 'SignupForm.passwordLabel',
@@ -162,14 +150,6 @@ const SignupFormComponent = props => (
               label={emailLabel}
               placeholder={emailPlaceholder}
               validate={validators.composeValidators(emailRequired, emailValid)}
-            />
-            <FieldPhoneNumberInput
-            className={css.phone}
-            id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
-            name="phoneNumber"
-            label={phoneLabel}
-            placeholder={phonePlaceholder}
-            validate={phoneRequired}
             />
             <div className={css.name}>
               <FieldTextInput
