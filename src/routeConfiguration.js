@@ -14,6 +14,7 @@ const pageDataLoadingAPI = getPageDataLoadingAPI();
 const FaqPage = loadable(() => import(/* webpackChunkName: "FaqPage" */ './containers/FaqPage/FaqPage'));
 const FeesPage = loadable(() => import(/* webpackChunkName: "FeesPage" */ './containers/FeesPage/FeesPage'));
 const CancellationPage = loadable(() => import(/* webpackChunkName: "CancellationPage" */ './containers/CancellationPage/CancellationPage'));
+const CMSPage = loadable(() => import(/* webpackChunkName: "CMSPage" */ './containers/CMSPage/CMSPage'));
 const GuidelinesPage = loadable(() => import(/* webpackChunkName: "GuidelinesPage" */ './containers/GuidelinesPage/GuidelinesPage'));
 const AboutPage = loadable(() => import(/* webpackChunkName: "AboutPage" */ './containers/AboutPage/AboutPage'));
 const AuthenticationPage = loadable(() => import(/* webpackChunkName: "AuthenticationPage" */ './containers/AuthenticationPage/AuthenticationPage'));
@@ -82,6 +83,12 @@ const routeConfiguration = () => {
       path: '/fees',
       name: 'FeesPage',
       component: FeesPage,
+    },
+    {
+      path: '/p/:pageId',
+      name: 'CMSPage',
+      component: CMSPage,
+      loadData: pageDataLoadingAPI.CMSPage.loadData,
     },
     {
       path: '/cancellations',
