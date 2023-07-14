@@ -107,9 +107,7 @@
   @media (min-width: 1200px) {
     /* Offset the start of the carousel so it follows the global grid layout (e.g. (1400 - 1200) / 2 = 100px) */
     /* Removing this uses the full page width for the slider pane */
-    transform: translateX(
-      max(calc((var(--carouselWidth) - var(--contentMaxWidth)) / 2 + 32px), 0px)
-    );
+    transform: matrix(1,0,0,1,396,0);
 
     &:last-of-type {
       padding-right: 32px;
