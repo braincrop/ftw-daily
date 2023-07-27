@@ -18,7 +18,8 @@ const SectionHeading = props => {
     onContactUser,
     listing,
     // unitType,
-    priceType
+    priceType,
+    currentUser
   } = props;
 
   const unitTranslationKey = `ListingPage.${priceType}`;
@@ -66,13 +67,22 @@ const SectionHeading = props => {
           {showContactUser ? (
             <span className={css.contactWrapper}>
               <span className={css.separator}>•</span>
-              <a
-                ClassName={css.contactLink} target = "_blank"
-                href={url}
-               // enforcePagePreloadFor="SignupPage"
-              >
-                <FormattedMessage id="ListingPage.contactUser" />
-              </a>
+
+              {!!currentUser ? (
+                <a
+                  className={css.contactLink} target="_blank"
+                  href={url}
+                >
+                  <FormattedMessage id="ListingPage.contactUser" />
+                </a>
+              ) : (
+                <span
+                  className={css.contactLink}
+                  onClick={onContactUser}
+                >
+                  <FormattedMessage id="ListingPage.contactUser" />
+                </span>
+              )}
             </span>
           ) : null}
         </div>
