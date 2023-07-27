@@ -175,19 +175,13 @@ export class ListingPageComponent extends Component {
   }
 
   onContactUser() {
-    const { currentUser, history, callSetInitialValues, params, location } = this.props;
+    const { currentUser, history, callSetInitialValues, params, location, getOwnListing, getListing } = this.props;
 
     if (!currentUser) {
       const state = { from: `${location.pathname}${location.search}${location.hash}` };
 
-      // We need to log in before showing the modal, but first we need to ensure
-      // that modal does open when user is redirected back to this listingpage
-      callSetInitialValues(setInitialValues, { enquiryModalOpenForListingId: params.id });
-
       // signup and return back to listingPage.
       history.push(createResourceLocatorString('SignupPage', routeConfiguration(), {}, {}), state);
-    } else {
-      this.setState({ enquiryModalOpen: true });
     }
   }
 
@@ -383,7 +377,6 @@ export class ListingPageComponent extends Component {
     const { key: priceType, value: { amount, currency } } = getLowestPrice(currentListing);
 
     const { formattedPrice, priceTitle } = priceData(amount && currency ? new Money(amount, currency) : null, intl);
-    console.log({ formattedPrice, priceTitle })
 
 
     const handleBookingSubmit = values => {
@@ -504,6 +497,7 @@ export class ListingPageComponent extends Component {
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                     priceType={priceType}
+                    currentUser={currentUser}
                   />
                   <div className={css.shareButtons}>
                     <InlineShareButtons
