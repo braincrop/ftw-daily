@@ -175,13 +175,19 @@ export class ListingPageComponent extends Component {
   }
 
   onContactUser() {
-    const { currentUser, history, callSetInitialValues, params, location, getOwnListing, getListing } = this.props;
+    const { currentUser, history, callSetInitialValues, params, location } = this.props;
 
     if (!currentUser) {
       const state = { from: `${location.pathname}${location.search}${location.hash}` };
 
+      // We need to log in before showing the modal, but first we need to ensure
+      // that modal does open when user is redirected back to this listingpage
+      callSetInitialValues(setInitialValues, { enquiryModalOpenForListingId: params.id });
+
       // signup and return back to listingPage.
       history.push(createResourceLocatorString('SignupPage', routeConfiguration(), {}, {}), state);
+    } else {
+      this.setState({ enquiryModalOpen: true });
     }
   }
 
@@ -498,6 +504,15 @@ export class ListingPageComponent extends Component {
                     onContactUser={this.onContactUser}
                     priceType={priceType}
                     currentUser={currentUser}
+                    onCloseEnquiryModal={() => this.setState({ enquiryModalOpen: false })}
+                    sendEnquiryError={sendEnquiryError}
+                    sendEnquiryInProgress={sendEnquiryInProgress}
+                    onSubmitEnquiry={params => {
+                      const { unitType = config.fallbackUnitType } = currentListing.attributes.publicData || {};
+                      this.onSubmitEnquiry(params, unitType)
+                    }}
+                    currentUser={currentUser}
+                    onManageDisableScrolling={onManageDisableScrolling}
                   />
                   <div className={css.shareButtons}>
                     <InlineShareButtons
