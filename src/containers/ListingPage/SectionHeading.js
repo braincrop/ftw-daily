@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
-import { InlineTextButton } from '../../components';
-// import { LINE_ITEM_UNITS, LINE_ITEM_DAY } from '../../util/types';
+import { UserCard, Modal } from '../../components';
+import { EnquiryForm } from '../../forms';
 
 import css from './ListingPage.module.css';
 
@@ -19,7 +19,14 @@ const SectionHeading = props => {
     listing,
     // unitType,
     priceType,
-    currentUser
+    currentUser,
+    authorDisplayName,
+    isEnquiryModalOpen,
+    onCloseEnquiryModal,
+    sendEnquiryError,
+    sendEnquiryInProgress,
+    onSubmitEnquiry,
+    onManageDisableScrolling,
   } = props;
 
   const unitTranslationKey = `ListingPage.${priceType}`;
@@ -34,7 +41,7 @@ const SectionHeading = props => {
   //   : 'ListingPage.perUnit';
 
   //const patch = JSON.stringify(richTitle);
-  
+
   //var data = {subject: JSON.stringify(richTitle)};
 
   //var params = jQuery.param(data);
@@ -51,7 +58,7 @@ const SectionHeading = props => {
   return (
     <div className={css.sectionHeading}>
       <div className={css.desktopPriceContainer}>
-      <p className={css.desktopPerUnit}>from</p>
+        <p className={css.desktopPerUnit}>from</p>
         <div className={css.desktopPriceValue} title={priceTitle}>
           {formattedPrice}
         </div>
@@ -69,12 +76,12 @@ const SectionHeading = props => {
               <span className={css.separator}>•</span>
 
               {!!currentUser ? (
-                <a
+                <span
                   className={css.contactLink} target="_blank"
-                  href={url}
+                  onClick={onContactUser}
                 >
                   <FormattedMessage id="ListingPage.contactUser" />
-                </a>
+                </span>
               ) : (
                 <span
                   className={css.contactLink}
@@ -87,6 +94,26 @@ const SectionHeading = props => {
           ) : null}
         </div>
       </div>
+
+      <Modal
+        id="ListingPage.enquiry"
+        contentClassName={css.enquiryModalContent}
+        isOpen={isEnquiryModalOpen}
+        onClose={onCloseEnquiryModal}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <EnquiryForm
+          className={css.enquiryForm}
+          submitButtonWrapperClassName={css.enquirySubmitButtonWrapper}
+          listingTitle={title}
+          authorDisplayName={authorDisplayName}
+          sendEnquiryError={sendEnquiryError}
+          onSubmit={onSubmitEnquiry}
+          inProgress={sendEnquiryInProgress}
+        />
+      </Modal>
+
     </div>
   );
 };
