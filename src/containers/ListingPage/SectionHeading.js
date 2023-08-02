@@ -76,12 +76,12 @@ const SectionHeading = props => {
               <span className={css.separator}>•</span>
 
               {!!currentUser ? (
-                <span
+                <a
                   className={css.contactLink} target="_blank"
-                  onClick={onContactUser}
+                  href={url}
                 >
                   <FormattedMessage id="ListingPage.contactUser" />
-                </span>
+                </a>
               ) : (
                 <span
                   className={css.contactLink}
@@ -95,7 +95,7 @@ const SectionHeading = props => {
         </div>
       </div>
 
-      <Modal
+      {/* <Modal
         id="ListingPage.enquiry"
         contentClassName={css.enquiryModalContent}
         isOpen={isEnquiryModalOpen}
@@ -112,7 +112,7 @@ const SectionHeading = props => {
           onSubmit={onSubmitEnquiry}
           inProgress={sendEnquiryInProgress}
         />
-      </Modal>
+      </Modal> */}
 
     </div>
   );

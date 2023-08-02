@@ -333,7 +333,6 @@ const fetchTimeSlotsDay = listingId => (dispatch, getState, sdk) => {
 
 export const fetchTimeSlotsTime = (listingId, start, end, timeZone) => (dispatch, getState, sdk) => {
   const monthId = monthIdStringInTimeZone(start, timeZone);
-console.log(monthId, 'monthId')
   dispatch(fetchTimeSlotsRequestTime(monthId));
 
   // The maximum pagination page size for timeSlots is 500

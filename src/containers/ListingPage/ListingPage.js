@@ -175,10 +175,25 @@ export class ListingPageComponent extends Component {
   }
 
   onContactUser() {
-    const { currentUser, history, callSetInitialValues, params, location } = this.props;
+    const { currentUser, history, callSetInitialValues, params, location, getOwnListing, getListing} = this.props;
+
+    // const listingId = new UUID(params.id);
+    // const isPendingApprovalVariant = params.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
+    // const isDraftVariant = params.variant === LISTING_PAGE_DRAFT_VARIANT;
+    // const currentListing =
+    //   isPendingApprovalVariant || isDraftVariant
+    //     ? ensureOwnListing(getOwnListing(listingId))
+    //     : ensureListing(getListing(listingId));
+
+    // var data = currentListing?.attributes?.title
+    // var patchId = currentListing?.id?.uuid;
+  
+    // var url = "https://share.hsforms.com/1Zq6xDjz7RCG8gjdC1vBbgA57edm?patch_name=" + encodeURIComponent(JSON.stringify(data)) + "&patch_url=https://www.hotpatch.com/l/" + encodeURIComponent(patchId);
+  
 
     if (!currentUser) {
       const state = { from: `${location.pathname}${location.search}${location.hash}` };
+      // const state = { from: url };
 
       // We need to log in before showing the modal, but first we need to ensure
       // that modal does open when user is redirected back to this listingpage
@@ -186,9 +201,10 @@ export class ListingPageComponent extends Component {
 
       // signup and return back to listingPage.
       history.push(createResourceLocatorString('SignupPage', routeConfiguration(), {}, {}), state);
-    } else {
-      this.setState({ enquiryModalOpen: true });
     }
+    //  else {
+    //   this.setState({ enquiryModalOpen: true });
+    // }
   }
 
   onSubmitEnquiry(values, unitType) {
@@ -511,7 +527,6 @@ export class ListingPageComponent extends Component {
                       const { unitType = config.fallbackUnitType } = currentListing.attributes.publicData || {};
                       this.onSubmitEnquiry(params, unitType)
                     }}
-                    currentUser={currentUser}
                     onManageDisableScrolling={onManageDisableScrolling}
                   />
                   <div className={css.shareButtons}>
