@@ -41,7 +41,7 @@ const SectionHostMaybe = props => {
         onContactUser={onContactUser} 
         url={url}
         />
-      <Modal
+      {/* <Modal
         id="ListingPage.enquiry"
         contentClassName={css.enquiryModalContent}
         isOpen={isEnquiryModalOpen}
@@ -58,7 +58,7 @@ const SectionHostMaybe = props => {
           onSubmit={onSubmitEnquiry}
           inProgress={sendEnquiryInProgress}
         />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
