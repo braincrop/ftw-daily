@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
-import { InlineTextButton } from '../../components';
-// import { LINE_ITEM_UNITS, LINE_ITEM_DAY } from '../../util/types';
+import { UserCard, Modal } from '../../components';
+import { EnquiryForm } from '../../forms';
 
 import css from './ListingPage.module.css';
 
@@ -18,7 +18,15 @@ const SectionHeading = props => {
     onContactUser,
     listing,
     // unitType,
-    priceType
+    priceType,
+    currentUser,
+    authorDisplayName,
+    isEnquiryModalOpen,
+    onCloseEnquiryModal,
+    sendEnquiryError,
+    sendEnquiryInProgress,
+    onSubmitEnquiry,
+    onManageDisableScrolling,
   } = props;
 
   const unitTranslationKey = `ListingPage.${priceType}`;
@@ -33,7 +41,7 @@ const SectionHeading = props => {
   //   : 'ListingPage.perUnit';
 
   //const patch = JSON.stringify(richTitle);
-  
+
   //var data = {subject: JSON.stringify(richTitle)};
 
   //var params = jQuery.param(data);
@@ -50,7 +58,7 @@ const SectionHeading = props => {
   return (
     <div className={css.sectionHeading}>
       <div className={css.desktopPriceContainer}>
-      <p className={css.desktopPerUnit}>from</p>
+        <p className={css.desktopPerUnit}>from</p>
         <div className={css.desktopPriceValue} title={priceTitle}>
           {formattedPrice}
         </div>
@@ -66,17 +74,46 @@ const SectionHeading = props => {
           {showContactUser ? (
             <span className={css.contactWrapper}>
               <span className={css.separator}>•</span>
-              <a
-                ClassName={css.contactLink} target = "_blank"
-                href={url}
-               // enforcePagePreloadFor="SignupPage"
-              >
-                <FormattedMessage id="ListingPage.contactUser" />
-              </a>
+
+              {!!currentUser ? (
+                <a
+                  className={css.contactLink} target="_blank"
+                  href={url}
+                >
+                  <FormattedMessage id="ListingPage.contactUser" />
+                </a>
+              ) : (
+                <span
+                  className={css.contactLink}
+                  onClick={onContactUser}
+                >
+                  <FormattedMessage id="ListingPage.contactUser" />
+                </span>
+              )}
             </span>
           ) : null}
         </div>
       </div>
+
+      {/* <Modal
+        id="ListingPage.enquiry"
+        contentClassName={css.enquiryModalContent}
+        isOpen={isEnquiryModalOpen}
+        onClose={onCloseEnquiryModal}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <EnquiryForm
+          className={css.enquiryForm}
+          submitButtonWrapperClassName={css.enquirySubmitButtonWrapper}
+          listingTitle={title}
+          authorDisplayName={authorDisplayName}
+          sendEnquiryError={sendEnquiryError}
+          onSubmit={onSubmitEnquiry}
+          inProgress={sendEnquiryInProgress}
+        />
+      </Modal> */}
+
     </div>
   );
 };
