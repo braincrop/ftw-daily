@@ -86,14 +86,24 @@ const UserCard = props => {
   const separator = isCurrentUser ? null : <span className={css.linkSeparator}>•</span>;
 
   const contact = (
-    <a
-      rootClassName={css.contact}
-      target = "_blank"
-      href={url}
-      enforcePagePreloadFor="SignupPage"
-    >
-      <FormattedMessage id="UserCard.contactUser" />
-    </a>
+    <span className={css.contactWrapper}>
+      {!!currentUser ? (
+        <a
+          className={css.contact}
+          target="_blank"
+          href={url}
+        >
+          <FormattedMessage id="UserCard.contactUser" />
+        </a>
+      ) : (
+        <span
+          className={css.contact}
+          onClick={onContactUser}
+        >
+          <FormattedMessage id="UserCard.contactUser" />
+        </span>
+      )}
+    </span>
   );
 
   const editProfileMobile = (
