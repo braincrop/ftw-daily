@@ -57,7 +57,13 @@
 
   --fontWeightHighlightEmail: var(--fontWeightBold);
 
-  /* ================ Spacing unites ================ */
+  /* ================ Spacing units ================ */
+
+  /**
+   * Note: changing --contentMaxWidth does not affect layouts with LayoutSideNavigation or search pages.
+   */
+  --contentMaxWidth: 1208px;
+  --contentMaxWidthPages: 1120px; /* calc(Global width (1056px) + (Horizontal padding (32px) * 2) */
 
   /* Multiples of mobile and desktop spacing units should be used with margins and paddings. */
   --spacingUnit: 6px;
@@ -164,6 +170,10 @@
   /* ================ ProfileSettingsForm ================ */
   --ProfileSettingsForm_avatarSize: 96px;
   --ProfileSettingsForm_avatarSizeDesktop: 240px;
+
+  /* ================ PageBuilder ================ */
+  /* --carouselWidth will be updated dynamically through JS */
+  --carouselWidth: 100vw;
 }
 
 /* ================ Global element styles ================ */

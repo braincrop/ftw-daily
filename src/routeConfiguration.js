@@ -14,6 +14,7 @@ const pageDataLoadingAPI = getPageDataLoadingAPI();
 const FaqPage = loadable(() => import(/* webpackChunkName: "FaqPage" */ './containers/FaqPage/FaqPage'));
 const FeesPage = loadable(() => import(/* webpackChunkName: "FeesPage" */ './containers/FeesPage/FeesPage'));
 const CancellationPage = loadable(() => import(/* webpackChunkName: "CancellationPage" */ './containers/CancellationPage/CancellationPage'));
+const CMSPage = loadable(() => import(/* webpackChunkName: "CMSPage" */ './containers/CMSPage/CMSPage'));
 const GuidelinesPage = loadable(() => import(/* webpackChunkName: "GuidelinesPage" */ './containers/GuidelinesPage/GuidelinesPage'));
 const AboutPage = loadable(() => import(/* webpackChunkName: "AboutPage" */ './containers/AboutPage/AboutPage'));
 const AuthenticationPage = loadable(() => import(/* webpackChunkName: "AuthenticationPage" */ './containers/AuthenticationPage/AuthenticationPage'));
@@ -36,6 +37,7 @@ const SearchPage = loadable(() => import(/* webpackChunkName: "SearchPage" */ /*
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ './containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ './containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ './containers/TransactionPage/TransactionPage'));
+const PreviewResolverPage = loadable(() => import(/* webpackChunkName: "PreviewResolverPage" */ './containers/PreviewResolverPage/PreviewResolverPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ './containers/StyleguidePage/StyleguidePage'));
@@ -82,6 +84,12 @@ const routeConfiguration = () => {
       path: '/fees',
       name: 'FeesPage',
       component: FeesPage,
+    },
+    {
+      path: '/p/:pageId',
+      name: 'CMSPage',
+      component: CMSPage,
+      loadData: pageDataLoadingAPI.CMSPage.loadData,
     },
     {
       path: '/cancellations',
@@ -369,6 +377,11 @@ const routeConfiguration = () => {
       authPage: 'LoginPage',
       component: EmailVerificationPage,
       loadData: pageDataLoadingAPI.EmailVerificationPage.loadData,
+    },
+    {
+      path: '/preview',
+      name: 'PreviewResolverPage',
+      component: PreviewResolverPage ,
     },
   ];
 };
