@@ -67,16 +67,16 @@ class SendMessageFormComponent extends Component {
             invalid,
             form,
             formId,
-            intl
+            intl,
           } = formRenderProps;
 
           const classes = classNames(rootClassName || css.root, className);
           const submitInProgress = inProgress;
           const submitDisabled = invalid || submitInProgress;
 
-          const firstWarning = intl.formatMessage({id: 'TransactionPage.warningNotification1'});
-          const secondWarning = intl.formatMessage({id: 'TransactionPage.warningNotification2'});
-          const thirdWarning = intl.formatMessage({id: 'TransactionPage.warningNotification3'});
+          const firstWarning = intl.formatMessage({ id: 'TransactionPage.warningNotification1' });
+          const secondWarning = intl.formatMessage({ id: 'TransactionPage.warningNotification2' });
+          const thirdWarning = intl.formatMessage({ id: 'TransactionPage.warningNotification3' });
 
           return (
             <Form className={classes} onSubmit={values => handleSubmit(values, form)}>
@@ -105,7 +105,7 @@ class SendMessageFormComponent extends Component {
                   onFocus={this.handleFocus}
                   onBlur={this.handleBlur}
                 >
-                  <IconSendMessage />
+                  <IconSendMessage /> test
                   <FormattedMessage id="SendMessageForm.sendMessage" />
                 </SecondaryButton>
               </div>
