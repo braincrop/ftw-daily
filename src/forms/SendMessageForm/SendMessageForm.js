@@ -79,7 +79,13 @@ class SendMessageFormComponent extends Component {
           const thirdWarning = intl.formatMessage({ id: 'TransactionPage.warningNotification3' });
 
           return (
-            <Form className={classes} onSubmit={values => handleSubmit(values, form)}>
+            <Form
+              className={classes}
+              onSubmit={values => {
+                console.log(values);
+                handleSubmit(values, form);
+              }}
+            >
               <FieldTextInput
                 inputRootClass={css.textarea}
                 type="textarea"
