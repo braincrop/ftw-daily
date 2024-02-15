@@ -105,7 +105,7 @@ class SendMessageFormComponent extends Component {
                   onFocus={this.handleFocus}
                   onBlur={this.handleBlur}
                 >
-                  <IconSendMessage /> test
+                  <IconSendMessage />
                   <FormattedMessage id="SendMessageForm.sendMessage" />
                 </SecondaryButton>
               </div>
