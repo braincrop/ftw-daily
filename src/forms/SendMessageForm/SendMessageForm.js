@@ -82,7 +82,7 @@ class SendMessageFormComponent extends Component {
             <Form
               className={classes}
               onSubmit={values => {
-                console.log(values);
+                console.log(form);
                 handleSubmit(values, form);
               }}
             >
