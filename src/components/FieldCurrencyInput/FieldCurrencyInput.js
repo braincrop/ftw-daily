@@ -113,6 +113,7 @@ class CurrencyInputComponent extends Component {
   }
 
   onInputBlur(event) {
+    console.log('on input blur function called');
     event.preventDefault();
     event.stopPropagation();
     const {
@@ -125,6 +126,7 @@ class CurrencyInputComponent extends Component {
         const price = getPrice(ensureDotSeparator(prevState.unformattedValue), currencyConfig);
         onBlur(price);
       }
+      console.log(prevState.formattedValue);
       return {
         value: prevState.formattedValue,
       };
@@ -151,7 +153,6 @@ class CurrencyInputComponent extends Component {
   }
 
   updateValues(event) {
-    console.log('this update function is called');
     try {
       const { currencyConfig, intl } = this.props;
       const targetValue = event.target.value.trim();
