@@ -11,20 +11,20 @@ export const getMainCurrency = currency => {
       maximumFractionDigits: 2,
     };
   }
-  const userCurrency = config.currency;
-  switch (currency) {
-    case config.additionalCurrency:
-      userCurrency = config.additionalCurrency;
-      break;
-    case config.additionalCurrencyEuro:
-      userCurrency = config.additionalCurrencyEuro;
-      break;
-    default:
-      userCurrency = config.currency;
-  }
-  // const userCurrency = currency === config.additionalCurrency
-  //   ? config.additionalCurrency
-  //   : config.currency;
+  // const userCurrency = config.currency;
+  // switch (currency) {
+  //   case config.additionalCurrency:
+  //     userCurrency = config.additionalCurrency;
+  //     break;
+  //   case config.additionalCurrencyEuro:
+  //     userCurrency = config.additionalCurrencyEuro;
+  //     break;
+  //   default:
+  //     userCurrency = config.currency;
+  // }
+  console.log(config.additionalCurrencyEuro);
+  const userCurrency =
+    currency === config.additionalCurrency ? config.additionalCurrency : config.currency;
 
   return {
     style: 'currency',
