@@ -22,10 +22,10 @@ export const getMainCurrency = currency => {
   //   default:
   //     userCurrency = config.currency;
   // }
-  console.log(config.additionalCurrencyEuro);
   const userCurrency =
     currency === config.additionalCurrency ? config.additionalCurrency : config.currency;
-
+  userCurrency =
+    currency === config.additionalCurrencyEuro ? config.additionalCurrencyEuro : config.currency;
   return {
     style: 'currency',
     currency: userCurrency,
