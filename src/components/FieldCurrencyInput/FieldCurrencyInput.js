@@ -151,6 +151,7 @@ class CurrencyInputComponent extends Component {
   }
 
   updateValues(event) {
+    console.log('this update function is called');
     try {
       const { currencyConfig, intl } = this.props;
       const targetValue = event.target.value.trim();
