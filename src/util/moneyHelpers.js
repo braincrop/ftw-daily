@@ -1,6 +1,6 @@
 import config from '../config';
 
-export const getMainCurrency = (currency) => {
+export const getMainCurrency = currency => {
   if (!currency) {
     return {
       style: 'currency',
@@ -9,12 +9,22 @@ export const getMainCurrency = (currency) => {
       useGrouping: true,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }
+    };
   }
-
-  const userCurrency = currency === config.additionalCurrency
-    ? config.additionalCurrency
-    : config.currency;
+  const userCurrency = config.currency;
+  switch (currency) {
+    case config.additionalCurrency:
+      userCurrency = config.additionalCurrency;
+      break;
+    case config.additionalCurrencyEuro:
+      userCurrency = config.additionalCurrencyEuro;
+      break;
+    default:
+      userCurrency = config.currency;
+  }
+  // const userCurrency = currency === config.additionalCurrency
+  //   ? config.additionalCurrency
+  //   : config.currency;
 
   return {
     style: 'currency',
@@ -23,5 +33,5 @@ export const getMainCurrency = (currency) => {
     useGrouping: true,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }
-}
+  };
+};
