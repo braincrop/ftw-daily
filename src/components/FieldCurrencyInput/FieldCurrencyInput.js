@@ -127,6 +127,7 @@ class CurrencyInputComponent extends Component {
         onBlur(price);
       }
       console.log(prevState.formattedValue);
+      console.log(currencyConfig);
       return {
         value: prevState.formattedValue,
       };
