@@ -21,11 +21,7 @@ import {
   denormalisedEntities,
   denormalisedResponseEntities,
 } from '../../util/data';
-import {
-  findNextBoundaryCustom,
-  nextMonthFn,
-  monthIdStringInTimeZone,
-} from '../../util/dates';
+import { findNextBoundaryCustom, nextMonthFn, monthIdStringInTimeZone } from '../../util/dates';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
 
@@ -382,7 +378,6 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
         transaction &&
         txIsEnquired(transaction);
 
-
       dispatch(fetchTimeslots(listing));
 
       const canFetchListing = listing && listing.attributes && !listing.attributes.deleted;
@@ -510,7 +505,7 @@ export const fetchMoreMessages = txId => (dispatch, getState, sdk) => {
 
 export const sendMessage = (txId, message) => (dispatch, getState, sdk) => {
   dispatch(sendMessageRequest());
-
+  console.log(message);
   return sdk.messages
     .send({ transactionId: txId, content: message })
     .then(response => {
@@ -673,8 +668,11 @@ const fetchTimeSlotsDay = listingId => (dispatch, getState, sdk) => {
     });
 };
 
-
-export const fetchTimeSlotsTime = (listingId, start, end, timeZone) => (dispatch, getState, sdk) => {
+export const fetchTimeSlotsTime = (listingId, start, end, timeZone) => (
+  dispatch,
+  getState,
+  sdk
+) => {
   const monthId = monthIdStringInTimeZone(start, timeZone);
 
   dispatch(fetchTimeSlotsRequestTime(monthId));
@@ -720,11 +718,11 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
   return Promise.all([]);
 };
 
-export const fetchTimeslots = (listing) => (dispatch, getState, sdk) => {
-  const listingId = listing && listing.id || null;
+export const fetchTimeslots = listing => (dispatch, getState, sdk) => {
+  const listingId = (listing && listing.id) || null;
   fetchMonthlyTimeSlots(dispatch, listing);
-  dispatch(fetchTimeSlotsDay(listingId))
-}
+  dispatch(fetchTimeSlotsDay(listingId));
+};
 
 export const fetchNextTransitions = id => (dispatch, getState, sdk) => {
   dispatch(fetchTransitionsRequest());
