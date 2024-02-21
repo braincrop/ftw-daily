@@ -504,8 +504,16 @@ export const fetchMoreMessages = txId => (dispatch, getState, sdk) => {
 };
 
 export const sendMessage = (txId, message) => (dispatch, getState, sdk) => {
+  const hideEmail = text =>
+    text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '(hidden)');
+  const hidePhone = text =>
+    text.replace(/(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g, '(hidden)');
+  const hideWebsite = text =>
+    text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, '(hidden)');
+  message = hideEmail(message);
+  message = hidePhone(message);
+  message = hideWebsite(message);
   dispatch(sendMessageRequest());
-  console.log(message);
   return sdk.messages
     .send({ transactionId: txId, content: message })
     .then(response => {
