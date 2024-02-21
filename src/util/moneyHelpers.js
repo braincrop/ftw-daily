@@ -11,6 +11,7 @@ export const getMainCurrency = currency => {
       maximumFractionDigits: 2,
     };
   }
+  console.log(currency);
   // const userCurrency = config.currency;
   // switch (currency) {
   //   case config.additionalCurrency:
