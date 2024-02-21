@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
-import { UserCard, Modal } from '../../components';
+import { UserCard, Modal, InlineTextButton } from '../../components';
 import { EnquiryForm } from '../../forms';
 
 import css from './ListingPage.module.css';
@@ -50,10 +50,14 @@ const SectionHeading = props => {
 
   //console.log('params', JSON.stringify(params));
 
-  var data = title
-  var patchId = id
+  var data = title;
+  var patchId = id;
 
-  var url = "https://share.hsforms.com/1Zq6xDjz7RCG8gjdC1vBbgA57edm?patch_name=" + encodeURIComponent(JSON.stringify(data)) + "&patch_url=https://www.hotpatch.com/l/" + encodeURIComponent(patchId);
+  var url =
+    'https://share.hsforms.com/1Zq6xDjz7RCG8gjdC1vBbgA57edm?patch_name=' +
+    encodeURIComponent(JSON.stringify(data)) +
+    '&patch_url=https://www.hotpatch.com/l/' +
+    encodeURIComponent(patchId);
 
   return (
     <div className={css.sectionHeading}>
@@ -74,8 +78,14 @@ const SectionHeading = props => {
           {showContactUser ? (
             <span className={css.contactWrapper}>
               <span className={css.separator}>•</span>
-
-              {!!currentUser ? (
+              <InlineTextButton
+                rootClassName={css.contactLink}
+                onClick={onContactUser}
+                enforcePagePreloadFor="SignupPage"
+              >
+                <FormattedMessage id="ListingPage.contactUser" />
+              </InlineTextButton>
+              {/* {!!currentUser ? (
                 <a
                   className={css.contactLink} target="_blank"
                   href={url}
@@ -89,7 +99,7 @@ const SectionHeading = props => {
                 >
                   <FormattedMessage id="ListingPage.contactUser" />
                 </span>
-              )}
+              )} */}
             </span>
           ) : null}
         </div>
@@ -113,7 +123,6 @@ const SectionHeading = props => {
           inProgress={sendEnquiryInProgress}
         />
       </Modal> */}
-
     </div>
   );
 };
