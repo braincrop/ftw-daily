@@ -42,6 +42,7 @@ const roundNumber = value => {
   else return +(num[0] + '.5');
 };
 
+console.log(config.currency);
 export const EditListingPricingFormComponent = props => (
   <FinalForm
     {...props}
@@ -224,10 +225,10 @@ export const EditListingPricingFormComponent = props => (
             disabled={disableCurrencyField}
             label={intl.formatMessage({ id: 'EditListingPricingForm.currency' })}
           >
-            <option value="GBP" key="GBP">
+            <option value="USD" key="USD">
               {config.currency}
             </option>
-            <option value="USD" key="USD">
+            <option value="GBP" key="GBP">
               {config.additionalCurrency}
             </option>
             <option value="EUR" key="EUR">

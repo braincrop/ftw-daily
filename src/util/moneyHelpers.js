@@ -11,7 +11,7 @@ export const getMainCurrency = currency => {
       maximumFractionDigits: 2,
     };
   }
-  console.log(currency);
+  // console.log(currency);
   // const userCurrency = config.currency;
   // switch (currency) {
   //   case config.additionalCurrency:
@@ -24,8 +24,12 @@ export const getMainCurrency = currency => {
   //     userCurrency = config.currency;
   // }
   const userCurrency =
-    currency === config.additionalCurrency ? config.additionalCurrency : config.currency;
-  console.log(userCurrency, config.currency);
+    currency === config.additionalCurrency
+      ? config.additionalCurrency
+      : currency === config.additionalCurrencyEuro
+      ? config.additionalCurrencyEuro
+      : config.currency;
+  console.log(userCurrency, config.currency, currency);
   // userCurrency =
   //   currency === config.additionalCurrencyEuro ? config.additionalCurrencyEuro : config.currency;
   return {
