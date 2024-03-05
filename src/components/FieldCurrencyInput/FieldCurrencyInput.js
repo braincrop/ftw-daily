@@ -122,9 +122,7 @@ class CurrencyInputComponent extends Component {
     this.setState(prevState => {
       if (onBlur) {
         // If parent component has provided onBlur function, call it with current price.
-        console.log('unformated', prevState.unformattedValue, currencyConfig);
         const price = getPrice(ensureDotSeparator(prevState.unformattedValue), currencyConfig);
-        console.log('price', price);
         onBlur(price);
       }
       console.log(prevState.formattedValue);

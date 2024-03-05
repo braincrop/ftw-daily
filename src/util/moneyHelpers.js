@@ -29,7 +29,6 @@ export const getMainCurrency = currency => {
       : currency === config.additionalCurrencyEuro
       ? config.additionalCurrencyEuro
       : config.currency;
-  console.log(userCurrency, config.currency, currency);
   // userCurrency =
   //   currency === config.additionalCurrencyEuro ? config.additionalCurrencyEuro : config.currency;
   return {
