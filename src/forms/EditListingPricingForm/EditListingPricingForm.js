@@ -226,10 +226,10 @@ export const EditListingPricingFormComponent = props => (
             label={intl.formatMessage({ id: 'EditListingPricingForm.currency' })}
           >
             <option value="USD" key="USD">
-              {config.currency}
+              USD
             </option>
             <option value="GBP" key="GBP">
-              {config.additionalCurrency}
+              GBP
             </option>
             <option value="EUR" key="EUR">
               EUR
