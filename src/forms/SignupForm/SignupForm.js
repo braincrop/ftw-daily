@@ -5,7 +5,14 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 import * as validators from '../../util/validators';
-import { Form, PrimaryButton, FieldTextInput, FieldPhoneNumberInput } from '../../components';
+import {
+  Form,
+  PrimaryButton,
+  FieldTextInput,
+  FieldPhoneNumberInput,
+  FieldSelect,
+  FieldRadioButton,
+} from '../../components';
 
 import css from './SignupForm.module.css';
 
@@ -45,6 +52,9 @@ const SignupFormComponent = props => (
       // password
       const passwordLabel = intl.formatMessage({
         id: 'SignupForm.passwordLabel',
+      });
+      const hearLabel = intl.formatMessage({
+        id: 'SignupForm.HearAboutUs',
       });
       const passwordPlaceholder = intl.formatMessage({
         id: 'SignupForm.passwordPlaceholder',
@@ -143,26 +153,52 @@ const SignupFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-         <div>
-         <p></p>
+          <div>
+            <p></p>
             <p className={css.bottomWrapperText}>
               <span className={css.password}>
-                <FormattedMessage
-                  id="SignupForm.Intro"
-                />
+                <FormattedMessage id="SignupForm.Intro" />
               </span>
             </p>
           </div>
           <div>
-            <FieldTextInput
-              type="email"
-              id={formId ? `${formId}.email` : 'email'}
-              name="email"
-              autoComplete="email"
-              label={emailLabel}
-              placeholder={emailPlaceholder}
-              validate={validators.composeValidators(emailRequired, emailValid)}
-            />
+            <label className={css.subTitle}>
+              <FormattedMessage id="SignupForm.planningToUse" />
+            </label>
+            <div className={css.radioButtonRow}>
+              <FieldRadioButton
+                id="Hosting"
+                name="planningType"
+                label={'Hosting'}
+                value="Hosting"
+                showAsRequired={true}
+              />
+              <FieldRadioButton
+                id="Renting"
+                name="planningType"
+                label={'Renting'}
+                value="Renting"
+                showAsRequired={true}
+              />
+              <FieldRadioButton
+                id="Both"
+                name="planningType"
+                label={'Both'}
+                value="Both"
+                showAsRequired={true}
+              />
+            </div>
+            <div className={css.firstAndLastField}>
+              <FieldTextInput
+                type="email"
+                id={formId ? `${formId}.email` : 'email'}
+                name="email"
+                autoComplete="email"
+                label={emailLabel}
+                placeholder={emailPlaceholder}
+                validate={validators.composeValidators(emailRequired, emailValid)}
+              />
+            </div>
             <div className={css.name}>
               <FieldTextInput
                 className={css.firstNameRoot}
@@ -205,6 +241,34 @@ const SignupFormComponent = props => (
               placeholder={passwordPlaceholder}
               validate={passwordValidators}
             />
+
+            <div className={css.firstAndLastField}>
+              <FieldSelect
+                id="currency"
+                name="currency"
+                className={css.priceInput}
+                label={hearLabel}
+              >
+                <option value="Google" key="Google">
+                  Google
+                </option>
+                <option
+                  value="Recommendation by friend or colleague"
+                  key="Recommendation by friend or colleague"
+                >
+                  Recommendation by friend or colleague
+                </option>
+                <option value="Social Media" key="Social Media">
+                  Social Media
+                </option>
+                <option value="Blog" key="Blog">
+                  Blog
+                </option>
+                <option value="Other" key="Other">
+                  Other
+                </option>
+              </FieldSelect>
+            </div>
           </div>
 
           <div className={css.bottomWrapper}>

@@ -64,3 +64,17 @@
     margin-top: 32px;
   }
 }
+
+.radioButtonRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.firstAndLastField {
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+  }
+}

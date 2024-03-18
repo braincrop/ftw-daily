@@ -1071,6 +1071,8 @@
   "SignupForm.lastNamePlaceholder": "Doe",
   "SignupForm.lastNameRequired": "You need to add a last name.",
   "SignupForm.passwordLabel": "Password",
+  "SignupForm.planningToUse": "What are you planning on using HotPatch for ?",
+  "SignupForm.HearAboutUs": "Where did you hear about us?",
   "SignupForm.passwordPlaceholder": "Enter your password…",
   "SignupForm.passwordRequired": "You need to add a password.",
   "SignupForm.passwordTooLong": "The password should be at most {maxLength} characters.",
