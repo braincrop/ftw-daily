@@ -78,3 +78,13 @@
     margin-top: 32px;
   }
 }
+.radioButtonLabel {
+  font-size: 16px !important;
+}
+.radioButtonCircle {
+  height: 26px !important;
+}
+
+.priceInput {
+  font-size: 16px !important;
+}

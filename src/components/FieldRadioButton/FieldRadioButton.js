@@ -1,5 +1,5 @@
 import React from 'react';
-import { node, string } from 'prop-types';
+import { node, string, bool } from 'prop-types';
 import classNames from 'classnames';
 import { Field } from 'react-final-form';
 
@@ -48,6 +48,8 @@ const FieldRadioButtonComponent = props => {
     id,
     label,
     showAsRequired,
+    circleClassName,
+    required,
     ...rest
   } = props;
 
@@ -57,6 +59,7 @@ const FieldRadioButtonComponent = props => {
     className: css.input,
     component: 'input',
     type: 'radio',
+    required: required,
     ...rest,
   };
 
@@ -64,14 +67,14 @@ const FieldRadioButtonComponent = props => {
     <span className={classes}>
       <Field {...radioButtonProps} />
       <label htmlFor={id} className={css.label}>
-        <span className={css.radioButtonWrapper}>
+        <span className={` ${css.radioButtonWrapper} ${circleClassName}`}>
           <IconRadioButton
             className={svgClassName}
             checkedClassName={checkedClassName}
             showAsRequired={showAsRequired}
           />
         </span>
-        <span className={css.text}>{label}</span>
+        <span className={`${css.text} ${className}`}>{label}</span>
       </label>
     </span>
   );
@@ -82,6 +85,8 @@ FieldRadioButtonComponent.defaultProps = {
   rootClassName: null,
   svgClassName: null,
   checkedClassName: null,
+  circleClassName: null,
+  required: false,
   label: null,
 };
 
@@ -89,6 +94,8 @@ FieldRadioButtonComponent.propTypes = {
   className: string,
   rootClassName: string,
   svgClassName: string,
+  circleClassName: string,
+  required: bool,
   checkedClassName: string,
 
   // Id is needed to connect the label with input.

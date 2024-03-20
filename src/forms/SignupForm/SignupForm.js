@@ -127,7 +127,15 @@ const SignupFormComponent = props => (
       const phoneRequiredMessage = intl.formatMessage({
         id: 'SignupForm.phoneRequired',
       });
+      const planRequiredMessage = intl.formatMessage({
+        id: 'SignupForm.planRequired',
+      });
+      const hearRequiredMessage = intl.formatMessage({
+        id: 'SignupForm.hearRequired',
+      });
       const phoneRequired = validators.required(phoneRequiredMessage);
+      const hearRequired = validators.required(hearRequiredMessage);
+      const planRequired = validators.required(planRequiredMessage);
 
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
@@ -172,20 +180,30 @@ const SignupFormComponent = props => (
                 label={'Hosting'}
                 value="Hosting"
                 showAsRequired={true}
+                circleClassName={css.radioButtonCircle}
+                className={css.radioButtonLabel}
+                required={true}
               />
               <FieldRadioButton
                 id="Renting"
                 name="planningType"
                 label={'Renting'}
                 value="Renting"
+                circleClassName={css.radioButtonCircle}
+                className={css.radioButtonLabel}
                 showAsRequired={true}
+                required={true}
               />
               <FieldRadioButton
                 id="Both"
                 name="planningType"
                 label={'Both'}
                 value="Both"
+                circleClassName={css.radioButtonCircle}
+                className={css.radioButtonLabel}
                 showAsRequired={true}
+                required={true}
+                validate={planRequired}
               />
             </div>
             <div className={css.firstAndLastField}>
@@ -244,10 +262,13 @@ const SignupFormComponent = props => (
 
             <div className={css.firstAndLastField}>
               <FieldSelect
-                id="currency"
-                name="currency"
-                className={css.priceInput}
+                id="hearAbout"
+                name="hearAboutUs"
+                style={{ fontSize: '16px' }}
                 label={hearLabel}
+                validate={hearRequired}
+
+                // onChange={handleChange}
               >
                 <option value="Google" key="Google">
                   Google
