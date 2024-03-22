@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
@@ -18,6 +18,41 @@ import css from './SignupForm.module.css';
 
 const KEY_CODE_ENTER = 13;
 
+const _interestedPatches = [
+  {
+    id: 'Hair & Beauty',
+    name: 'InterestedPatches',
+  },
+  {
+    id: '',
+    name: 'InterestedPatches',
+  },
+  {
+    id: '',
+    name: 'InterestedPatches',
+  },
+  {
+    id: '',
+    name: 'InterestedPatches',
+  },
+  {
+    id: '',
+    name: 'InterestedPatches',
+  },
+  {
+    id: '',
+    name: 'InterestedPatches',
+  },
+  {
+    id: '',
+    name: 'InterestedPatches',
+  },
+  {
+    id: '',
+    name: 'InterestedPatches',
+  },
+];
+
 const SignupFormComponent = props => (
   <FinalForm
     {...props}
@@ -33,6 +68,7 @@ const SignupFormComponent = props => (
         onOpenTermsOfService,
       } = fieldRenderProps;
 
+      const [hearAbtUsOtherShow, setHearAbtUsOtherShow] = useState(false);
       // email
       const emailLabel = intl.formatMessage({
         id: 'SignupForm.emailLabel',
@@ -55,6 +91,9 @@ const SignupFormComponent = props => (
       });
       const hearLabel = intl.formatMessage({
         id: 'SignupForm.HearAboutUs',
+      });
+      const hearOtherLabel = intl.formatMessage({
+        id: 'SignupForm.HearAboutUsOtherLabel',
       });
       const passwordPlaceholder = intl.formatMessage({
         id: 'SignupForm.passwordPlaceholder',
@@ -159,6 +198,12 @@ const SignupFormComponent = props => (
         </span>
       );
 
+      const handleChangeHearAbtUs = e => {
+        if (e === 'Other') setHearAbtUsOtherShow(true);
+        else setHearAbtUsOtherShow(false);
+      };
+
+      console.log('test@test.com', hearAbtUsOtherShow);
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <div>
@@ -267,9 +312,11 @@ const SignupFormComponent = props => (
                 style={{ fontSize: '16px' }}
                 label={hearLabel}
                 validate={hearRequired}
-
-                // onChange={handleChange}
+                onChange={handleChangeHearAbtUs}
               >
+                <option selected disabled value="" key="">
+                  Select
+                </option>
                 <option value="Google" key="Google">
                   Google
                 </option>
@@ -289,7 +336,52 @@ const SignupFormComponent = props => (
                   Other
                 </option>
               </FieldSelect>
+              <FieldTextInput
+                className={css.phone}
+                style={hearAbtUsOtherShow ? { display: 'block' } : { display: 'none' }}
+                type="text"
+                id={formId ? `${formId}.hearAbout` : 'hearAbout'}
+                name="hearAboutUsOther"
+                placeholder={hearOtherLabel}
+              />
             </div>
+
+            {/* <label className={css.subTitle}>
+              <FormattedMessage id="SignupForm.InterestedPatches" />
+            </label>
+            <div className={css.radioButtonRow}>
+              <FieldRadioButton
+                id="Hosting"
+                name="planningType"
+                label={'Hosting'}
+                value="Hosting"
+                showAsRequired={true}
+                circleClassName={css.radioButtonCircle}
+                className={css.radioButtonLabel}
+                required={true}
+              />
+              <FieldRadioButton
+                id="Renting"
+                name="planningType"
+                label={'Renting'}
+                value="Renting"
+                circleClassName={css.radioButtonCircle}
+                className={css.radioButtonLabel}
+                showAsRequired={true}
+                required={true}
+              />
+              <FieldRadioButton
+                id="Both"
+                name="planningType"
+                label={'Both'}
+                value="Both"
+                circleClassName={css.radioButtonCircle}
+                className={css.radioButtonLabel}
+                showAsRequired={true}
+                required={true}
+                validate={planRequired}
+              />
+            </div> */}
           </div>
 
           <div className={css.bottomWrapper}>

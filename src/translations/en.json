@@ -1073,6 +1073,8 @@
   "SignupForm.passwordLabel": "Password",
   "SignupForm.planningToUse": "What are you planning on using HotPatch for ?",
   "SignupForm.HearAboutUs": "Where did you hear about us?",
+  "SignupForm.HearAboutUsOtherLabel": "Please Specify",
+  "SignupForm.InterestedPatches": "What kind of Patches are you interested in? (Optional)",
   "SignupForm.passwordPlaceholder": "Enter your password…",
   "SignupForm.passwordRequired": "You need to add a password.",
   "SignupForm.passwordTooLong": "The password should be at most {maxLength} characters.",
