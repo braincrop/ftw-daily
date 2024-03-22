@@ -72,6 +72,7 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionCapacity from './SectionCapacity';
 import SectionSeats from './SectionSeats';
 import css from './ListingPage.module.css';
+import Swal from 'sweetalert2';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -240,14 +241,27 @@ export class ListingPageComponent extends Component {
     const { message } = values;
     let modifiedMessage = message;
     const hideEmail = text =>
-      text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '(hidden)');
+      text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'HIDDEN');
     const hidePhone = text =>
-      text.replace(/(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g, '(hidden)');
+      text.replace(/(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g, 'HIDDEN');
     const hideWebsite = text =>
-      text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, '(hidden)');
+      text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, 'HIDDEN');
     modifiedMessage = hideEmail(modifiedMessage);
     modifiedMessage = hidePhone(modifiedMessage);
     modifiedMessage = hideWebsite(modifiedMessage);
+
+    if (modifiedMessage.includes('HIDDEN')) {
+      Swal.fire({
+        title: "Hold your horses! We can't hit that send button just yet",
+        text: `Contact info can't be shared until a booking is confirmed.
+           To send the message, please remove the contact info.`,
+        confirmButtonText: 'Edit Message',
+        confirmButtonColor: '#5cbfcc',
+      }).then(() => {
+        return;
+      });
+      return;
+    }
 
     onSendEnquiry(listingId, modifiedMessage.trim(), unitType)
       .then(txId => {
