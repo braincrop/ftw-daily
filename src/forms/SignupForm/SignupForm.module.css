@@ -64,3 +64,27 @@
     margin-top: 32px;
   }
 }
+
+.radioButtonRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.firstAndLastField {
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+  }
+}
+.radioButtonLabel {
+  font-size: 16px !important;
+}
+.radioButtonCircle {
+  height: 26px !important;
+}
+
+.priceInput {
+  font-size: 16px !important;
+}
