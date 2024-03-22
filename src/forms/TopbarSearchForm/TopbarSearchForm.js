@@ -55,7 +55,7 @@ class TopbarSearchFormComponent extends Component {
               onSubmit={preventFormSubmit}
               enforcePagePreloadFor="SearchPage"
             >
-              <Field
+              {/* <Field
                 name="location"
                 format={identity}
                 render={({ input, meta }) => {
@@ -92,7 +92,7 @@ class TopbarSearchFormComponent extends Component {
                     />
                   );
                 }}
-              />
+              /> */}
               {/*{this.renderCategoryDropDown()}*/}
             </Form>
           );

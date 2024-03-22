@@ -478,7 +478,7 @@ class LocationAutocompleteInputImpl extends Component {
     const renderPredictions = this.state.inputHasFocus;
 
     return (
-      <div className={rootClass}>
+      <div className={rootClass} style={{ display: 'none' }}>
         <div className={iconClass}>
           {this.state.fetchingPlaceDetails ? (
             <IconSpinner className={css.iconSpinner} />

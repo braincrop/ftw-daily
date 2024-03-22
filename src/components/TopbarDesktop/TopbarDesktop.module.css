@@ -380,7 +380,6 @@
 }
 
 .categoriesLink {
-
 }
 
 .logoutButton {
@@ -451,11 +450,15 @@
   padding: 8px 0;
   margin: 15px 8px 15px 8px;
   text-align: center;
-  color: var(--matterColor);
+  /* color: var(--matterColor); */
+  background-color: #5cbfcc;
+  color: #fff;
 
   &:hover,
   &:focus {
-    text-decoration: none;
+    background-color: #fff;
+    color: #5cbfcc;
+    font-weight: 700;
   }
 
   @media (--viewportLarge) {
