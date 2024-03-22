@@ -203,7 +203,6 @@ const SignupFormComponent = props => (
         else setHearAbtUsOtherShow(false);
       };
 
-      console.log('test@test.com', hearAbtUsOtherShow);
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <div>
