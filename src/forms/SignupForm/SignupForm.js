@@ -15,43 +15,9 @@ import {
 } from '../../components';
 
 import css from './SignupForm.module.css';
+import { _interestedPatches } from './interestedPatches';
 
 const KEY_CODE_ENTER = 13;
-
-const _interestedPatches = [
-  {
-    id: 'Hair & Beauty',
-    name: 'InterestedPatches',
-  },
-  {
-    id: '',
-    name: 'InterestedPatches',
-  },
-  {
-    id: '',
-    name: 'InterestedPatches',
-  },
-  {
-    id: '',
-    name: 'InterestedPatches',
-  },
-  {
-    id: '',
-    name: 'InterestedPatches',
-  },
-  {
-    id: '',
-    name: 'InterestedPatches',
-  },
-  {
-    id: '',
-    name: 'InterestedPatches',
-  },
-  {
-    id: '',
-    name: 'InterestedPatches',
-  },
-];
 
 const SignupFormComponent = props => (
   <FinalForm
@@ -345,42 +311,22 @@ const SignupFormComponent = props => (
               />
             </div>
 
-            {/* <label className={css.subTitle}>
+            <label className={css.subTitle}>
               <FormattedMessage id="SignupForm.InterestedPatches" />
             </label>
-            <div className={css.radioButtonRow}>
-              <FieldRadioButton
-                id="Hosting"
-                name="planningType"
-                label={'Hosting'}
-                value="Hosting"
-                showAsRequired={true}
-                circleClassName={css.radioButtonCircle}
-                className={css.radioButtonLabel}
-                required={true}
-              />
-              <FieldRadioButton
-                id="Renting"
-                name="planningType"
-                label={'Renting'}
-                value="Renting"
-                circleClassName={css.radioButtonCircle}
-                className={css.radioButtonLabel}
-                showAsRequired={true}
-                required={true}
-              />
-              <FieldRadioButton
-                id="Both"
-                name="planningType"
-                label={'Both'}
-                value="Both"
-                circleClassName={css.radioButtonCircle}
-                className={css.radioButtonLabel}
-                showAsRequired={true}
-                required={true}
-                validate={planRequired}
-              />
-            </div> */}
+            <div className={css.radioButtonRowInterestedPatch}>
+              {_interestedPatches.map((val, index) => (
+                <FieldRadioButton
+                  id={val.id}
+                  name={val.name}
+                  label={val.id}
+                  value={val.id}
+                  circleClassName={css.radioButtonCircle}
+                  className={css.radioButtonInterestedPatch}
+                  key={index}
+                />
+              ))}
+            </div>
           </div>
 
           <div className={css.bottomWrapper}>
