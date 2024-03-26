@@ -18,6 +18,7 @@ import hotPatchMobile2 from './images/sliderMobile/hero 222.jpg';
 import hotPatchMobile3 from './images/sliderMobile/hero 333.jpg';
 import hotPatchMobile4 from './images/sliderMobile/hero 444.jpg';
 import hotPatchMobile5 from './images/sliderMobile/hero 555.jpg';
+import IconHourGlass from '../LocationAutocompleteInput/IconHourGlass';
 
 const expertArr = [hotPatch4, hotPatch1, hotPatch5, hotPatch3, hotPatch2];
 const mobileExpertArr = [
@@ -43,7 +44,7 @@ const SectionHero = props => {
       else setImageArr(expertArr);
     });
 
-const classes = classNames(rootClassName || css.root, className);
+  const classes = classNames(rootClassName || css.root, className);
   const makeSpaceWork = (
     <span className={css.bold}>
       <FormattedMessage id="SectionHero.subTitleBold" />
@@ -81,13 +82,20 @@ const classes = classNames(rootClassName || css.root, className);
         </h2>
 
         <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerDesktop)}>
-          <NamedLink
+          {/* <NamedLink
             className={css.heroButtonPink}
             name="SearchPage"
             to={{ search: 'address=&bounds=59.49417013%2C4.15978193%2C49.54972301%2C-10.51994741' }}
           >
             <FormattedMessage id="SectionHero.browseButton" />
-          </NamedLink>
+          </NamedLink> */}
+          <div className={css.searchBar}>
+            <button className={classNames(css.catSearch, css.searchBarBtns)}>
+              What are you searching for
+            </button>
+            <button className={classNames(css.filterSearch, css.searchBarBtns)}>Location</button>{' '}
+            <IconHourGlass />
+          </div>
         </div>
       </div>
 
