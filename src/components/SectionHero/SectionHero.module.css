@@ -214,6 +214,8 @@
 
   @media (--viewportSmall) {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -422,9 +424,15 @@
   font-weight: 500;
   padding: 0px 20px;
   cursor: pointer;
+  margin: 0 !important;
 }
 .catSearch {
   border-right: 1px solid #2525255f;
 }
-.filterSearch {
+.searchFiltersMobile {
+  padding: 16px 24px;
+
+  @media (--viewportMedium) {
+    display: none;
+  }
 }
