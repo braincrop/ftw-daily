@@ -8,7 +8,7 @@ export const _interestedPatches = [
     name: 'interestedPatches',
   },
   {
-    id: 'Coworking % Office',
+    id: 'Coworking & Office',
     name: 'interestedPatches',
   },
   {
