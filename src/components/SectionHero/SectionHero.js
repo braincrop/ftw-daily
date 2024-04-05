@@ -464,6 +464,7 @@ const SectionHero = props => {
                   onOpenCategoryFilter={onOpenCategoryFilter}
                   isCategoryFilterEnabled={isCategoryFilterEnabled}
                   setSelectedCategoriesLength={setSelectedCategoriesLengthFunc}
+                  isFromLandingPageSearch={true}
                 />
               );
             })}
