@@ -6,7 +6,9 @@
   background-color: var(--matterColorBright);
   position: relative;
 }
-
+.rootLanding {
+  position: absolute;
+}
 .longInfo {
   flex-wrap: wrap;
 }
@@ -47,7 +49,8 @@
   margin-bottom: 16px;
 }
 
-.searchResultSummary, .catTxtDiv{
+.searchResultSummary,
+.catTxtDiv {
   @apply --marketplaceH4FontStyles;
   line-height: 20px;
   margin-top: 10px;
@@ -92,7 +95,8 @@
   }
 }
 
-.resultsFound, .catTxtSpan{
+.resultsFound,
+.catTxtSpan {
   white-space: nowrap;
 }
 
@@ -132,22 +136,27 @@
   border: 1px solid var(--marketplaceColor);
 
   /* &:focus, */
-  &:hover, 
+  &:hover,
   &:focus {
     border: 1px solid var(--marketplaceColorDark);
     background: var(--marketplaceColorDark);
   }
 }
 
-
 .categoryBtn {
-
 }
 
 .categoryItemsWrapper {
   position: absolute;
   left: -44px;
   top: 42px;
+  z-index: 2;
+  width: 680px;
+}
+.categoryItemsWrapperLanding {
+  position: absolute;
+  left: 0;
+  top: 55px;
   z-index: 2;
   width: 680px;
 }
@@ -170,7 +179,7 @@
   @apply --marketplaceSearchFilterSublabelFontStyles;
   margin: 0 0 17px;
   line-height: 27px;
-  
+
   & svg {
     cursor: pointer;
   }
@@ -193,8 +202,7 @@
     margin-right: 0;
   }
 
-
-  &:nth-child(-n+4) {
+  &:nth-child(-n + 4) {
     margin-bottom: 50px;
   }
 
@@ -205,7 +213,6 @@
 }
 
 .categoryItemSelected {
-  
 }
 
 .active {
@@ -218,7 +225,7 @@
     background: var(--marketplaceColor);
     color: var(--matterColorLight);
   }
-  
+
   &:hover {
     border: 1px solid var(--marketplaceColorDark);
     background: var(--marketplaceColorDark);

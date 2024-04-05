@@ -80,7 +80,12 @@ const FilterFormComponent = props => {
           >
             {isCategory ? (
               <div>
-                <div className={classNames(css.subcategoryHeading, {[css.subcategoryHeading]: isSubCategoryOpen})} onClick={toggleIsSubCategoryOpen}>
+                <div
+                  className={classNames(css.subcategoryHeading, {
+                    [css.subcategoryHeading]: isSubCategoryOpen,
+                  })}
+                  onClick={toggleIsSubCategoryOpen}
+                >
                   <span className={css.subcategoryHeadingDesktop}>
                     <FormattedMessage id="FilterForm.patchCategory" />
                   </span>
@@ -96,11 +101,18 @@ const FilterFormComponent = props => {
                   <>
                     <div className={css.subcategorySubHeading}>
                       <FormattedMessage id="FilterForm.subcategory" />
-                      <button className={css.subcategoryClearButton} type="button" onClick={onClear}>
+                      <button
+                        className={css.subcategoryClearButton}
+                        type="button"
+                        style={props.isFromLandingPageSearch ? { display: 'none' } : {}}
+                        onClick={onClear}
+                      >
                         <FormattedMessage id="FilterForm.reset" />
                       </button>
                     </div>
-                    <div className={classNames(paddingClasses || css.contentWrapper)}>{children}</div>
+                    <div className={classNames(paddingClasses || css.contentWrapper)}>
+                      {children}
+                    </div>
                   </>
                 )}
               </div>
@@ -136,6 +148,7 @@ FilterFormComponent.defaultProps = {
   onCancel: null,
   onChange: null,
   onClear: null,
+  isFromLandingPageSearch: false,
   onSubmit: null,
 };
 
@@ -147,6 +160,7 @@ FilterFormComponent.propTypes = {
   onSubmit: func,
   style: object,
   children: node.isRequired,
+  isFromLandingPageSearch: bool,
 
   // form injectIntl
   intl: intlShape.isRequired,
