@@ -492,23 +492,16 @@ const SectionHero = props => {
       </div>
 
       <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerMobile)}>
-        {/* <NamedLink
+        <NamedLink
           className={css.heroButtonPink}
           name="SearchPage"
           to={{ search: 'address=&bounds=59.49417013%2C4.15978193%2C49.54972301%2C-10.51994741' }}
         >
           <FormattedMessage id="SectionHero.browseButton" />
-        </NamedLink> */}
-        {/* <NamedLink
-            className={css.heroButtonPink}
-            name="SearchPage"
-            to={{ search: 'address=&bounds=59.49417013%2C4.15978193%2C49.54972301%2C-10.51994741' }}
-          >
-            <FormattedMessage id="SectionHero.browseButton" />
-          </NamedLink> */}
+        </NamedLink>
 
         {/* Search Bar open*/}
-        <button
+        {/* <button
           className={css.searchBar}
           onClick={() => onOpenCategoryFilter()}
           disabled={isCategoryFilterOpen}
@@ -564,7 +557,7 @@ const SectionHero = props => {
               />
             );
           })}
-        </SearchFiltersMobile>
+        </SearchFiltersMobile> */}
       </div>
     </div>
   );
