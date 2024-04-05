@@ -48,7 +48,7 @@ const SearchFiltersPrimaryComponent = props => {
     </button>
   ) : null;
 
-  console.log('child: ', children);
+  // console.log('child: ', children);
   const nonCategoryChildren = children.filter(c => !c.props.isCategory);
   const categoryChildren = children.filter(c => c.props.isCategory);
   const categoriesText = (
@@ -104,7 +104,6 @@ const SearchFiltersPrimaryComponent = props => {
 
                   <div className={css.categoryItemsHolder}>
                     {categoryChildren.map((category, i) => {
-                      console.log('category', category);
                       return <React.Fragment key={`category-${i}`}>{category}</React.Fragment>;
                     })}
                   </div>
