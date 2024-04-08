@@ -52,6 +52,8 @@ const TopbarDesktop = props => {
   const [category, setCategory] = useState('Categories');
   const [genCats, setGenCats] = useState(generalCategories);
 
+  console.log('search Cat:', categories);
+
   function createSearchBar() {
     const catKeys =
       category && category !== 'Categories'
@@ -253,7 +255,8 @@ const TopbarDesktop = props => {
           alt={intl.formatMessage({ id: 'TopbarDesktop.logo' })}
         />
       </NamedLink>
-      {search}
+      {/* {search} */}
+      <div style={{ width: '60%' }} />
       {categoriesBtn}
       <NamedLink className={css.createListingLink} name="NewListingPage">
         <span className={css.createListing}>

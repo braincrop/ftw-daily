@@ -45,6 +45,7 @@
   position: absolute;
   top: 16%;
   left: 24px;
+  width: 600px !important;
 
   @media (--viewportSmall) {
     top: 15%;
@@ -210,7 +211,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  max-width: 450px;
+  max-width: 600px;
 
   @media (--viewportSmall) {
     display: flex;
@@ -228,9 +229,11 @@
   margin-top: 15px;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 24px;
+  padding: 4px;
+  padding-top: 10px;
   background: var(--matterColorLight);
 
   @media (--viewportSmall) {
@@ -414,20 +417,22 @@
   background-color: #fff;
   border: 2px solid #5cbfcc;
   border-radius: 50px;
-  padding: 10px 5px;
+  padding: 10px 0px;
+  width: 100%;
 }
 
 .searchBarBtns {
-  font-size: 16px;
+  font-size: 14px;
   color: #252525;
   border-width: 0;
   font-weight: 500;
-  padding: 0px 20px;
+  padding: 0px 10px;
   cursor: pointer;
   margin: 0 !important;
 }
 .catSearch {
-  border-right: 1px solid #2525255f;
+  /* border-right: 1px solid #2525255f; */
+  width: 40%;
 }
 .searchFiltersMobile {
   padding: 16px 24px;
@@ -435,4 +440,177 @@
   @media (--viewportMedium) {
     display: none;
   }
+}
+
+.desktopPredictions {
+  position: absolute;
+  width: 100%;
+  padding-bottom: var(--locationAutocompleteBottomPadding);
+  top: 50px;
+  left: 0;
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  margin-top: calc(
+    var(--topbarHeightDesktop) - var(--TopbarSearchForm_inputHeight) +
+      var(--TopbarSearchForm_bottomBorder)
+  );
+  max-width: 434px;
+}
+
+.mobilePredictions {
+  position: absolute;
+  top: calc(var(--TopbarSearchForm_inputHeight) - var(--TopbarSearchForm_bottomBorder) + 18px);
+  left: 0;
+  min-height: calc(
+    100vh -
+      calc(
+        var(--TopbarSearchForm_topbarMargin) + var(--TopbarSearchForm_inputHeight) -
+          var(--TopbarSearchForm_bottomBorder) - 18px
+      )
+  );
+  width: 100%;
+  padding-bottom: var(--locationAutocompleteBottomPadding);
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+}
+
+.mobilePredictionsAttribution {
+  /* When using the Google Maps Places geocoder, the "Powered by Google"
+   text is hidden in Mobile Safari without giving some extra space to
+   it. */
+  margin-bottom: 100px;
+}
+
+.mobileIcon {
+  margin-left: 24px;
+  padding: 11px 0 0 8px;
+
+  /* Borders */
+  border-bottom-width: var(--borderRadiusMobileSearch);
+  border-bottom-style: solid;
+  border-bottom-color: var(--marketplaceColor);
+  display: flex;
+  min-width: 26px;
+  align-self: stretch;
+  background-color: var(--matterColorLight);
+}
+
+.desktopIcon {
+  /*height: var(--topbarHeightDesktop);*/
+  border: none;
+  /* padding-top: 3px; */
+
+  display: flex;
+  width: 24px;
+  align-self: stretch;
+  background-color: var(--matterColorLight);
+}
+.mobileInput {
+  flex-grow: 1;
+
+  /* Font */
+  @apply --marketplaceH1FontStyles;
+
+  /* Layout */
+  margin: 0 24px 0 0;
+  padding: 11px 13px 13px;
+  height: var(--TopbarSearchForm_inputHeight);
+  line-height: unset;
+
+  /* Borders */
+  border-bottom-width: var(--borderRadiusMobileSearch);
+
+  &::-moz-placeholder {
+    color: #82888a;
+  }
+  &:-moz-placeholder {
+    /* Firefox 18- */
+    color: #82888a;
+  }
+  &::placeholder {
+    padding-top: 10px;
+    line-height: 24px;
+    font-weight: var(--fontWeightRegular);
+    font-size: 22px;
+  }
+  &:hover,
+  &:focus {
+    border-bottom-color: var(--marketplaceColor);
+    outline: none;
+  }
+}
+@-moz-document url-prefix() {
+  .mobileInput {
+    padding: 19px 13px 13px;
+  }
+}
+
+.desktopInput {
+  flex-grow: 1;
+  /* Font */
+  @apply --marketplaceH4FontStyles;
+  /*height: var(--topbarHeightDesktop);*/
+  line-height: unset;
+  border: none;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 8px;
+
+  /* Search text gets ellipsis if it's too wide */
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+
+  &:hover,
+  &:focus {
+    border-bottom-color: var(--marketplaceColor);
+    outline: none;
+  }
+
+  &:hover::placeholder,
+  &:focus::placeholder {
+    color: var(--matterColor);
+  }
+
+  /* Placeholder text might be too wide */
+  &::placeholder {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    font-weight: var(--fontWeightMedium);
+    transition: var(--transitionStyleButton);
+  }
+
+  margin-top: 0;
+  margin-bottom: 0;
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: var(--fontWeightSemiBold);
+  }
+}
+.searchLink {
+  flex-grow: 1;
+  height: 100%;
+  margin-right: 4px;
+  border-left: 0.5px solid var(--matterColorNegative);
+  display: flex;
+  /* padding: 16px 0 16px 12px; */
+
+  @media (--viewportLarge) {
+    /* margin-right: 12px; */
+    /* padding: 16px 0 16px 32px; */
+  }
+}
+
+.topbarSearchWithLeftPadding {
+  width: 100%;
+  max-width: 300px;
+  height: 100%;
+  /* border-bottom: 2px solid var(--customDarkBlue); */
 }

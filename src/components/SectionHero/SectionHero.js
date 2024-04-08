@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { oneOf, shape, string } from 'prop-types';
+import { object, oneOf, shape, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 import {
@@ -9,7 +9,7 @@ import {
   SearchFiltersPrimary,
 } from '../../components';
 import Slider from 'react-slick';
-
+import swal from 'sweetalert2';
 import css from './SectionHero.module.css';
 
 import hotPatch1 from './images/newSlider/Hero 11.jpg';
@@ -36,6 +36,8 @@ import routeConfiguration from '../../routeConfiguration';
 import { manageDisableScrolling } from '../../ducks/UI.duck';
 import { useDispatch } from 'react-redux';
 import { isAnyFilterActive } from '../../util/search';
+import { TopbarSearchForm } from '../../forms';
+import { filters } from '../../marketplace-custom-config';
 
 const expertArr = [hotPatch4, hotPatch1, hotPatch5, hotPatch3, hotPatch2];
 const mobileExpertArr = [
@@ -58,7 +60,10 @@ let defaultLocation = {
 
 const SectionHero = props => {
   const { rootClassName, className } = props;
+  const { categories } = config.custom;
+
   const dispatch = useDispatch();
+  // const predictionsClass = classNames(predictionsClassName);
 
   const filterConfig = props.filterConfig;
   const { ...searchInURL } = parse(defaultLocation.search, {
@@ -73,6 +78,14 @@ const SectionHero = props => {
   // const [selectedCategoriesLength, setSelectedCategoriesLength] = useState(0);
   const [currentActiveCategory, setCurrentActiveCategory] = useState(null);
   const [currentQueryParams, setCurrentQueryParams] = useState(urlQueryParams);
+  const [category, setCategory] = useState('Categories');
+  const [selectedMainCategory, setSelectedMainCategory] = useState(null);
+  const [SearchQueryData, setSearchQueryData] = useState({
+    pub_category: '',
+    address: '',
+    bounds: {},
+  });
+
   const [isSearchMapOpenOnMobile, setIsSearchMapOpenOnMobile] = useState(props.tab === 'map');
   let selectedCategoriesLength = null;
   //! Search Bar Working
@@ -89,9 +102,68 @@ const SectionHero = props => {
   const isAmenitiesFilterEnabled =
     searchParamsForPagination && !!searchParamsForPagination.pub_amenities;
 
-  // const categoryChildren = filterConfig.filter(c => c.props.isCategory);
+  //Location Search
 
-  // console.log('Section Hero props => ', selectedCategoriesLength);
+  const { address, origin, bounds } = parse(props.location.search, {
+    latlng: ['origin'],
+    latlngBounds: ['bounds'],
+  });
+  const locationFieldsPresent = config.sortSearchByDistance
+    ? address && origin && bounds
+    : address && bounds;
+  const initialSearchFormValues = {
+    location: locationFieldsPresent
+      ? {
+          search: address,
+          selectedPlace: { address, origin, bounds },
+        }
+      : null,
+  };
+
+  function handleSubmit(values) {
+    const { currentSearchParams } = props;
+    const { search, selectedPlace } = values.location;
+    const { categories } = values;
+    const { origin, bounds } = selectedPlace;
+    const originMaybe = config.sortSearchByDistance ? { origin } : {};
+    let searchParams = {
+      ...currentSearchParams,
+      ...originMaybe,
+      address: search,
+      bounds,
+    };
+    if (categories) {
+      searchParams['pub_category'] = categories;
+    }
+    // console.log('search Location:', searchParams);
+
+    setSearchQueryData(prev => ({
+      ...prev,
+      address: searchParams.address,
+      bounds: searchParams.bounds,
+    }));
+    // history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams));
+  }
+
+  function createSearchBar() {
+    const catKeys =
+      category && category !== 'Categories'
+        ? categories.find(cat => cat.label === category).config.catKeys
+        : '';
+
+    return (
+      <TopbarSearchForm
+        className={css.searchLink}
+        desktopInputRoot={css.topbarSearchWithLeftPadding}
+        onSubmit={handleSubmit}
+        initialValues={initialSearchFormValues}
+        // dropdown={topbarDropDown}
+        selectedCategories={catKeys}
+        isFromLandingPageSearch={true}
+      />
+    );
+  }
+  let search = createSearchBar();
 
   const cleanSearchFromConflictingParams = (searchParams, sortConfig, filterConfig) => {
     // Single out filters that should disable SortBy when an active
@@ -293,18 +365,30 @@ const SectionHero = props => {
           const searchParams = { ...updatedURLParams, ...currentQueryParams };
           const search = cleanSearchFromConflictingParams(searchParams, sortConfig, filterConfig);
 
-          !isMobileLayout &&
-            history.push(
-              createResourceLocatorString(
-                'SearchPage',
-                routeConfiguration(),
-                {},
-                !!selectedCategoriesLength && !!search?.pub_category
-                  ? search
-                  : delete search.pub_category
-              )
-            );
-          history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, search));
+          // console.log('search Cat:', search);
+
+          setSearchQueryData(prev => ({
+            ...prev,
+            pub_category: search.pub_category,
+          }));
+
+          const _selectedMainCat = primaryFilters.find(
+            c => c.config.isCategory && _pubCat.pub_category === c.id
+          );
+          setSelectedMainCategory(_selectedMainCat);
+
+          // !isMobileLayout &&
+          // history.push(
+          //   createResourceLocatorString(
+          //     'SearchPage',
+          //     routeConfiguration(),
+          //     {},
+          //     !!selectedCategoriesLength && !!search?.pub_category
+          //       ? search
+          //       : delete search.pub_category
+          //   )
+          // );
+          // history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, search));
         }
       };
       // this.setState(updater, callback);
@@ -340,7 +424,7 @@ const SectionHero = props => {
     !!queryParams?.pub_pricePerDayFilter && delete queryParams.pub_pricePerDayFilter;
     !!queryParams?.pub_pricePerWeekFilter && delete queryParams.pub_pricePerWeekFilter;
     !!queryParams?.pub_pricePerMonthFilter && delete queryParams.pub_pricePerMonthFilter;
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
+    // history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
   }
   function onOpenCategoryFilter() {
     setIsCategoryFilterOpen(!isCategoryFilterOpen);
@@ -389,6 +473,53 @@ const SectionHero = props => {
     pauseOnHover: false,
   };
 
+  console.log('SearchQueryData:', SearchQueryData);
+
+  const handleSearchLanding = () => {
+    const { history } = props;
+    const { address, bounds, pub_category } = SearchQueryData;
+    if (address === '' || bounds == {}) {
+      swal.fire({
+        title: 'Please select Location.',
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `,
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `,
+        },
+      });
+    } else if (pub_category == '') {
+      swal.fire({
+        title: 'Please select Category.',
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `,
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `,
+        },
+      });
+    } else {
+      history.push(
+        createResourceLocatorString('SearchPage', routeConfiguration(), {}, SearchQueryData)
+      );
+    }
+  };
   return (
     <div className={classes}>
       <Slider className={css.slider} {...settings}>
@@ -418,17 +549,27 @@ const SectionHero = props => {
           </NamedLink> */}
 
           {/* Search Bar open*/}
-          <button
+          <div
             className={css.searchBar}
-            onClick={() => onOpenCategoryFilter()}
-            disabled={isCategoryFilterOpen}
+            // onClick={() => onOpenCategoryFilter()}
+            // disabled={isCategoryFilterOpen}
           >
-            <h4 className={classNames(css.catSearch, css.searchBarBtns)}>
-              What are you searching for
-            </h4>
-            <h4 className={classNames(css.filterSearch, css.searchBarBtns)}>Location</h4>{' '}
-            <IconHourGlass />
-          </button>
+            <button
+              onClick={() => onOpenCategoryFilter()}
+              disabled={isCategoryFilterOpen}
+              className={classNames(css.catSearch, css.searchBarBtns)}
+            >
+              {selectedMainCategory == null
+                ? 'What are you searching for'
+                : selectedMainCategory.label}
+            </button>
+            {/* <h4 className={classNames(css.filterSearch, css.searchBarBtns)}>Location</h4>{' '} */}
+            {search}
+
+            <div style={{ width: '7%', cursor: 'pointer' }} onClick={() => handleSearchLanding()}>
+              <IconHourGlass />
+            </div>
+          </div>
 
           <SearchFiltersPrimary
             className={css.searchFiltersPrimary}
@@ -469,6 +610,16 @@ const SectionHero = props => {
               );
             })}
           </SearchFiltersPrimary>
+          {/* <LocationPredictionsList
+            rootClassName={predictionsClass}
+            attributionClassName={predictionsAttributionClassName}
+            predictions={predictions}
+            geocoder={this.getGeocoder()}
+            highlightedIndex={this.state.highlightedIndex}
+            onSelectStart={this.handlePredictionsSelectStart}
+            onSelectMove={this.handlePredictionsSelectMove}
+            onSelectEnd={this.handlePredictionsSelectEnd}
+          /> */}
 
           {/* Search Bar closed */}
 
@@ -492,25 +643,26 @@ const SectionHero = props => {
         </div>
       </div>
 
-      <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerMobile)}>
-        <NamedLink
+      {/* <NamedLink
           className={css.heroButtonPink}
           name="SearchPage"
           to={{ search: 'address=&bounds=59.49417013%2C4.15978193%2C49.54972301%2C-10.51994741' }}
         >
           <FormattedMessage id="SectionHero.browseButton" />
-        </NamedLink>
 
-        {/* Search Bar open*/}
-        {/* <button
+        </NamedLink> */}
+      {/* Search Bar open*/}
+
+      {/* <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerMobile)}>
+        <button
           className={css.searchBar}
           onClick={() => onOpenCategoryFilter()}
           disabled={isCategoryFilterOpen}
         >
-          <h4 className={classNames(css.catSearch, css.searchBarBtns)}>
+          <h5 className={classNames(css.catSearch, css.searchBarBtns)}>
             What are you searching for
-          </h4>
-          <h4 className={classNames(css.filterSearch, css.searchBarBtns)}>Location</h4>{' '}
+          </h5>
+          <h5 className={classNames(css.filterSearch, css.searchBarBtns)}>Location</h5>{' '}
           <IconHourGlass />
         </button>
         <SearchFiltersMobile
@@ -533,6 +685,7 @@ const SectionHero = props => {
           currentActiveCategory={currentActiveCategory}
           initialValues={initialValues}
           filterConfig={filterConfig}
+          isFromLandingPageSearch={true}
         >
           {filterConfig.map(config => {
             return (
@@ -558,8 +711,8 @@ const SectionHero = props => {
               />
             );
           })}
-        </SearchFiltersMobile> */}
-      </div>
+        </SearchFiltersMobile>
+    </div> */}
     </div>
   );
 };
@@ -569,6 +722,7 @@ SectionHero.defaultProps = {
   className: null,
   filterConfig: config.custom.filters,
   sortConfig: config.custom.sortConfig,
+  currentSearchParams: null,
   tab: 'listings',
 };
 
@@ -577,6 +731,7 @@ SectionHero.propTypes = {
   className: string,
   filterConfig: propTypes.filterConfig,
   sortConfig: propTypes.sortConfig,
+  currentSearchParams: object,
   location: shape({
     search: string.isRequired,
   }).isRequired,
