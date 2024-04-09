@@ -82,7 +82,7 @@ const SectionHero = props => {
   const [selectedMainCategory, setSelectedMainCategory] = useState(null);
   const [SearchQueryData, setSearchQueryData] = useState({
     pub_category: '',
-    address: '',
+    address: 'World Wide',
     bounds: {},
   });
 
@@ -473,30 +473,12 @@ const SectionHero = props => {
     pauseOnHover: false,
   };
 
-  // console.log('SearchQueryData:', SearchQueryData);
+  console.log('SearchQueryData:', SearchQueryData);
 
   const handleSearchLanding = () => {
     const { history } = props;
     const { address, bounds, pub_category } = SearchQueryData;
-    if (address === '' || bounds == {}) {
-      swal.fire({
-        title: 'Please select Location.',
-        showClass: {
-          popup: `
-            animate__animated
-            animate__fadeInUp
-            animate__faster
-          `,
-        },
-        hideClass: {
-          popup: `
-            animate__animated
-            animate__fadeOutDown
-            animate__faster
-          `,
-        },
-      });
-    } else if (pub_category == '') {
+    if (pub_category == '') {
       swal.fire({
         title: 'Please select Category.',
         showClass: {

@@ -52,7 +52,7 @@ const TopbarDesktop = props => {
   const [category, setCategory] = useState('Categories');
   const [genCats, setGenCats] = useState(generalCategories);
 
-  console.log('search Cat:', categories);
+  // console.log('search Cat:', categories);
 
   function createSearchBar() {
     const catKeys =

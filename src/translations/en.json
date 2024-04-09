@@ -969,12 +969,15 @@
   "SearchMapPriceLabel.pricePerMonth": "m",
   "SearchPage.schemaDescription": "Showing search results",
   "SearchPage.schemaMapSearch": "United Kingdom",
+  "SearchPage.schemaMapSearchWW": "World Wide",
 
   "SearchPage.schemaMetaTitle": "Rent Hair & Beauty, Wellness, Fitness, Photography, Film, Coworking, Office, Music, Arts, Events, Venues, Kitchens & Pop-up Space in {searchAddress} - {siteTitle}",
   "SearchPage.schemaTitle": "HotPatch is here to help you find space to rent for Hair & Beauty, Fitness, Photography & Film, and even more in {searchAddress} - {siteTitle}",
   "SearchPage.schemaTitleUK": "HotPatch is here to help you find space to rent for Hair & Beauty, Fitness, Photography & Film, and even more in the {searchAddress} - {siteTitle}",
+  "SearchPage.schemaTitleWW": "HotPatch is here to help you find space to rent for Hair & Beauty, Fitness, Photography & Film, and even more in the {address} - {siteTitle}",
 
   "SearchPage.schemaTitleNew": "{uniqueCategory} {article} in {searchAddress} - {siteTitle}",
+  "SearchPage.schemaTitleNewWW": "{uniqueCategory} {article} {searchAddress} - {siteTitle}",
 
   "SearchPage.schemaTitleNairBeauty": "Salon, Barber, Beauty, Aesthetics, Tattoo & Piercing Space to rent in {searchAddress} - {siteTitle}",
   "SearchPage.schemaTitleWellness": "Therapy, Massage & Clinical Room to rent in {searchAddress} - {siteTitle}",
