@@ -69,14 +69,15 @@
   &::-moz-placeholder {
     color: #82888a;
   }
-  &:-moz-placeholder { /* Firefox 18- */
+  &:-moz-placeholder {
+    /* Firefox 18- */
     color: #82888a;
   }
   &::placeholder {
-     padding-top: 10px;
-     line-height: 24px;
-     font-weight: var(--fontWeightRegular);
-     font-size: 22px;
+    padding-top: 10px;
+    line-height: 24px;
+    font-weight: var(--fontWeightRegular);
+    font-size: 22px;
   }
   &:hover,
   &:focus {

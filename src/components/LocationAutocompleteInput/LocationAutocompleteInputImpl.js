@@ -135,6 +135,7 @@ const currentValue = props => {
   return { search, predictions, selectedPlace };
 };
 
+export { LocationPredictionsList };
 /*
   Location auto completion input component
 
@@ -454,6 +455,7 @@ class LocationAutocompleteInputImpl extends Component {
       input,
       meta,
       inputRef,
+      isFromLandingPageSearch,
     } = this.props;
     const { name, onFocus } = input;
     const { search } = currentValue(this.props);
@@ -478,13 +480,14 @@ class LocationAutocompleteInputImpl extends Component {
     const renderPredictions = this.state.inputHasFocus;
 
     return (
-      <div className={rootClass} style={{ display: 'none' }}>
+      <div className={rootClass}>
         <div className={iconClass}>
-          {this.state.fetchingPlaceDetails ? (
-            <IconSpinner className={css.iconSpinner} />
-          ) : (
-            <IconHourGlass />
-          )}
+          {!isFromLandingPageSearch &&
+            (this.state.fetchingPlaceDetails ? (
+              <IconSpinner className={css.iconSpinner} />
+            ) : (
+              <IconHourGlass />
+            ))}
         </div>
         <input
           className={inputClass}
