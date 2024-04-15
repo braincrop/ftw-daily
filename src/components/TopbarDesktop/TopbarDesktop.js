@@ -52,7 +52,7 @@ const TopbarDesktop = props => {
   const [category, setCategory] = useState('Categories');
   const [genCats, setGenCats] = useState(generalCategories);
 
-  // console.log('search Cat:', categories);
+  console.log('search Cat:', history.location.pathname === '/');
 
   function createSearchBar() {
     const catKeys =
@@ -71,7 +71,6 @@ const TopbarDesktop = props => {
       />
     );
   }
-
   let search;
   const onDropDownClick = selectedText => {
     const locationParams =
@@ -255,8 +254,7 @@ const TopbarDesktop = props => {
           alt={intl.formatMessage({ id: 'TopbarDesktop.logo' })}
         />
       </NamedLink>
-      {/* {search} */}
-      <div style={{ width: '60%' }} />
+      {history.location.pathname === '/' ? <div style={{ width: '60%' }} /> : search}
       {categoriesBtn}
       <NamedLink className={css.createListingLink} name="NewListingPage">
         <span className={css.createListing}>
