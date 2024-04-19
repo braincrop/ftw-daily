@@ -2,7 +2,7 @@ import React from 'react';
 import { bool, func, node, number, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { OutsideClickHandler, IconCloseCustom } from '../../components';
+import { OutsideClickHandler, IconCloseCustom, InlineTextButton } from '../../components';
 
 import css from './SearchFiltersPrimary.module.css';
 import { Classnames } from 'react-alice-carousel';
@@ -24,6 +24,7 @@ const SearchFiltersPrimaryComponent = props => {
     isCategoryFilterOpen,
     isCategoryFilterEnabled,
     isFromLandingPageSearch,
+    getHandleChangedValueFn,
   } = props;
 
   const hasNoResult = listingsAreLoaded && resultsCount === 0;
@@ -97,6 +98,13 @@ const SearchFiltersPrimaryComponent = props => {
                 <div className={css.categoryItems}>
                   <h3 className={css.categoryItemsTitle}>
                     <FormattedMessage id="SearchFiltersPrimary.categories" />
+                    {/* <button
+                      // style={props.isFromLandingPageSearch ? { display: 'none' } : {}}
+                      className={css.submitLandingSearchButton}
+                      onClick={isFromLandingPageSearch && getHandleChangedValueFn(true)}
+                    >
+                      Apply
+                    </button> */}
                     <div onClick={onCloseCategoryFilter}>
                       <IconCloseCustom />
                     </div>
@@ -142,6 +150,7 @@ SearchFiltersPrimaryComponent.defaultProps = {
   toggleSecondaryFiltersOpen: null,
   selectedSecondaryFiltersCount: 0,
   sortByComponent: null,
+  getHandleChangedValueFn: null,
   isFromLandingPageSearch: false,
 };
 
@@ -156,6 +165,7 @@ SearchFiltersPrimaryComponent.propTypes = {
   selectedSecondaryFiltersCount: number,
   sortByComponent: node,
   isFromLandingPageSearch: bool,
+  getHandleChangedValueFn: func,
 };
 
 const SearchFiltersPrimary = SearchFiltersPrimaryComponent;

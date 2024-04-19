@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { node, string } from 'prop-types';
 import classNames from 'classnames';
 import { Field } from 'react-final-form';
@@ -49,12 +49,17 @@ const FieldCheckboxComponent = props => {
     ...rest
   } = props;
 
+  const [selectedCategories, setSelectedCategories] = useState({});
   const classes = classNames(rootClassName || css.root, className);
 
   // This is a workaround for a bug in Firefox & React Final Form.
   // https://github.com/final-form/react-final-form/issues/134
   const handleOnChange = (input, event) => {
     const { onBlur, onChange } = input;
+
+    // console.log('input', input);
+
+    setSelectedCategories(input);
     onChange(event);
     onBlur(event);
   };
@@ -65,11 +70,14 @@ const FieldCheckboxComponent = props => {
         boxClassName: css.boxSuccess,
       }
     : {};
-  
-    const imgSrc = isCategory && Object.entries(subCategoryImage).filter(el => el[0] === labelImg).map(img => {
-      return img[1]
-    })
 
+  const imgSrc =
+    isCategory &&
+    Object.entries(subCategoryImage)
+      .filter(el => el[0] === labelImg)
+      .map(img => {
+        return img[1];
+      });
 
   return (
     <span className={classes}>
@@ -87,7 +95,6 @@ const FieldCheckboxComponent = props => {
         }}
       </Field>
       <label htmlFor={id} className={css.label}>
-
         <span className={css.checkboxWrapper}>
           <IconCheckbox className={svgClassName} {...successColorVariantMaybe} />
         </span>

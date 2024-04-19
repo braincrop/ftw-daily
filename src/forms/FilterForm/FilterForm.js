@@ -99,8 +99,22 @@ const FilterFormComponent = props => {
                 </div>
                 {(!isMobileLayout || isSubCategoryOpen) && (
                   <>
-                    <div className={css.subcategorySubHeading}>
-                      <FormattedMessage id="FilterForm.subcategory" />
+                    <div
+                      className={
+                        props.isFromLandingPageSearch
+                          ? `${css.subcategorySubHeadingLanding}  ${css.subcategorySubHeading}`
+                          : css.subcategorySubHeading
+                      }
+                    >
+                      <FormattedMessage
+                        isFromLandingPageSearch={props.isFromLandingPageSearch}
+                        id={`${
+                          props.isFromLandingPageSearch
+                            ? 'FilterForm.subcategoryLandingSearch'
+                            : 'FilterForm.subcategory'
+                        }`}
+                      />
+                      <span style={{ color: '#b2b2b2' }}>&nbsp;(Optional)</span>
                       <button
                         className={css.subcategoryClearButton}
                         type="button"
@@ -127,11 +141,17 @@ const FilterFormComponent = props => {
                 <button className={css.clearButton} type="button" onClick={onClear}>
                   {clear}
                 </button>
+                <button
+                  // style={props.isFromLandingPageSearch ? { display: 'none' } : {}}
+                  className={
+                    props.isFromLandingPageSearch ? css.submitLandingSearchButton : css.submitButton
+                  }
+                  type="submit"
+                >
+                  {submit}
+                </button>
                 <button className={css.cancelButton} type="button" onClick={handleCancel}>
                   {isCategory ? <IconCloseCustom /> : cancel}
-                </button>
-                <button className={css.submitButton} type="submit">
-                  {submit}
                 </button>
               </div>
             )}

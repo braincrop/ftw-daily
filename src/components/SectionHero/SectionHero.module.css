@@ -216,7 +216,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  max-width: 600px;
+  max-width: 475px;
 
   @media (--viewportSmall) {
     display: flex;
@@ -437,7 +437,8 @@
 }
 .catSearch {
   /* border-right: 1px solid #2525255f; */
-  width: 40%;
+  width: 47%;
+  text-align: left;
 }
 .searchFiltersMobile {
   padding: 16px 24px;

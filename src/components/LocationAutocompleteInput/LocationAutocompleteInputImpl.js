@@ -481,16 +481,19 @@ class LocationAutocompleteInputImpl extends Component {
 
     return (
       <div className={rootClass}>
-        <div className={iconClass}>
-          {!isFromLandingPageSearch &&
-            (this.state.fetchingPlaceDetails ? (
-              <IconSpinner className={css.iconSpinner} />
-            ) : (
-              <IconHourGlass />
-            ))}
+        <div style={isFromLandingPageSearch ? { display: 'none' } : {}} className={iconClass}>
+          {this.state.fetchingPlaceDetails ? (
+            <IconSpinner className={css.iconSpinner} />
+          ) : (
+            <IconHourGlass />
+          )}
         </div>
         <input
-          className={inputClass}
+          className={
+            isFromLandingPageSearch
+              ? `${inputClass} ${css.inputClassLandingPlaceHolder}`
+              : inputClass
+          }
           type="search"
           autoComplete="off"
           autoFocus={autoFocus}

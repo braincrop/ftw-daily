@@ -50,6 +50,7 @@ const FieldRadioButtonComponent = props => {
     showAsRequired,
     circleClassName,
     required,
+    labelCss,
     ...rest
   } = props;
 
@@ -74,7 +75,7 @@ const FieldRadioButtonComponent = props => {
             showAsRequired={showAsRequired}
           />
         </span>
-        <span className={`${css.text} ${className}`}>{label}</span>
+        <span className={`${css.text} ${labelCss}`}>{label}</span>
       </label>
     </span>
   );
@@ -88,6 +89,7 @@ FieldRadioButtonComponent.defaultProps = {
   circleClassName: null,
   required: false,
   label: null,
+  labelCss: null,
 };
 
 FieldRadioButtonComponent.propTypes = {
@@ -97,6 +99,7 @@ FieldRadioButtonComponent.propTypes = {
   circleClassName: string,
   required: bool,
   checkedClassName: string,
+  labelCss: string,
 
   // Id is needed to connect the label with input.
   id: string.isRequired,
