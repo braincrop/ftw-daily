@@ -40,6 +40,8 @@ const FilterComponent = props => {
   const prefix = idPrefix || 'SearchPage';
   const componentId = `${prefix}.${id.toLowerCase()}`;
   const name = id.replace(/\s+/g, '-').toLowerCase();
+  // console.log('type:', type);
+
   switch (type) {
     case 'SelectSingleFilter': {
       return (

@@ -232,3 +232,43 @@
     color: var(--matterColorLight);
   }
 }
+
+.submitLandingSearchButton {
+  @apply --marketplaceH4FontStyles;
+  font-weight: var(--fontWeightMedium);
+  color: var(--marketplaceColor);
+
+  /* Layout */
+  margin: 0 0 0 19px;
+  padding: 0;
+
+  /* Override button styles */
+  outline: none;
+  border: none;
+  cursor: pointer;
+
+  &:focus,
+  &:hover {
+    color: var(--marketplaceColor);
+    transition: width var(--transitionStyleButton);
+  }
+}
+
+.submitLandingSearchButton {
+  position: absolute;
+  right: 40px;
+  top: 10px;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--customDarkBlue);
+  color: var(--customDarkBlue);
+  width: 120px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 15px;
+  line-height: 18px;
+  font-weight: var(--fontWeightBold);
+  margin-left: auto;
+}

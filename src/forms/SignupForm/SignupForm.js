@@ -323,6 +323,7 @@ const SignupFormComponent = props => (
                   value={val.id}
                   circleClassName={css.radioButtonCircle}
                   className={css.radioButtonInterestedPatch}
+                  labelCss={css.radioButtonInterestedPatchLabel}
                   key={index}
                 />
               ))}

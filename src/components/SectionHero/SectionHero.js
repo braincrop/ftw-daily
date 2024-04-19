@@ -211,6 +211,7 @@ const SectionHero = props => {
   function getHandleChangedValueFn(useHistoryPush) {
     const { sortConfig, history } = props;
 
+    // console.log('useHistoryPush', useHistoryPush);
     // history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, 'search'));
     return (updatedURLParams, filterConfigId) => {
       const updater = prevState => {
@@ -473,7 +474,7 @@ const SectionHero = props => {
     pauseOnHover: false,
   };
 
-  console.log('SearchQueryData:', SearchQueryData);
+  // console.log('SearchQueryData:', filterConfig);
 
   const handleSearchLanding = () => {
     const { history } = props;
@@ -542,7 +543,7 @@ const SectionHero = props => {
               className={classNames(css.catSearch, css.searchBarBtns)}
             >
               {selectedMainCategory == null
-                ? 'What are you searching for'
+                ? 'What are you searching for?'
                 : selectedMainCategory.label}
             </button>
             {/* <h4 className={classNames(css.filterSearch, css.searchBarBtns)}>Location</h4>{' '} */}
@@ -568,6 +569,7 @@ const SectionHero = props => {
             isCategoryFilterEnabled={isCategoryFilterEnabled}
             setSelectedCategoriesLength={setSelectedCategoriesLengthFunc}
             isFromLandingPageSearch={true}
+            getHandleChangedValueFn={getHandleChangedValueFn}
             // {...propsForSecondaryFiltersToggle}
           >
             {primaryFilters.map(config => {
