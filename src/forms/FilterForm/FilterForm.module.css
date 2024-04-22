@@ -176,6 +176,12 @@
   }
 }
 
+.LandingWrapper {
+  padding: 10px;
+  @media (--viewportSmall) {
+    padding: 0;
+  }
+}
 .subcategoryHeading {
   padding: 10px 0 16px;
   font-size: 16px;
@@ -187,6 +193,10 @@
   letter-spacing: 0;
   /* border-top: 1px solid var(--matterColorNegative); */
 
+  border-bottom: 1px solid var(--customDarkBlue);
+  @media (--viewportSmall) {
+    border-bottom-width: 0px;
+  }
   @media (--viewportMedium) {
     padding: 24px 39px;
     border-bottom: 1px solid var(--matterColorNegative);
@@ -273,9 +283,10 @@
 .activeCategory {
   color: var(--customDarkBlue);
   font-weight: 600;
-  margin-left: 2px;
   cursor: pointer;
-
+  @media (--viewportSmall) {
+    margin-left: 2px;
+  }
   &:after {
     content: '';
     display: inline-block;

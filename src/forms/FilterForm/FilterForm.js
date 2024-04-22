@@ -70,6 +70,7 @@ const FilterFormComponent = props => {
 
         const classes = classNames(css.root, { [css.subCategoryItem]: isCategory });
 
+        console.log('isFromLandingPageSearchMobile', children, props.isFromLandingPageSearchMobile);
         return (
           <Form
             id={id}
@@ -79,56 +80,60 @@ const FilterFormComponent = props => {
             style={{ ...style }}
           >
             {isCategory ? (
-              <div>
+              <div className={css.LandingWrapper}>
                 <div
                   className={classNames(css.subcategoryHeading, {
                     [css.subcategoryHeading]: isSubCategoryOpen,
                   })}
                   onClick={toggleIsSubCategoryOpen}
                 >
-                  <span className={css.subcategoryHeadingDesktop}>
-                    <FormattedMessage id="FilterForm.patchCategory" />
-                  </span>
-                  <span className={css.subcategoryHeadingMobile}>
-                    <FormattedMessage id="FilterForm.subcategory" />
-                    {!!selectedItemsCounter && ` • ${selectedItemsCounter}`}
-                  </span>
+                  <div className={css.LandingSubcategoryHeadingResp}>
+                    <span className={css.subcategoryHeadingDesktop}>
+                      <FormattedMessage id="FilterForm.patchCategory" />
+                    </span>
+                    <span className={css.subcategoryHeadingMobile}>
+                      <FormattedMessage id="FilterForm.patchCategory" />
+                      {!!selectedItemsCounter && ` • ${selectedItemsCounter}`}
+                    </span>
+                  </div>
                   <span className={css.activeCategory} onClick={closeSubCategory}>
                     {activeCategory}
                   </span>
                 </div>
-                {(!isMobileLayout || isSubCategoryOpen) && (
-                  <>
-                    <div
-                      className={
-                        props.isFromLandingPageSearch
-                          ? `${css.subcategorySubHeadingLanding}  ${css.subcategorySubHeading}`
-                          : css.subcategorySubHeading
-                      }
-                    >
-                      <FormattedMessage
-                        isFromLandingPageSearch={props.isFromLandingPageSearch}
-                        id={`${
+                {!isMobileLayout ||
+                  isSubCategoryOpen ||
+                  (props.isFromLandingPageSearch && (
+                    <>
+                      <div
+                        className={
                           props.isFromLandingPageSearch
-                            ? 'FilterForm.subcategoryLandingSearch'
-                            : 'FilterForm.subcategory'
-                        }`}
-                      />
-                      <span style={{ color: '#b2b2b2' }}>&nbsp;(Optional)</span>
-                      <button
-                        className={css.subcategoryClearButton}
-                        type="button"
-                        style={props.isFromLandingPageSearch ? { display: 'none' } : {}}
-                        onClick={onClear}
+                            ? `${css.subcategorySubHeadingLanding}  ${css.subcategorySubHeading}`
+                            : css.subcategorySubHeading
+                        }
                       >
-                        <FormattedMessage id="FilterForm.reset" />
-                      </button>
-                    </div>
-                    <div className={classNames(paddingClasses || css.contentWrapper)}>
-                      {children}
-                    </div>
-                  </>
-                )}
+                        <FormattedMessage
+                          isFromLandingPageSearch={props.isFromLandingPageSearch}
+                          id={`${
+                            props.isFromLandingPageSearch
+                              ? 'FilterForm.subcategoryLandingSearch'
+                              : 'FilterForm.subcategory'
+                          }`}
+                        />
+                        <span style={{ color: '#b2b2b2' }}>&nbsp;(Optional)</span>
+                        <button
+                          className={css.subcategoryClearButton}
+                          type="button"
+                          style={props.isFromLandingPageSearch ? { display: 'none' } : {}}
+                          onClick={onClear}
+                        >
+                          <FormattedMessage id="FilterForm.reset" />
+                        </button>
+                      </div>
+                      <div className={classNames(paddingClasses || css.contentWrapper)}>
+                        {children}
+                      </div>
+                    </>
+                  ))}
               </div>
             ) : (
               <div className={classNames(paddingClasses || css.contentWrapper)}>{children}</div>
@@ -169,6 +174,7 @@ FilterFormComponent.defaultProps = {
   onChange: null,
   onClear: null,
   isFromLandingPageSearch: false,
+  isFromLandingPageSearchMobile: false,
   onSubmit: null,
 };
 
@@ -181,6 +187,7 @@ FilterFormComponent.propTypes = {
   style: object,
   children: node.isRequired,
   isFromLandingPageSearch: bool,
+  isFromLandingPageSearchMobile: bool,
 
   // form injectIntl
   intl: intlShape.isRequired,

@@ -124,6 +124,7 @@ class FilterPopup extends Component {
       mainCategoriesImages,
       isCategoryFilterEnabled,
       isFromLandingPageSearch,
+      isFromLandingPageSearchMobile,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className, {
@@ -249,6 +250,7 @@ class FilterPopup extends Component {
                 activeCategory={label}
                 closeSubCategory={this.handleBlur}
                 isFromLandingPageSearch={isFromLandingPageSearch}
+                isFromLandingPageSearchMobile={isFromLandingPageSearchMobile}
               >
                 {children}
               </FilterForm>
@@ -269,6 +271,7 @@ FilterPopup.defaultProps = {
   contentPlacementOffset: 0,
   liveEdit: false,
   label: null,
+  isFromLandingPageSearchMobile: false,
   isFromLandingPageSearch: false,
   labelMaxWidth: null,
 };
@@ -287,6 +290,7 @@ FilterPopup.propTypes = {
   isSelected: bool.isRequired,
   children: node.isRequired,
   isFromLandingPageSearch: bool,
+  isFromLandingPageSearchMobile: bool,
 
   // form injectIntl
   intl: intlShape.isRequired,

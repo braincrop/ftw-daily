@@ -523,15 +523,6 @@ const SectionHero = props => {
         </h2>
 
         <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerDesktop)}>
-          {/* <NamedLink
-            className={css.heroButtonPink}
-            name="SearchPage"
-            to={{ search: 'address=&bounds=59.49417013%2C4.15978193%2C49.54972301%2C-10.51994741' }}
-          >
-            <FormattedMessage id="SectionHero.browseButton" />
-          </NamedLink> */}
-
-          {/* Search Bar open*/}
           <div
             className={css.searchBar}
             // onClick={() => onOpenCategoryFilter()}
@@ -546,12 +537,20 @@ const SectionHero = props => {
                 ? 'What are you searching for?'
                 : selectedMainCategory.label}
             </button>
-            {/* <h4 className={classNames(css.filterSearch, css.searchBarBtns)}>Location</h4>{' '} */}
+            <div className={css.filterSearchMobile} />
+
             {search}
 
-            <div style={{ width: '7%', cursor: 'pointer' }} onClick={() => handleSearchLanding()}>
+            <div
+              className={css.SearchBtnDesktop}
+              style={{ width: '7%', cursor: 'pointer' }}
+              onClick={() => handleSearchLanding()}
+            >
               <IconHourGlass />
             </div>
+            <button onClick={() => handleSearchLanding()} className={css.SearchBtnMobile}>
+              Search
+            </button>
           </div>
 
           <SearchFiltersPrimary
@@ -594,37 +593,67 @@ const SectionHero = props => {
               );
             })}
           </SearchFiltersPrimary>
-          {/* <LocationPredictionsList
-            rootClassName={predictionsClass}
-            attributionClassName={predictionsAttributionClassName}
-            predictions={predictions}
-            geocoder={this.getGeocoder()}
-            highlightedIndex={this.state.highlightedIndex}
-            onSelectStart={this.handlePredictionsSelectStart}
-            onSelectMove={this.handlePredictionsSelectMove}
-            onSelectEnd={this.handlePredictionsSelectEnd}
-          /> */}
-
-          {/* Search Bar closed */}
-
-          {/* <NamedLink
-            name="SearchPage"
-            to={{ search: locationParams + searchQuery }}
-            className={css.category}
-          >
-            <div className={css.imageWrapper}>
-              <div className={css.aspectWrapper}>
-                <LazyImage src={image} alt={name} className={css.categoryImage} />
-              </div>
-            </div>
-            <div className={css.linkText}>
-              <FormattedMessage
-                id="SectionPatchCategories.categoriesInLocation"
-                values={{ category: nameText }}
-              />
-            </div>
-          </NamedLink> */}
         </div>
+        {/* <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerMobile)}>
+          <div className={css.searchBarMobile} disabled={isCategoryFilterOpen}>
+            <button
+              className={classNames(css.catSearchMobile, css.searchBarBtnsMobile)}
+              onClick={() => onOpenCategoryFilter()}
+              disabled={isCategoryFilterOpen}
+            >
+              {selectedMainCategory == null
+                ? 'What are you searching for?'
+                : selectedMainCategory.label}
+            </button>
+            <div className={css.filterSearchMobile} />
+            {search}
+            <button onClick={() => handleSearchLanding()} className={css.SearchBtnMobile}>
+              Search
+            </button>
+          </div>
+          <SearchFiltersPrimary
+            className={css.searchFiltersPrimary}
+            sortByComponent={sortBy('desktop')}
+            // listingsAreLoaded={listingsAreLoaded}
+            // resultsCount={totalItems}
+            // searchInProgress={searchInProgress}
+            // searchListingsError={searchListingsError}
+            mainCategoriesImages={categoryImages.mainCategoriesImages}
+            subCategoriesImages={categoryImages.subCategoriesImages}
+            isCategoryFilterOpen={isCategoryFilterOpen}
+            onOpenCategoryFilter={onOpenCategoryFilter}
+            onCloseCategoryFilter={onCloseCategoryFilter}
+            isCategoryFilterEnabled={isCategoryFilterEnabled}
+            setSelectedCategoriesLength={setSelectedCategoriesLengthFunc}
+            isFromLandingPageSearch={true}
+            isFromLandingPageSearchMobile={true}
+            getHandleChangedValueFn={getHandleChangedValueFn}
+            // {...propsForSecondaryFiltersToggle}
+          >
+            {primaryFilters.map(config => {
+              return (
+                <FilterComponent
+                  key={`SearchFiltersPrimary.${config.id}`}
+                  idPrefix="SearchFiltersPrimary"
+                  filterConfig={config}
+                  urlQueryParams={urlQueryParams}
+                  initialValues={initialValues}
+                  getHandleChangedValueFn={getHandleChangedValueFn}
+                  showAsPopup
+                  contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
+                  isCategory={!!config.config.isCategory}
+                  mainCategoriesImages={categoryImages.mainCategoriesImages}
+                  subCategoriesImages={categoryImages.subCategoriesImages}
+                  onOpenCategoryFilter={onOpenCategoryFilter}
+                  isCategoryFilterEnabled={isCategoryFilterEnabled}
+                  setSelectedCategoriesLength={setSelectedCategoriesLengthFunc}
+                  isFromLandingPageSearch={true}
+                  isFromLandingPageSearchMobile={true}
+                />
+              );
+            })}
+          </SearchFiltersPrimary>
+        </div> */}
       </div>
 
       <NamedLink
@@ -635,67 +664,6 @@ const SectionHero = props => {
         <FormattedMessage id="SectionHero.browseButton" />
       </NamedLink>
       {/* Search Bar open*/}
-
-      {/* <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerMobile)}>
-        <button
-          className={css.searchBar}
-          onClick={() => onOpenCategoryFilter()}
-          disabled={isCategoryFilterOpen}
-        >
-          <h5 className={classNames(css.catSearch, css.searchBarBtns)}>
-            What are you searching for
-          </h5>
-          <h5 className={classNames(css.filterSearch, css.searchBarBtns)}>Location</h5>{' '}
-          <IconHourGlass />
-        </button>
-        <SearchFiltersMobile
-          className={css.searchFiltersMobile}
-          urlQueryParams={urlQueryParams}
-          sortByComponent={sortBy('mobile')}
-          // listingsAreLoaded={listingsAreLoaded}
-          // resultsCount={totalItems}
-          // searchInProgress={searchInProgress}
-          // searchListingsError={searchListingsError}
-          showAsModalMaxWidth={MODAL_BREAKPOINT}
-          onMapIconClick={onMapIconClick}
-          onManageDisableScrolling={onManageDisableScrolling}
-          onOpenModal={onOpenMobileModal}
-          onCloseModal={onCloseMobileModal}
-          resetAll={resetAll}
-          // selectedFiltersCount={selectedFiltersCount}
-          mainCategoriesImages={categoryImages.mainCategoriesImages}
-          subCategoriesImages={categoryImages.subCategoriesImages}
-          currentActiveCategory={currentActiveCategory}
-          initialValues={initialValues}
-          filterConfig={filterConfig}
-          isFromLandingPageSearch={true}
-        >
-          {filterConfig.map(config => {
-            return (
-              <FilterComponent
-                key={`SearchFiltersMobile.${config.id}`}
-                idPrefix="SearchFiltersMobile"
-                filterConfig={config}
-                urlQueryParams={urlQueryParams}
-                initialValues={initialValues}
-                getHandleChangedValueFn={getHandleChangedValueFn}
-                liveEdit
-                showAsPopup={false}
-                mainCategoriesImages={categoryImages.mainCategoriesImages}
-                subCategoriesImages={categoryImages.subCategoriesImages}
-                onOpenCategoryFilter={onOpenCategoryFilter}
-                isCategory={!!config.config.isCategory}
-                isCategoryAmenities={!!config.config.isCategoryAmenities}
-                setCurrentActiveCategory={setCurrentActiveCategoryFunc}
-                isCategoryFilterEnabled={isCategoryFilterEnabled}
-                isAmenitiesFilterEnabled={isAmenitiesFilterEnabled}
-                currentActiveCategory={currentActiveCategory}
-                setSelectedCategoriesLength={setSelectedCategoriesLengthFunc}
-              />
-            );
-          })}
-        </SearchFiltersMobile>
-    </div> */}
     </div>
   );
 };

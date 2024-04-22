@@ -210,42 +210,101 @@
 } */
 
 .heroButtonsContainerDesktop {
-  display: none;
+  display: flex;
   bottom: 16px;
   margin-top: 15px;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
   max-width: 475px;
+  width: 70%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+  background: transparent;
+  left: 0;
+  top: 130px;
 
   @media (--viewportSmall) {
-    display: flex;
     flex-direction: column;
     align-items: flex-start;
+    left: 0;
+    top: 0;
+    width: 100%;
   }
 }
 
 .heroButtonsContainerMobile {
   position: absolute;
-  left: 0;
-  bottom: 15px;
-  /* bottom: 16px; */
-  bottom: 0;
+
   margin-top: 15px;
-  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 4px;
   padding-top: 10px;
-  background: var(--matterColorLight);
+  background: transparent;
 
   @media (--viewportSmall) {
     display: none;
   }
 }
 
+.searchBarMobile {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #fff;
+  border: 2px solid #5cbfcc;
+  border-radius: 10px;
+  padding: 5px;
+  width: 100%;
+  flex-direction: column;
+}
+.searchBarBtnsMobile {
+  font-size: 14px;
+  color: #252525;
+  border-width: 1px;
+  font-weight: 500;
+  padding: 0px 10px;
+  cursor: pointer;
+  width: 100%;
+  margin: 3px 0px;
+}
+.catSearchMobile {
+  /* border-right: 1px solid #2525255f; */
+  text-align: left;
+  border: 0px !important;
+}
+
+.filterSearchMobile {
+  border-top: 1px solid #2525255f;
+  width: 100%;
+  margin: 5px 0px;
+
+  @media (--viewportSmall) {
+    display: none;
+  }
+}
+.SearchBtnMobile {
+  width: 100%;
+  border: 0px;
+  background-color: #ffabd7;
+  padding: 5px;
+  color: #fff;
+  border-radius: 10px;
+  margin-top: 5px;
+  @media (--viewportSmall) {
+    display: none;
+  }
+}
+
+.SearchBtnDesktop {
+  display: none;
+  @media (--viewportSmall) {
+    display: block;
+  }
+}
 .heroButtonPink {
   /* @apply --SectionHero_animation; */
 
@@ -418,27 +477,45 @@
 .searchBar {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background-color: #fff;
   border: 2px solid #5cbfcc;
-  border-radius: 50px;
-  padding: 10px 0px;
+  border-radius: 10px;
+  padding: 5px;
   width: 100%;
+  flex-direction: column;
+
+  @media (--viewportSmall) {
+    align-items: center;
+    border-radius: 50px;
+    padding: 10px 0px;
+    flex-direction: row;
+  }
 }
 
 .searchBarBtns {
   font-size: 14px;
   color: #252525;
-  border-width: 0;
+  border-width: 1px;
   font-weight: 500;
   padding: 0px 10px;
   cursor: pointer;
-  margin: 0 !important;
+  width: 100%;
+  margin: 3px 0px;
+
+  @media (--viewportSmall) {
+    border-width: 0;
+    margin: 0 !important;
+  }
 }
 .catSearch {
   /* border-right: 1px solid #2525255f; */
-  width: 47%;
   text-align: left;
+  border: 0px !important;
+
+  @media (--viewportSmall) {
+    width: 47%;
+  }
 }
 .searchFiltersMobile {
   padding: 16px 24px;
@@ -606,9 +683,11 @@
   margin-right: 4px;
   border-left: 0.5px solid var(--matterColorNegative);
   display: flex;
+  width: 100%;
   /* padding: 16px 0 16px 12px; */
 
-  @media (--viewportLarge) {
+  @media (--viewportSmall) {
+    width: auto;
     /* margin-right: 12px; */
     /* padding: 16px 0 16px 32px; */
   }

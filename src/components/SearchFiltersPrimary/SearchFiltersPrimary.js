@@ -24,7 +24,7 @@ const SearchFiltersPrimaryComponent = props => {
     isCategoryFilterOpen,
     isCategoryFilterEnabled,
     isFromLandingPageSearch,
-    getHandleChangedValueFn,
+    isFromLandingPageSearchMobile,
   } = props;
 
   const hasNoResult = listingsAreLoaded && resultsCount === 0;
@@ -90,12 +90,18 @@ const SearchFiltersPrimaryComponent = props => {
             {isCategoryFilterOpen && (
               <div
                 className={
-                  isFromLandingPageSearch
+                  isFromLandingPageSearchMobile
+                    ? (css.categoryItemsWrapperLanding, css.categoryItemsWrapperLandingMobile)
+                    : isFromLandingPageSearch
                     ? css.categoryItemsWrapperLanding
                     : css.categoryItemsWrapper
                 }
               >
-                <div className={css.categoryItems}>
+                <div
+                  className={
+                    isFromLandingPageSearchMobile ? css.categoryItemsMobile : css.categoryItems
+                  }
+                >
                   <h3 className={css.categoryItemsTitle}>
                     <FormattedMessage id="SearchFiltersPrimary.categories" />
                     {/* <button
@@ -152,6 +158,7 @@ SearchFiltersPrimaryComponent.defaultProps = {
   sortByComponent: null,
   getHandleChangedValueFn: null,
   isFromLandingPageSearch: false,
+  isFromLandingPageSearchMobile: false,
 };
 
 SearchFiltersPrimaryComponent.propTypes = {
@@ -165,6 +172,7 @@ SearchFiltersPrimaryComponent.propTypes = {
   selectedSecondaryFiltersCount: number,
   sortByComponent: node,
   isFromLandingPageSearch: bool,
+  isFromLandingPageSearchMobile: bool,
   getHandleChangedValueFn: func,
 };
 

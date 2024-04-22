@@ -31,6 +31,7 @@ const FilterComponent = props => {
     isMobileLayout,
     setSelectedCategoriesLength,
     isFromLandingPageSearch,
+    isFromLandingPageSearchMobile,
     ...rest
   } = props;
   const { id, type, queryParamNames, label, labelImg, labelMobile, config } = filterConfig;
@@ -81,6 +82,7 @@ const FilterComponent = props => {
           isMobileLayout={isMobileLayout}
           setSelectedCategoriesLength={setSelectedCategoriesLength}
           isFromLandingPageSearch={isFromLandingPageSearch}
+          isFromLandingPageSearchMobile={isFromLandingPageSearchMobile}
           {...config}
           {...rest}
         />
@@ -133,9 +135,11 @@ const FilterComponent = props => {
 
 FilterComponent.defaultProps = {
   isFromLandingPageSearch: false,
+  isFromLandingPageSearchMobile: false,
 };
 FilterComponent.propTypes = {
   isFromLandingPageSearch: bool,
+  isFromLandingPageSearchMobile: bool,
 };
 
 export default FilterComponent;
