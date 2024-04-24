@@ -70,7 +70,7 @@ const FilterFormComponent = props => {
 
         const classes = classNames(css.root, { [css.subCategoryItem]: isCategory });
 
-        console.log('isFromLandingPageSearchMobile', children, props.isFromLandingPageSearchMobile);
+        console.log('isFromLandingPageSearch', props.isFromLandingPageSearch);
         return (
           <Form
             id={id}
@@ -80,12 +80,22 @@ const FilterFormComponent = props => {
             style={{ ...style }}
           >
             {isCategory ? (
-              <div className={css.LandingWrapper}>
+              <div
+                className={
+                  props.isFromLandingPageSearch ? css.LandingWrapper : css.LandingWrapperMain
+                }
+              >
                 <div
-                  className={classNames(css.subcategoryHeading, {
-                    [css.subcategoryHeading]: isSubCategoryOpen,
-                  })}
+                  className={classNames(
+                    !props.isFromLandingPageSearch
+                      ? css.subcategoryHeading
+                      : css.subcategoryHeadingMain,
+                    {
+                      [css.subcategoryHeading]: isSubCategoryOpen,
+                    }
+                  )}
                   onClick={toggleIsSubCategoryOpen}
+                  style={isMobileLayout ? {} : { display: 'flex' }}
                 >
                   <div className={css.LandingSubcategoryHeadingResp}>
                     <span className={css.subcategoryHeadingDesktop}>
@@ -100,9 +110,8 @@ const FilterFormComponent = props => {
                     {activeCategory}
                   </span>
                 </div>
-                {!isMobileLayout ||
-                  isSubCategoryOpen ||
-                  (props.isFromLandingPageSearch && (
+                {!props.isFromLandingPageSearch ? (
+                  (!isMobileLayout || isSubCategoryOpen) && (
                     <>
                       <div
                         className={
@@ -111,15 +120,17 @@ const FilterFormComponent = props => {
                             : css.subcategorySubHeading
                         }
                       >
-                        <FormattedMessage
-                          isFromLandingPageSearch={props.isFromLandingPageSearch}
-                          id={`${
-                            props.isFromLandingPageSearch
-                              ? 'FilterForm.subcategoryLandingSearch'
-                              : 'FilterForm.subcategory'
-                          }`}
-                        />
-                        <span style={{ color: '#b2b2b2' }}>&nbsp;(Optional)</span>
+                        <div>
+                          <FormattedMessage
+                            isFromLandingPageSearch={props.isFromLandingPageSearch}
+                            id={`${
+                              props.isFromLandingPageSearch
+                                ? 'FilterForm.subcategoryLandingSearch'
+                                : 'FilterForm.subcategory'
+                            }`}
+                          />
+                          <span style={{ color: '#b2b2b2' }}>&nbsp;(Optional)</span>
+                        </div>
                         <button
                           className={css.subcategoryClearButton}
                           type="button"
@@ -133,7 +144,39 @@ const FilterFormComponent = props => {
                         {children}
                       </div>
                     </>
-                  ))}
+                  )
+                ) : (
+                  <>
+                    <div
+                      className={
+                        props.isFromLandingPageSearch
+                          ? `${css.subcategorySubHeadingLanding}  ${css.subcategorySubHeading}`
+                          : css.subcategorySubHeading
+                      }
+                    >
+                      <FormattedMessage
+                        isFromLandingPageSearch={props.isFromLandingPageSearch}
+                        id={`${
+                          props.isFromLandingPageSearch
+                            ? 'FilterForm.subcategoryLandingSearch'
+                            : 'FilterForm.subcategory'
+                        }`}
+                      />
+                      <span style={{ color: '#b2b2b2' }}>&nbsp;(Optional)</span>
+                      <button
+                        className={css.subcategoryClearButton}
+                        type="button"
+                        style={props.isFromLandingPageSearch ? { display: 'none' } : {}}
+                        onClick={onClear}
+                      >
+                        <FormattedMessage id="FilterForm.reset" />
+                      </button>
+                    </div>
+                    <div className={classNames(paddingClasses || css.contentWrapper)}>
+                      {children}
+                    </div>
+                  </>
+                )}
               </div>
             ) : (
               <div className={classNames(paddingClasses || css.contentWrapper)}>{children}</div>
@@ -174,7 +217,6 @@ FilterFormComponent.defaultProps = {
   onChange: null,
   onClear: null,
   isFromLandingPageSearch: false,
-  isFromLandingPageSearchMobile: false,
   onSubmit: null,
 };
 
@@ -187,7 +229,6 @@ FilterFormComponent.propTypes = {
   style: object,
   children: node.isRequired,
   isFromLandingPageSearch: bool,
-  isFromLandingPageSearchMobile: bool,
 
   // form injectIntl
   intl: intlShape.isRequired,

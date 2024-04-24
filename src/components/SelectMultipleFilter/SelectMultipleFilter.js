@@ -138,7 +138,6 @@ class SelectMultipleFilter extends Component {
       isMobileLayout,
       setSelectedCategoriesLength,
       isFromLandingPageSearch,
-      isFromLandingPageSearchMobile,
       ...rest
     } = this.props;
 
@@ -231,7 +230,6 @@ class SelectMultipleFilter extends Component {
         isCategoryFilterEnabled={isCategoryFilterEnabled}
         setSelectedCategoriesLength={setSelectedCategoriesLength}
         isFromLandingPageSearch={isFromLandingPageSearch}
-        isFromLandingPageSearchMobile={isFromLandingPageSearchMobile}
         {...rest}
       >
         <GroupOfFieldCheckboxes
@@ -289,7 +287,6 @@ SelectMultipleFilter.defaultProps = {
   className: null,
   initialValues: null,
   isFromLandingPageSearch: false,
-  isFromLandingPageSearchMobile: false,
   contentPlacementOffset: 0,
 };
 
@@ -306,7 +303,6 @@ SelectMultipleFilter.propTypes = {
   initialValues: object,
   contentPlacementOffset: number,
   isFromLandingPageSearch: bool,
-  isFromLandingPageSearchMobile: bool,
 
   // form injectIntl
   intl: intlShape.isRequired,

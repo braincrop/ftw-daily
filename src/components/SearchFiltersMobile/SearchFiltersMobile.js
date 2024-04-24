@@ -15,7 +15,7 @@ class SearchFiltersMobileComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFiltersOpenOnMobile: true,
+      isFiltersOpenOnMobile: false,
       initialQueryParams: null,
       isCategoryFiltersOpenOnMobile: true,
     };

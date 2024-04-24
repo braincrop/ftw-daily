@@ -158,10 +158,11 @@
   left: -135px;
   top: 55px;
   z-index: 2;
-  width: 680px;
+  width: 360px;
 
   @media (--viewportSmall) {
     left: 0;
+    width: 680px;
   }
 }
 .categoryItemsWrapperLandingMobile {
@@ -178,7 +179,7 @@
   /* box-shadow: 4px 4px 36px rgba(0, 0, 0, 0.25); */
   box-shadow: 4px 4px 36px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  max-width: 55%;
+  max-width: 100%;
   background: var(--matterColorLight);
 
   @media (--viewportSmall) {

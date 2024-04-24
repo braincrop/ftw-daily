@@ -594,66 +594,6 @@ const SectionHero = props => {
             })}
           </SearchFiltersPrimary>
         </div>
-        {/* <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerMobile)}>
-          <div className={css.searchBarMobile} disabled={isCategoryFilterOpen}>
-            <button
-              className={classNames(css.catSearchMobile, css.searchBarBtnsMobile)}
-              onClick={() => onOpenCategoryFilter()}
-              disabled={isCategoryFilterOpen}
-            >
-              {selectedMainCategory == null
-                ? 'What are you searching for?'
-                : selectedMainCategory.label}
-            </button>
-            <div className={css.filterSearchMobile} />
-            {search}
-            <button onClick={() => handleSearchLanding()} className={css.SearchBtnMobile}>
-              Search
-            </button>
-          </div>
-          <SearchFiltersPrimary
-            className={css.searchFiltersPrimary}
-            sortByComponent={sortBy('desktop')}
-            // listingsAreLoaded={listingsAreLoaded}
-            // resultsCount={totalItems}
-            // searchInProgress={searchInProgress}
-            // searchListingsError={searchListingsError}
-            mainCategoriesImages={categoryImages.mainCategoriesImages}
-            subCategoriesImages={categoryImages.subCategoriesImages}
-            isCategoryFilterOpen={isCategoryFilterOpen}
-            onOpenCategoryFilter={onOpenCategoryFilter}
-            onCloseCategoryFilter={onCloseCategoryFilter}
-            isCategoryFilterEnabled={isCategoryFilterEnabled}
-            setSelectedCategoriesLength={setSelectedCategoriesLengthFunc}
-            isFromLandingPageSearch={true}
-            isFromLandingPageSearchMobile={true}
-            getHandleChangedValueFn={getHandleChangedValueFn}
-            // {...propsForSecondaryFiltersToggle}
-          >
-            {primaryFilters.map(config => {
-              return (
-                <FilterComponent
-                  key={`SearchFiltersPrimary.${config.id}`}
-                  idPrefix="SearchFiltersPrimary"
-                  filterConfig={config}
-                  urlQueryParams={urlQueryParams}
-                  initialValues={initialValues}
-                  getHandleChangedValueFn={getHandleChangedValueFn}
-                  showAsPopup
-                  contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
-                  isCategory={!!config.config.isCategory}
-                  mainCategoriesImages={categoryImages.mainCategoriesImages}
-                  subCategoriesImages={categoryImages.subCategoriesImages}
-                  onOpenCategoryFilter={onOpenCategoryFilter}
-                  isCategoryFilterEnabled={isCategoryFilterEnabled}
-                  setSelectedCategoriesLength={setSelectedCategoriesLengthFunc}
-                  isFromLandingPageSearch={true}
-                  isFromLandingPageSearchMobile={true}
-                />
-              );
-            })}
-          </SearchFiltersPrimary>
-        </div> */}
       </div>
 
       <NamedLink
