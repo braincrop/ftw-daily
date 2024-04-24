@@ -70,6 +70,7 @@ const FilterFormComponent = props => {
 
         const classes = classNames(css.root, { [css.subCategoryItem]: isCategory });
 
+        // console.log('isFromLandingPageSearch', props.isFromLandingPageSearch);
         return (
           <Form
             id={id}
@@ -79,25 +80,72 @@ const FilterFormComponent = props => {
             style={{ ...style }}
           >
             {isCategory ? (
-              <div>
+              <div
+                className={
+                  props.isFromLandingPageSearch ? css.LandingWrapper : css.LandingWrapperMain
+                }
+              >
                 <div
-                  className={classNames(css.subcategoryHeading, {
-                    [css.subcategoryHeading]: isSubCategoryOpen,
-                  })}
+                  className={classNames(
+                    !props.isFromLandingPageSearch
+                      ? css.subcategoryHeading
+                      : css.subcategoryHeadingMain,
+                    {
+                      [css.subcategoryHeading]: isSubCategoryOpen,
+                    }
+                  )}
                   onClick={toggleIsSubCategoryOpen}
+                  style={isMobileLayout ? {} : { display: 'flex' }}
                 >
-                  <span className={css.subcategoryHeadingDesktop}>
-                    <FormattedMessage id="FilterForm.patchCategory" />
-                  </span>
-                  <span className={css.subcategoryHeadingMobile}>
-                    <FormattedMessage id="FilterForm.subcategory" />
-                    {!!selectedItemsCounter && ` • ${selectedItemsCounter}`}
-                  </span>
+                  <div className={css.LandingSubcategoryHeadingResp}>
+                    <span className={css.subcategoryHeadingDesktop}>
+                      <FormattedMessage id="FilterForm.patchCategory" />
+                    </span>
+                    <span className={css.subcategoryHeadingMobile}>
+                      <FormattedMessage id="FilterForm.patchCategory" />
+                      {!!selectedItemsCounter && ` • ${selectedItemsCounter}`}
+                    </span>
+                  </div>
                   <span className={css.activeCategory} onClick={closeSubCategory}>
                     {activeCategory}
                   </span>
                 </div>
-                {(!isMobileLayout || isSubCategoryOpen) && (
+                {!props.isFromLandingPageSearch ? (
+                  (!isMobileLayout || isSubCategoryOpen) && (
+                    <>
+                      <div
+                        className={
+                          props.isFromLandingPageSearch
+                            ? `${css.subcategorySubHeadingLanding}  ${css.subcategorySubHeading}`
+                            : css.subcategorySubHeading
+                        }
+                      >
+                        <div>
+                          <FormattedMessage
+                            isFromLandingPageSearch={props.isFromLandingPageSearch}
+                            id={`${
+                              props.isFromLandingPageSearch
+                                ? 'FilterForm.subcategoryLandingSearch'
+                                : 'FilterForm.subcategory'
+                            }`}
+                          />
+                          <span style={{ color: '#b2b2b2' }}>&nbsp;(Optional)</span>
+                        </div>
+                        <button
+                          className={css.subcategoryClearButton}
+                          type="button"
+                          style={props.isFromLandingPageSearch ? { display: 'none' } : {}}
+                          onClick={onClear}
+                        >
+                          <FormattedMessage id="FilterForm.reset" />
+                        </button>
+                      </div>
+                      <div className={classNames(paddingClasses || css.contentWrapper)}>
+                        {children}
+                      </div>
+                    </>
+                  )
+                ) : (
                   <>
                     <div
                       className={

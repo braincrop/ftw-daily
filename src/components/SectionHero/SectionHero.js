@@ -1,13 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { object, oneOf, shape, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import {
-  IconCloseCustom,
-  NamedLink,
-  SearchFiltersMobile,
-  SearchFiltersPrimary,
-} from '../../components';
+import { NamedLink, SearchFiltersPrimary } from '../../components';
 import Slider from 'react-slick';
 import swal from 'sweetalert2';
 import css from './SectionHero.module.css';
@@ -33,11 +28,8 @@ import categoryImages from '../../containers/SearchPage/filterImages';
 import { validURLParamsForExtendedData } from '../../containers/SearchPage/SearchPage.helpers';
 import { createResourceLocatorString } from '../../util/routes';
 import routeConfiguration from '../../routeConfiguration';
-import { manageDisableScrolling } from '../../ducks/UI.duck';
-import { useDispatch } from 'react-redux';
 import { isAnyFilterActive } from '../../util/search';
 import { TopbarSearchForm } from '../../forms';
-import { filters } from '../../marketplace-custom-config';
 
 const expertArr = [hotPatch4, hotPatch1, hotPatch5, hotPatch3, hotPatch2];
 const mobileExpertArr = [
@@ -62,9 +54,6 @@ const SectionHero = props => {
   const { rootClassName, className } = props;
   const { categories } = config.custom;
 
-  const dispatch = useDispatch();
-  // const predictionsClass = classNames(predictionsClassName);
-
   const filterConfig = props.filterConfig;
   const { ...searchInURL } = parse(defaultLocation.search, {
     latlng: ['origin'],
@@ -74,9 +63,6 @@ const SectionHero = props => {
 
   const [imageArr, setImageArr] = useState(expertArr);
   const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(false);
-  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
-  // const [selectedCategoriesLength, setSelectedCategoriesLength] = useState(0);
-  const [currentActiveCategory, setCurrentActiveCategory] = useState(null);
   const [currentQueryParams, setCurrentQueryParams] = useState(urlQueryParams);
   const [category, setCategory] = useState('Categories');
   const [selectedMainCategory, setSelectedMainCategory] = useState(null);
@@ -86,7 +72,6 @@ const SectionHero = props => {
     bounds: {},
   });
 
-  const [isSearchMapOpenOnMobile, setIsSearchMapOpenOnMobile] = useState(props.tab === 'map');
   let selectedCategoriesLength = null;
   //! Search Bar Working
 
@@ -98,9 +83,6 @@ const SectionHero = props => {
   let searchParamsForPagination = parse(defaultLocation.search);
   const isCategoryFilterEnabled =
     searchParamsForPagination && !!searchParamsForPagination.pub_category;
-
-  const isAmenitiesFilterEnabled =
-    searchParamsForPagination && !!searchParamsForPagination.pub_amenities;
 
   //Location Search
 
@@ -211,7 +193,6 @@ const SectionHero = props => {
   function getHandleChangedValueFn(useHistoryPush) {
     const { sortConfig, history } = props;
 
-    // console.log('useHistoryPush', useHistoryPush);
     // history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, 'search'));
     return (updatedURLParams, filterConfigId) => {
       const updater = prevState => {
@@ -348,6 +329,8 @@ const SectionHero = props => {
           delete updatedURLParams.pub_category;
         }
 
+        // console.log('updater:', mergedQueryParams, updatedURLParams, priceMaybe, address, bounds);
+
         return {
           currentQueryParams: {
             ...mergedQueryParams,
@@ -365,17 +348,26 @@ const SectionHero = props => {
           const _pubCat = { pub_category: filterConfigId };
           const searchParams = { ...updatedURLParams, ...currentQueryParams };
           const search = cleanSearchFromConflictingParams(searchParams, sortConfig, filterConfig);
-
-          // console.log('search Cat:', search);
-
-          setSearchQueryData(prev => ({
-            ...prev,
-            pub_category: search.pub_category,
-          }));
-
           const _selectedMainCat = primaryFilters.find(
             c => c.config.isCategory && _pubCat.pub_category === c.id
           );
+          if (search.pub_category !== undefined) {
+            // console.log('search if:', search.pub_category);
+
+            setSearchQueryData(prev => ({
+              ...prev,
+              pub_category: search.pub_category,
+            }));
+          } else {
+            const _def_pubCat = `${_selectedMainCat.config.searchMode}:${_selectedMainCat.config.catKeys}`;
+            // console.log('search else:', _def_pubCat);
+
+            setSearchQueryData(prev => ({
+              ...prev,
+              pub_category: _def_pubCat,
+            }));
+          }
+
           setSelectedMainCategory(_selectedMainCat);
 
           // !isMobileLayout &&
@@ -398,49 +390,12 @@ const SectionHero = props => {
     };
   }
 
-  function onManageDisableScrolling(componentId, disableScrolling) {
-    dispatch(manageDisableScrolling(componentId, disableScrolling));
-  }
-
-  const onMapIconClick = () => {
-    // this.useLocationSearchBounds = true;
-    setIsSearchMapOpenOnMobile(true);
-  };
-  function onOpenMobileModal() {
-    setIsMobileModalOpen(true);
-  }
-  function onCloseMobileModal() {
-    setIsMobileModalOpen(false);
-  }
-
-  function resetAll(e) {
-    const { history } = props;
-    const filterQueryParamNames = filterConfig.map(f => f.queryParamNames);
-
-    // Reset state
-    setCurrentQueryParams({});
-
-    // Reset routing params
-    const queryParams = omit(urlQueryParams, filterQueryParamNames);
-    !!queryParams?.pub_pricePerDayFilter && delete queryParams.pub_pricePerDayFilter;
-    !!queryParams?.pub_pricePerWeekFilter && delete queryParams.pub_pricePerWeekFilter;
-    !!queryParams?.pub_pricePerMonthFilter && delete queryParams.pub_pricePerMonthFilter;
-    // history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
-  }
   function onOpenCategoryFilter() {
     setIsCategoryFilterOpen(!isCategoryFilterOpen);
   }
 
   function onCloseCategoryFilter() {
     setIsCategoryFilterOpen(false);
-  }
-
-  function setCurrentActiveCategoryFunc(category) {
-    if (category === currentActiveCategory) {
-      setCurrentActiveCategory(null);
-    } else {
-      setCurrentActiveCategory(category);
-    }
   }
 
   useEffect(() => {
@@ -479,6 +434,8 @@ const SectionHero = props => {
   const handleSearchLanding = () => {
     const { history } = props;
     const { address, bounds, pub_category } = SearchQueryData;
+    console.log('handleSearchLanding', SearchQueryData);
+
     if (pub_category == '') {
       swal.fire({
         title: 'Please select Category.',
@@ -523,15 +480,6 @@ const SectionHero = props => {
         </h2>
 
         <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerDesktop)}>
-          {/* <NamedLink
-            className={css.heroButtonPink}
-            name="SearchPage"
-            to={{ search: 'address=&bounds=59.49417013%2C4.15978193%2C49.54972301%2C-10.51994741' }}
-          >
-            <FormattedMessage id="SectionHero.browseButton" />
-          </NamedLink> */}
-
-          {/* Search Bar open*/}
           <div
             className={css.searchBar}
             // onClick={() => onOpenCategoryFilter()}
@@ -546,12 +494,20 @@ const SectionHero = props => {
                 ? 'What are you searching for?'
                 : selectedMainCategory.label}
             </button>
-            {/* <h4 className={classNames(css.filterSearch, css.searchBarBtns)}>Location</h4>{' '} */}
+            <div className={css.filterSearchMobile} />
+
             {search}
 
-            <div style={{ width: '7%', cursor: 'pointer' }} onClick={() => handleSearchLanding()}>
+            <div
+              className={css.SearchBtnDesktop}
+              style={{ width: '7%', cursor: 'pointer' }}
+              onClick={() => handleSearchLanding()}
+            >
               <IconHourGlass />
             </div>
+            <button onClick={() => handleSearchLanding()} className={css.SearchBtnMobile}>
+              Search
+            </button>
           </div>
 
           <SearchFiltersPrimary
@@ -594,36 +550,6 @@ const SectionHero = props => {
               );
             })}
           </SearchFiltersPrimary>
-          {/* <LocationPredictionsList
-            rootClassName={predictionsClass}
-            attributionClassName={predictionsAttributionClassName}
-            predictions={predictions}
-            geocoder={this.getGeocoder()}
-            highlightedIndex={this.state.highlightedIndex}
-            onSelectStart={this.handlePredictionsSelectStart}
-            onSelectMove={this.handlePredictionsSelectMove}
-            onSelectEnd={this.handlePredictionsSelectEnd}
-          /> */}
-
-          {/* Search Bar closed */}
-
-          {/* <NamedLink
-            name="SearchPage"
-            to={{ search: locationParams + searchQuery }}
-            className={css.category}
-          >
-            <div className={css.imageWrapper}>
-              <div className={css.aspectWrapper}>
-                <LazyImage src={image} alt={name} className={css.categoryImage} />
-              </div>
-            </div>
-            <div className={css.linkText}>
-              <FormattedMessage
-                id="SectionPatchCategories.categoriesInLocation"
-                values={{ category: nameText }}
-              />
-            </div>
-          </NamedLink> */}
         </div>
       </div>
 
@@ -635,67 +561,6 @@ const SectionHero = props => {
         <FormattedMessage id="SectionHero.browseButton" />
       </NamedLink>
       {/* Search Bar open*/}
-
-      {/* <div className={classNames(css.heroButtonsContainer, css.heroButtonsContainerMobile)}>
-        <button
-          className={css.searchBar}
-          onClick={() => onOpenCategoryFilter()}
-          disabled={isCategoryFilterOpen}
-        >
-          <h5 className={classNames(css.catSearch, css.searchBarBtns)}>
-            What are you searching for
-          </h5>
-          <h5 className={classNames(css.filterSearch, css.searchBarBtns)}>Location</h5>{' '}
-          <IconHourGlass />
-        </button>
-        <SearchFiltersMobile
-          className={css.searchFiltersMobile}
-          urlQueryParams={urlQueryParams}
-          sortByComponent={sortBy('mobile')}
-          // listingsAreLoaded={listingsAreLoaded}
-          // resultsCount={totalItems}
-          // searchInProgress={searchInProgress}
-          // searchListingsError={searchListingsError}
-          showAsModalMaxWidth={MODAL_BREAKPOINT}
-          onMapIconClick={onMapIconClick}
-          onManageDisableScrolling={onManageDisableScrolling}
-          onOpenModal={onOpenMobileModal}
-          onCloseModal={onCloseMobileModal}
-          resetAll={resetAll}
-          // selectedFiltersCount={selectedFiltersCount}
-          mainCategoriesImages={categoryImages.mainCategoriesImages}
-          subCategoriesImages={categoryImages.subCategoriesImages}
-          currentActiveCategory={currentActiveCategory}
-          initialValues={initialValues}
-          filterConfig={filterConfig}
-          isFromLandingPageSearch={true}
-        >
-          {filterConfig.map(config => {
-            return (
-              <FilterComponent
-                key={`SearchFiltersMobile.${config.id}`}
-                idPrefix="SearchFiltersMobile"
-                filterConfig={config}
-                urlQueryParams={urlQueryParams}
-                initialValues={initialValues}
-                getHandleChangedValueFn={getHandleChangedValueFn}
-                liveEdit
-                showAsPopup={false}
-                mainCategoriesImages={categoryImages.mainCategoriesImages}
-                subCategoriesImages={categoryImages.subCategoriesImages}
-                onOpenCategoryFilter={onOpenCategoryFilter}
-                isCategory={!!config.config.isCategory}
-                isCategoryAmenities={!!config.config.isCategoryAmenities}
-                setCurrentActiveCategory={setCurrentActiveCategoryFunc}
-                isCategoryFilterEnabled={isCategoryFilterEnabled}
-                isAmenitiesFilterEnabled={isAmenitiesFilterEnabled}
-                currentActiveCategory={currentActiveCategory}
-                setSelectedCategoriesLength={setSelectedCategoriesLengthFunc}
-              />
-            );
-          })}
-        </SearchFiltersMobile>
-    </div> */}
     </div>
   );
 };
