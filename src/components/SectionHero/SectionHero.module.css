@@ -214,12 +214,11 @@
   bottom: 16px;
   margin-top: 15px;
   justify-content: space-between;
-  align-items: center;
   max-width: 475px;
   width: 70%;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding-top: 10px;
   background: transparent;
   left: 0;

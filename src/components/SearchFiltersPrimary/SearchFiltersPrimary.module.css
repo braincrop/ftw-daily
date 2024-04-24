@@ -155,10 +155,11 @@
 }
 .categoryItemsWrapperLanding {
   position: absolute;
-  left: -135px;
+  /* left: -135px; */
   top: 55px;
   z-index: 2;
-  width: 360px;
+  width: 100%;
+  min-width: 340px;
 
   @media (--viewportSmall) {
     left: 0;
