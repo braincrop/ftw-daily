@@ -1,13 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { object, oneOf, shape, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import {
-  IconCloseCustom,
-  NamedLink,
-  SearchFiltersMobile,
-  SearchFiltersPrimary,
-} from '../../components';
+import { NamedLink, SearchFiltersPrimary } from '../../components';
 import Slider from 'react-slick';
 import swal from 'sweetalert2';
 import css from './SectionHero.module.css';
@@ -33,11 +28,8 @@ import categoryImages from '../../containers/SearchPage/filterImages';
 import { validURLParamsForExtendedData } from '../../containers/SearchPage/SearchPage.helpers';
 import { createResourceLocatorString } from '../../util/routes';
 import routeConfiguration from '../../routeConfiguration';
-import { manageDisableScrolling } from '../../ducks/UI.duck';
-import { useDispatch } from 'react-redux';
 import { isAnyFilterActive } from '../../util/search';
 import { TopbarSearchForm } from '../../forms';
-import { filters } from '../../marketplace-custom-config';
 
 const expertArr = [hotPatch4, hotPatch1, hotPatch5, hotPatch3, hotPatch2];
 const mobileExpertArr = [
@@ -62,9 +54,6 @@ const SectionHero = props => {
   const { rootClassName, className } = props;
   const { categories } = config.custom;
 
-  const dispatch = useDispatch();
-  // const predictionsClass = classNames(predictionsClassName);
-
   const filterConfig = props.filterConfig;
   const { ...searchInURL } = parse(defaultLocation.search, {
     latlng: ['origin'],
@@ -74,9 +63,6 @@ const SectionHero = props => {
 
   const [imageArr, setImageArr] = useState(expertArr);
   const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(false);
-  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
-  // const [selectedCategoriesLength, setSelectedCategoriesLength] = useState(0);
-  const [currentActiveCategory, setCurrentActiveCategory] = useState(null);
   const [currentQueryParams, setCurrentQueryParams] = useState(urlQueryParams);
   const [category, setCategory] = useState('Categories');
   const [selectedMainCategory, setSelectedMainCategory] = useState(null);
@@ -86,7 +72,6 @@ const SectionHero = props => {
     bounds: {},
   });
 
-  const [isSearchMapOpenOnMobile, setIsSearchMapOpenOnMobile] = useState(props.tab === 'map');
   let selectedCategoriesLength = null;
   //! Search Bar Working
 
@@ -98,9 +83,6 @@ const SectionHero = props => {
   let searchParamsForPagination = parse(defaultLocation.search);
   const isCategoryFilterEnabled =
     searchParamsForPagination && !!searchParamsForPagination.pub_category;
-
-  const isAmenitiesFilterEnabled =
-    searchParamsForPagination && !!searchParamsForPagination.pub_amenities;
 
   //Location Search
 
@@ -398,49 +380,12 @@ const SectionHero = props => {
     };
   }
 
-  function onManageDisableScrolling(componentId, disableScrolling) {
-    dispatch(manageDisableScrolling(componentId, disableScrolling));
-  }
-
-  const onMapIconClick = () => {
-    // this.useLocationSearchBounds = true;
-    setIsSearchMapOpenOnMobile(true);
-  };
-  function onOpenMobileModal() {
-    setIsMobileModalOpen(true);
-  }
-  function onCloseMobileModal() {
-    setIsMobileModalOpen(false);
-  }
-
-  function resetAll(e) {
-    const { history } = props;
-    const filterQueryParamNames = filterConfig.map(f => f.queryParamNames);
-
-    // Reset state
-    setCurrentQueryParams({});
-
-    // Reset routing params
-    const queryParams = omit(urlQueryParams, filterQueryParamNames);
-    !!queryParams?.pub_pricePerDayFilter && delete queryParams.pub_pricePerDayFilter;
-    !!queryParams?.pub_pricePerWeekFilter && delete queryParams.pub_pricePerWeekFilter;
-    !!queryParams?.pub_pricePerMonthFilter && delete queryParams.pub_pricePerMonthFilter;
-    // history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
-  }
   function onOpenCategoryFilter() {
     setIsCategoryFilterOpen(!isCategoryFilterOpen);
   }
 
   function onCloseCategoryFilter() {
     setIsCategoryFilterOpen(false);
-  }
-
-  function setCurrentActiveCategoryFunc(category) {
-    if (category === currentActiveCategory) {
-      setCurrentActiveCategory(null);
-    } else {
-      setCurrentActiveCategory(category);
-    }
   }
 
   useEffect(() => {
