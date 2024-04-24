@@ -193,7 +193,6 @@ const SectionHero = props => {
   function getHandleChangedValueFn(useHistoryPush) {
     const { sortConfig, history } = props;
 
-    // console.log('useHistoryPush', useHistoryPush);
     // history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, 'search'));
     return (updatedURLParams, filterConfigId) => {
       const updater = prevState => {
@@ -330,6 +329,8 @@ const SectionHero = props => {
           delete updatedURLParams.pub_category;
         }
 
+        // console.log('updater:', mergedQueryParams, updatedURLParams, priceMaybe, address, bounds);
+
         return {
           currentQueryParams: {
             ...mergedQueryParams,
@@ -347,17 +348,26 @@ const SectionHero = props => {
           const _pubCat = { pub_category: filterConfigId };
           const searchParams = { ...updatedURLParams, ...currentQueryParams };
           const search = cleanSearchFromConflictingParams(searchParams, sortConfig, filterConfig);
-
-          // console.log('search Cat:', search);
-
-          setSearchQueryData(prev => ({
-            ...prev,
-            pub_category: search.pub_category,
-          }));
-
           const _selectedMainCat = primaryFilters.find(
             c => c.config.isCategory && _pubCat.pub_category === c.id
           );
+          if (search.pub_category !== undefined) {
+            // console.log('search if:', search.pub_category);
+
+            setSearchQueryData(prev => ({
+              ...prev,
+              pub_category: search.pub_category,
+            }));
+          } else {
+            const _def_pubCat = `${_selectedMainCat.config.searchMode}:${_selectedMainCat.config.catKeys}`;
+            // console.log('search else:', _def_pubCat);
+
+            setSearchQueryData(prev => ({
+              ...prev,
+              pub_category: _def_pubCat,
+            }));
+          }
+
           setSelectedMainCategory(_selectedMainCat);
 
           // !isMobileLayout &&
@@ -424,6 +434,8 @@ const SectionHero = props => {
   const handleSearchLanding = () => {
     const { history } = props;
     const { address, bounds, pub_category } = SearchQueryData;
+    console.log('handleSearchLanding', SearchQueryData);
+
     if (pub_category == '') {
       swal.fire({
         title: 'Please select Category.',

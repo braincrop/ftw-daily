@@ -70,7 +70,7 @@ const FilterFormComponent = props => {
 
         const classes = classNames(css.root, { [css.subCategoryItem]: isCategory });
 
-        console.log('isFromLandingPageSearch', props.isFromLandingPageSearch);
+        // console.log('isFromLandingPageSearch', props.isFromLandingPageSearch);
         return (
           <Form
             id={id}
