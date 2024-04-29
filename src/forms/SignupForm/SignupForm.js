@@ -16,6 +16,7 @@ import {
 
 import css from './SignupForm.module.css';
 import { _interestedPatches } from './interestedPatches';
+import FieldCheckboxComponent from '../../components/FieldCheckbox/FieldCheckbox';
 
 const KEY_CODE_ENTER = 13;
 
@@ -314,20 +315,28 @@ const SignupFormComponent = props => (
             <label className={css.subTitle}>
               <FormattedMessage id="SignupForm.InterestedPatches" />
             </label>
-            <div className={css.radioButtonRowInterestedPatch}>
+            <ul className={css.radioButtonRowInterestedPatch}>
               {_interestedPatches.map((val, index) => (
-                <FieldRadioButton
-                  id={val.id}
-                  name={val.name}
-                  label={val.id}
-                  value={val.id}
-                  circleClassName={css.radioButtonCircle}
-                  className={css.radioButtonInterestedPatch}
-                  labelCss={css.radioButtonInterestedPatchLabel}
-                  key={index}
-                />
+                // <FieldRadioButton
+                //   id={val.id}
+                //   name={val.id}
+                //   label={val.id}
+                //   value={val.id}
+                //   circleClassName={css.radioButtonCircle}
+                //   className={css.radioButtonInterestedPatch}
+                //   labelCss={css.radioButtonInterestedPatchLabel}
+                //   key={index}
+                // />
+                <li key={index} className={css.radioButtonInterestedPatch}>
+                  <FieldCheckboxComponent
+                    id={val.id}
+                    name={val.name}
+                    label={val.id}
+                    value={val.id}
+                  />
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           <div className={css.bottomWrapper}>
