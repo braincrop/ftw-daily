@@ -272,6 +272,33 @@ const SignupFormComponent = props => (
             />
 
             <div className={css.firstAndLastField}>
+              <label className={css.subTitle}>
+                <FormattedMessage id="SignupForm.InterestedPatches" />
+              </label>
+              <ul className={css.radioButtonRowInterestedPatch}>
+                {_interestedPatches.map((val, index) => (
+                  // <FieldRadioButton
+                  //   id={val.id}
+                  //   name={val.id}
+                  //   label={val.id}
+                  //   value={val.id}
+                  //   circleClassName={css.radioButtonCircle}
+                  //   className={css.radioButtonInterestedPatch}
+                  //   labelCss={css.radioButtonInterestedPatchLabel}
+                  //   key={index}
+                  // />
+                  <li key={index} className={css.radioButtonInterestedPatch}>
+                    <FieldCheckboxComponent
+                      id={val.id}
+                      name={val.name}
+                      label={val.id}
+                      value={val.id}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className={css.firstAndLastField}>
               <FieldSelect
                 id="hearAbout"
                 name="hearAboutUs"
@@ -311,32 +338,6 @@ const SignupFormComponent = props => (
                 placeholder={hearOtherLabel}
               />
             </div>
-
-            <label className={css.subTitle}>
-              <FormattedMessage id="SignupForm.InterestedPatches" />
-            </label>
-            <ul className={css.radioButtonRowInterestedPatch}>
-              {_interestedPatches.map((val, index) => (
-                // <FieldRadioButton
-                //   id={val.id}
-                //   name={val.id}
-                //   label={val.id}
-                //   value={val.id}
-                //   circleClassName={css.radioButtonCircle}
-                //   className={css.radioButtonInterestedPatch}
-                //   labelCss={css.radioButtonInterestedPatchLabel}
-                //   key={index}
-                // />
-                <li key={index} className={css.radioButtonInterestedPatch}>
-                  <FieldCheckboxComponent
-                    id={val.id}
-                    name={val.name}
-                    label={val.id}
-                    value={val.id}
-                  />
-                </li>
-              ))}
-            </ul>
           </div>
 
           <div className={css.bottomWrapper}>

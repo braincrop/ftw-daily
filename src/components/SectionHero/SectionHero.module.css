@@ -171,7 +171,7 @@
   font-weight: var(--fontWeightSemiBold);
   /* @apply --SectionHero_animation; */
   animation-delay: 0.65s;
-  max-width: 400px;
+  max-width: 320px;
 
   @media (--viewportMedium) {
     font-size: 24px;
@@ -215,7 +215,7 @@
   margin-top: 15px;
   justify-content: space-between;
   max-width: 475px;
-  width: 70%;
+  width: 75%;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;

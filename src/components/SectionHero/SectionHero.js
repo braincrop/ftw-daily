@@ -434,7 +434,7 @@ const SectionHero = props => {
   const handleSearchLanding = () => {
     const { history } = props;
     const { address, bounds, pub_category } = SearchQueryData;
-    console.log('handleSearchLanding', SearchQueryData);
+    // console.log('handleSearchLanding', SearchQueryData);
 
     if (pub_category == '') {
       swal.fire({

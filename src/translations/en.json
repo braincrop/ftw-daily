@@ -1090,7 +1090,7 @@
   "SignupForm.phonePlaceholder": "Enter your phone number",
   "SignupForm.phoneRequired": "You need to add your phone number",
   "SignupForm.planRequired": "You need to add your plans to use HotPatch",
-  "SignupForm.hearRequired": "We would like to know from where you heard about us",
+  "SignupForm.hearRequired": "We’d love to know where you heard about us!",
   "SortBy.heading": "Sort by",
   "StripeBankAccountTokenInputField.accountNumber.inline": "account number",
   "StripeBankAccountTokenInputField.accountNumber.label": "Bank account number",
