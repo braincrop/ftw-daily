@@ -240,28 +240,31 @@ export class ListingPageComponent extends Component {
     const listingId = new UUID(params.id);
     const { message } = values;
     let modifiedMessage = message;
-    const hideEmail = text =>
-      text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'HIDDEN');
-    const hidePhone = text =>
-      text.replace(/(\+?\d{0,2}\s?)?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{4}/g, 'HIDDEN');
-    const hideWebsite = text =>
-      text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, 'HIDDEN');
-    modifiedMessage = hideEmail(modifiedMessage);
-    modifiedMessage = hidePhone(modifiedMessage);
-    modifiedMessage = hideWebsite(modifiedMessage);
 
-    if (modifiedMessage.includes('HIDDEN')) {
-      Swal.fire({
-        title: "Hold your horses! We can't hit that send button just yet",
-        text: `Contact info can't be shared until a booking is confirmed.
-           To send the message, please remove the contact info.`,
-        confirmButtonText: 'Edit Message',
-        confirmButtonColor: '#5cbfcc',
-      }).then(() => {
-        return;
-      });
-      return;
-    }
+    //! Remove comments to apply regex functionality on messages
+    // const hideEmail = text =>
+    //   text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'HIDDEN');
+    // const hidePhone = text =>
+    //   text.replace(/(\+?\d{0,2}\s?)?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{4}/g, 'HIDDEN');
+    // const hideWebsite = text =>
+    //   text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, 'HIDDEN');
+    // modifiedMessage = hideEmail(modifiedMessage);
+    // modifiedMessage = hidePhone(modifiedMessage);
+    // modifiedMessage = hideWebsite(modifiedMessage);
+
+    // console.log('regex,', modifiedMessage, !modifiedMessage.includes('HIDDEN'));
+    // if (!modifiedMessage.includes('HIDDEN')) {
+    //   Swal.fire({
+    //     title: "Hold your horses! We can't hit that send button just yet",
+    //     text: `Contact info can't be shared until a booking is confirmed.
+    //        To send the message, please remove the contact info.`,
+    //     confirmButtonText: 'Edit Message',
+    //     confirmButtonColor: '#5cbfcc',
+    //   }).then(() => {
+    //     return;
+    //   });
+    //   return;
+    // }
 
     onSendEnquiry(listingId, modifiedMessage.trim(), unitType)
       .then(txId => {
