@@ -6,6 +6,7 @@ import {
   SelectSingleFilter,
   SelectMultipleFilter,
 } from '../../components';
+import { bool } from 'prop-types';
 
 /**
  * FilterComponent is used to map configured filter types
@@ -29,6 +30,7 @@ const FilterComponent = props => {
     currentActiveCategory,
     isMobileLayout,
     setSelectedCategoriesLength,
+    isFromLandingPageSearch,
     ...rest
   } = props;
   const { id, type, queryParamNames, label, labelImg, labelMobile, config } = filterConfig;
@@ -38,6 +40,8 @@ const FilterComponent = props => {
   const prefix = idPrefix || 'SearchPage';
   const componentId = `${prefix}.${id.toLowerCase()}`;
   const name = id.replace(/\s+/g, '-').toLowerCase();
+  // console.log('type:', type);
+
   switch (type) {
     case 'SelectSingleFilter': {
       return (
@@ -76,6 +80,7 @@ const FilterComponent = props => {
           currentActiveCategory={currentActiveCategory}
           isMobileLayout={isMobileLayout}
           setSelectedCategoriesLength={setSelectedCategoriesLength}
+          isFromLandingPageSearch={isFromLandingPageSearch}
           {...config}
           {...rest}
         />
@@ -124,6 +129,13 @@ const FilterComponent = props => {
     default:
       return null;
   }
+};
+
+FilterComponent.defaultProps = {
+  isFromLandingPageSearch: false,
+};
+FilterComponent.propTypes = {
+  isFromLandingPageSearch: bool,
 };
 
 export default FilterComponent;

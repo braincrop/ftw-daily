@@ -82,13 +82,18 @@ class TopbarSearchFormComponent extends Component {
                       predictionsAttributionClassName={
                         isMobile ? css.mobilePredictionsAttribution : null
                       }
-                      placeholder={intl.formatMessage({ id: 'TopbarSearchForm.placeholder' })}
+                      placeholder={
+                        this.props.isFromLandingPageSearch
+                          ? intl.formatMessage({ id: 'TopbarSearchForm.placeholderLanding' })
+                          : intl.formatMessage({ id: 'TopbarSearchForm.placeholder' })
+                      }
                       closeOnBlur={!isMobile}
                       inputRef={node => {
                         this.searchInput = node;
                       }}
                       input={searchInput}
                       meta={meta}
+                      isFromLandingPageSearch={this.props.isFromLandingPageSearch}
                     />
                   );
                 }}
@@ -109,6 +114,7 @@ TopbarSearchFormComponent.defaultProps = {
   className: null,
   desktopInputRoot: null,
   isMobile: false,
+  isFromLandingPageSearch: false,
 };
 
 TopbarSearchFormComponent.propTypes = {
@@ -117,6 +123,7 @@ TopbarSearchFormComponent.propTypes = {
   desktopInputRoot: string,
   onSubmit: func.isRequired,
   isMobile: bool,
+  isFromLandingPageSearch: bool,
 
   // from injectIntl
   intl: intlShape.isRequired,

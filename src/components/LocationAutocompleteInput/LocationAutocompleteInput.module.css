@@ -24,7 +24,6 @@
   @media (--viewportLarge) {
     flex: 0 0 100%;
     max-width: 100%;
-
   }
 }
 
@@ -160,4 +159,14 @@ bottom of the container.
 
 .currentLocationIcon {
   margin-right: 10px;
+}
+
+.inputClassLandingPlaceHolder {
+  font-size: 14px !important;
+}
+.inputClassLandingPlaceHolder::placeholder {
+  font-size: 15px !important;
+}
+.inputClassLandingPlaceHolder::placeholder {
+  color: #252525 !important;
 }

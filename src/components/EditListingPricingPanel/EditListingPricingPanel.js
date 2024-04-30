@@ -10,16 +10,14 @@ import {
   LINE_ITEM_UNITS,
   HOURLY_BOOKING,
   DAILY_BOOKING,
-  LISTING_STATE_DRAFT
+  LISTING_STATE_DRAFT,
 } from '../../util/types';
 import { ListingLink } from '../../components';
 import { EditListingPricingForm } from '../../forms';
 import { ensureOwnListing } from '../../util/data';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import config from '../../config';
-import {
-  createDefaultPlan
-} from '../../util/data';
+import { createDefaultPlan } from '../../util/data';
 
 import css from './EditListingPricingPanel.module.css';
 
@@ -39,7 +37,7 @@ const EditListingPricingPanel = props => {
     updateInProgress,
     errors,
     fetchListingProgress,
-    userPublicData
+    userPublicData,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -57,73 +55,77 @@ const EditListingPricingPanel = props => {
   );
 
   const initialPrices = listing => {
-    const {publicData, price} = listing && listing.attributes || {};
+    const { publicData, price } = (listing && listing.attributes) || {};
 
-    if (!publicData){
+    if (!publicData) {
       return null;
     }
 
     //for support old listings types
-    if (publicData.unitType && publicData.unitType === LINE_ITEM_DAY){
+    if (publicData.unitType && publicData.unitType === LINE_ITEM_DAY) {
       return {
         price: null,
-        [DAILY_PRICE]: price
-      }
+        [DAILY_PRICE]: price,
+      };
     }
 
     return {
       price,
-      ...([DAILY_PRICE, WEEKLY_PRICE, MONTHLY_PRICE].reduce((acc, p) => {
-        if (!publicData[p]){
+      ...[DAILY_PRICE, WEEKLY_PRICE, MONTHLY_PRICE].reduce((acc, p) => {
+        if (!publicData[p]) {
           return acc;
         }
 
-        const {amount, currency} = publicData[p];
+        const { amount, currency } = publicData[p];
 
         return {
           ...acc,
-          [p]: new Money(amount, currency)
-        }
-      }, {}))
-    }
-  }
+          [p]: new Money(amount, currency),
+        };
+      }, {}),
+    };
+  };
 
   const initialDiscounts = listing => {
-    const {publicData = {}} = listing && listing.attributes || {};
-    const {discount = {}} = publicData;
+    const { publicData = {} } = (listing && listing.attributes) || {};
+    const { discount = {} } = publicData;
 
-    return {discount: {
-      type: publicData[LINE_ITEM_DAY] ? DAILY_BOOKING : HOURLY_BOOKING,
-      ...discount,
-    }}
-  }
-const { minBooking } = publicData
-const { minBookingType, minBookingCount } = minBooking || {}
+    return {
+      discount: {
+        type: publicData[LINE_ITEM_DAY] ? DAILY_BOOKING : HOURLY_BOOKING,
+        ...discount,
+      },
+    };
+  };
+  const { minBooking } = publicData;
+  const { minBookingType, minBookingCount } = minBooking || {};
   const initialValues = {
-    currency: userPublicData && userPublicData.currency || config.currency,
+    currency: (userPublicData && userPublicData.currency) || config.currency,
     price,
     minBookingType,
     minBookingCount,
     // ...initialDiscounts(listing),
-    ...initialPrices(listing)
+    ...initialPrices(listing),
   };
 
   const managePrices = values => {
     return [DAILY_PRICE, WEEKLY_PRICE, MONTHLY_PRICE].reduce((acc, p) => {
-      const {amount, currency} = values[p] || {};
+      const { amount, currency } = values[p] || {};
 
       return {
         ...acc,
-        [p]: amount ? {amount, currency} : null,
-        [`${p}Filter`]: amount ? amount/100 : null
-      }
+        [p]: amount ? { amount, currency } : null,
+        [`${p}Filter`]: amount ? amount / 100 : null,
+      };
     }, {});
-  }
+  };
 
   const updateAvailabilityMaybe = values => {
-    return (values[WEEKLY_PRICE] && !initialValues[WEEKLY_PRICE]) ||
-           (values[MONTHLY_PRICE] && !initialValues[MONTHLY_PRICE])
-  }
+    return (
+      (values[WEEKLY_PRICE] && !initialValues[WEEKLY_PRICE]) ||
+      (values[MONTHLY_PRICE] && !initialValues[MONTHLY_PRICE])
+    );
+  };
 
   // const priceCurrencyValid = price instanceof Money ? price.currency === config.currency : true;
   const priceCurrencyValid = true;
@@ -136,7 +138,7 @@ const { minBookingType, minBookingCount } = minBooking || {}
       fetchListingProgress={fetchListingProgress}
       onSubmit={values => {
         const { price, discount, minBookingType, minBookingCount, currency } = values;
-        const minBooking = { minBookingType, minBookingCount }
+        const minBooking = { minBookingType, minBookingCount };
         onSubmit({
           price,
           currency,
@@ -144,9 +146,11 @@ const { minBookingType, minBookingCount } = minBooking || {}
             minBooking,
             unitType: null, //remove unittype field from previous realisation
             // discount,
-            ...managePrices(values)
+            ...managePrices(values),
           },
-          ...(updateAvailabilityMaybe(values) ? {availabilityPlan: createDefaultPlan(publicData.seats || 1, true)} : {}),
+          ...(updateAvailabilityMaybe(values)
+            ? { availabilityPlan: createDefaultPlan(publicData.seats || 1, true) }
+            : {}),
         });
       }}
       onChange={onChange}

@@ -95,9 +95,9 @@ export const validFilterParams = (params, filters) => {
 
     return filterParamNames.includes(paramName)
       ? {
-        ...validParams,
-        ...validURLParamForExtendedData(paramName, paramValue, filters),
-      }
+          ...validParams,
+          ...validURLParamForExtendedData(paramName, paramValue, filters),
+        }
       : { ...validParams };
   }, {});
 };
@@ -117,11 +117,10 @@ export const validURLParamsForExtendedData = (params, filters) => {
   return paramEntries.reduce((validParams, entry) => {
     const [paramName, paramValue] = entry;
     return filterParamNames.includes(paramName)
-      ?
-      {
-        ...validParams,
-        ...validURLParamForExtendedData(paramName, paramValue, filters)
-      }
+      ? {
+          ...validParams,
+          ...validURLParamForExtendedData(paramName, paramValue, filters),
+        }
       : { ...validParams, [paramName]: paramValue };
   }, {});
 };
@@ -160,7 +159,11 @@ export const createSearchResultSchema = (listings, address, intl, pub_category, 
   // We are using JSON-LD format
   const siteTitle = config.siteTitle;
   const newAddress = address && address.substring(0, address.indexOf(','));
-  const searchAddress = newAddress || intl.formatMessage({ id: 'SearchPage.schemaMapSearch' });
+  const searchAddress =
+    newAddress ||
+    (address === 'World Wide'
+      ? intl.formatMessage({ id: 'SearchPage.schemaMapSearchWW' })
+      : intl.formatMessage({ id: 'SearchPage.schemaMapSearch' }));
   const schemaDescription = intl.formatMessage({ id: 'SearchPage.schemaDescription' });
   // const nail = [
   //   'nail-technician',
@@ -176,121 +179,164 @@ export const createSearchResultSchema = (listings, address, intl, pub_category, 
   // const space = ['desk-space', 'office-space', 'meeting-room-space'];
   const filt = pub_category ? pub_category.replace('has_any:', '').split(',') : '';
   let schemaTitle;
-  if(searchAddress =="United Kingdom") {
-   schemaTitle = intl.formatMessage(
-    {id: 'SearchPage.schemaTitleUK' },
-    { searchAddress, siteTitle }
+  if (address === 'World Wide') {
+    schemaTitle = intl.formatMessage({ id: 'SearchPage.schemaTitleWW' }, { address, siteTitle });
+    console.log('helpers1: ', searchAddress, address);
+  } else if (searchAddress == 'United Kingdom' && address !== 'World Wide') {
+    schemaTitle = intl.formatMessage(
+      { id: 'SearchPage.schemaTitleUK' },
+      { searchAddress, siteTitle }
     );
-    } else {
-   schemaTitle = intl.formatMessage(
-    { id: 'SearchPage.schemaTitle' },
-    { searchAddress, siteTitle }
-  );
-  };
+    console.log('helpers2: ', searchAddress, address);
+  } else {
+    schemaTitle = intl.formatMessage(
+      { id: 'SearchPage.schemaTitle' },
+      { searchAddress, siteTitle }
+    );
+    console.log('helpers3: ', searchAddress, address);
+  }
   let firstThreeCategoryTitle;
-  
+
   const arrayCategory = filterConfig.filter(e => e.queryParamNames[0] === 'pub_category');
   arrayCategory.forEach(e => {
     // let article = 'to rent';
     const arrForHire = [
-      'tattoo-and-piercing', 
-      'dance-studio', 
-      'sports-hall', 
-      'outdoor-site', 
-      'meeting-room-space', 
-      'conference-room', 
+      'tattoo-and-piercing',
+      'dance-studio',
+      'sports-hall',
+      'outdoor-site',
+      'meeting-room-space',
+      'conference-room',
       'classroom',
-      'recording-studio', 
+      'recording-studio',
       'gallery-space',
       'rehearsal-space',
       'music-venue',
       'private-event-space',
       'sports-venue',
-      'conference-exhibition', 
-      'outdoor-events', 
+      'conference-exhibition',
+      'outdoor-events',
       'private-dining',
     ];
 
-    const arrToHire = ['activity-room', 'classroom', 'recording-studio', 'drama-studio', 'theatre-space'];
-    const arrForHireSpace = ['hair-stylist', 'barber', 'makeup-artist', 'nail-technician', 'cosmetics', 'beauty-treatment-room'];
+    const arrToHire = [
+      'activity-room',
+      'classroom',
+      'recording-studio',
+      'drama-studio',
+      'theatre-space',
+    ];
+    const arrForHireSpace = [
+      'hair-stylist',
+      'barber',
+      'makeup-artist',
+      'nail-technician',
+      'cosmetics',
+      'beauty-treatment-room',
+    ];
 
     const cat = e.config.catKeys.split(',');
 
-    if(!!filt && filt.sort().join(',') === cat.sort().join(',') && filt.includes('hair-stylist')) {
+    if (!!filt && filt.sort().join(',') === cat.sort().join(',') && filt.includes('hair-stylist')) {
       firstThreeCategoryTitle = intl.formatMessage(
         { id: 'SearchPage.schemaTitleNairBeauty' },
         { searchAddress, siteTitle }
-      )
-    } else if (!!filt && filt.sort().join(',') === cat.sort().join(',') && filt.includes('therapy-room')) {
+      );
+    } else if (
+      !!filt &&
+      filt.sort().join(',') === cat.sort().join(',') &&
+      filt.includes('therapy-room')
+    ) {
       firstThreeCategoryTitle = intl.formatMessage(
         { id: 'SearchPage.schemaTitleWellness' },
         { searchAddress, siteTitle }
-      )
-    } else if (!!filt && filt.sort().join(',') === cat.sort().join(',') && filt.includes('fitness')) {
+      );
+    } else if (
+      !!filt &&
+      filt.sort().join(',') === cat.sort().join(',') &&
+      filt.includes('fitness')
+    ) {
       firstThreeCategoryTitle = intl.formatMessage(
         { id: 'SearchPage.schemaTitleFitness' },
         { searchAddress, siteTitle }
-      )
+      );
     }
 
-    if (!!filt && filt.every((e) => cat.includes(e))) {
-      const article = filt.some(e => arrToHire.includes(e)) ? 'to hire' :
-        // filt.some(e => arrForHire.includes(e)) ? 'for hire' : filt.some(e => arrForHireSpace.includes(e)) ? 'space to rent' : 'to rent';
-        filt.some(e => arrForHire.includes(e)) ? 'for hire' : 'to rent';
+    if (!!filt && filt.every(e => cat.includes(e))) {
+      const article = filt.some(e => arrToHire.includes(e))
+        ? 'to hire'
+        : // filt.some(e => arrForHire.includes(e)) ? 'for hire' : filt.some(e => arrForHireSpace.includes(e)) ? 'space to rent' : 'to rent';
+        filt.some(e => arrForHire.includes(e))
+        ? 'for hire'
+        : 'to rent';
 
       const aaa = e.config.options.filter(el => filt.indexOf(el.key) != -1).map(e => e.metaLabel);
-      const ddd = aaa.includes('Kitchen Space') && aaa.length >= 2 ? aaa.filter(item => item !== 'Kitchen Space') : aaa;
+      const ddd =
+        aaa.includes('Kitchen Space') && aaa.length >= 2
+          ? aaa.filter(item => item !== 'Kitchen Space')
+          : aaa;
       const uniqueCategory = ddd.join(', ');
       const eventsCat = cat.filter(e => e !== 'kitchen-space');
 
       // console.log(cat, "!!!!!!!cat");
       // console.log(uniqueCategory, "!!!!!!!!uniqueCategory");
 
-      !uniqueCategory  ? 
-        schemaTitle = intl.formatMessage(
-          { id: 'SearchPage.schemaTitle' },
-          { searchAddress, siteTitle }
-        ) : filt.sort().join(',') === cat.sort().join(',') && filt.includes('hair-stylist') ?
-          schemaTitle = intl.formatMessage(
+      !uniqueCategory
+        ? (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitle' },
+            { searchAddress, siteTitle }
+          ))
+        : filt.sort().join(',') === cat.sort().join(',') && filt.includes('hair-stylist')
+        ? (schemaTitle = intl.formatMessage(
             { id: 'SearchPage.schemaTitleNairBeauty' },
             { searchAddress, siteTitle }
-          ) : filt.sort().join(',') === cat.sort().join(',') && filt.includes('therapy-room') ?
-            schemaTitle = intl.formatMessage(
-              { id: 'SearchPage.schemaTitleWellness' },
-              { searchAddress, siteTitle }
-            ) : filt.sort().join(',') === cat.sort().join(',') && filt.includes('fitness') ?
-            schemaTitle = intl.formatMessage(
-              { id: 'SearchPage.schemaTitleFitness' },
-              { searchAddress, siteTitle }
-            ) : filt.sort().join(',') === cat.sort().join(',') && filt.includes('photography') ?
-            schemaTitle = intl.formatMessage(
-              { id: 'SearchPage.schemaTitlePhotographyFilm' },
-              { searchAddress, siteTitle }
-            ) : filt.sort().join(',') === cat.sort().join(',') && filt.includes('desk-space') ?
-              schemaTitle = intl.formatMessage(
-                { id: 'SearchPage.schemaTitleCoworking' },
-                { searchAddress, siteTitle }
-              ) : filt.sort().join(',') === cat.sort().join(',') && filt.includes('music-studio') ?
-                schemaTitle = intl.formatMessage(
-                  { id: 'SearchPage.schemaTitleMusicArts' },
-                  { searchAddress, siteTitle }
-                ) : filt.sort().join(',') === cat.sort().join(',') && filt.includes('music-venue') ?
-                  schemaTitle = intl.formatMessage(
-                    { id: 'SearchPage.schemaTitleEventsVenues' },
-                    { searchAddress, siteTitle }
-                  ) : filt.sort().join(',') === cat.sort().join(',') && filt.includes('kitchen-space') ?
-                    schemaTitle = intl.formatMessage(
-                      { id: 'SearchPage.schemaTitleKitchensandPopUps' },
-                      { searchAddress, siteTitle }
-                    ) :
-                  schemaTitle = intl.formatMessage(
-                    { id: 'SearchPage.schemaTitleNew' },
-                    { uniqueCategory, article, searchAddress, siteTitle }
-                  );
-      }
-
-  })
-
+          ))
+        : filt.sort().join(',') === cat.sort().join(',') && filt.includes('therapy-room')
+        ? (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitleWellness' },
+            { searchAddress, siteTitle }
+          ))
+        : filt.sort().join(',') === cat.sort().join(',') && filt.includes('fitness')
+        ? (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitleFitness' },
+            { searchAddress, siteTitle }
+          ))
+        : filt.sort().join(',') === cat.sort().join(',') && filt.includes('photography')
+        ? (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitlePhotographyFilm' },
+            { searchAddress, siteTitle }
+          ))
+        : filt.sort().join(',') === cat.sort().join(',') && filt.includes('desk-space')
+        ? (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitleCoworking' },
+            { searchAddress, siteTitle }
+          ))
+        : filt.sort().join(',') === cat.sort().join(',') && filt.includes('music-studio')
+        ? (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitleMusicArts' },
+            { searchAddress, siteTitle }
+          ))
+        : filt.sort().join(',') === cat.sort().join(',') && filt.includes('music-venue')
+        ? (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitleEventsVenues' },
+            { searchAddress, siteTitle }
+          ))
+        : filt.sort().join(',') === cat.sort().join(',') && filt.includes('kitchen-space')
+        ? (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitleKitchensandPopUps' },
+            { searchAddress, siteTitle }
+          ))
+        : address !== 'World Wide'
+        ? (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitleNew' },
+            { uniqueCategory, article, searchAddress, siteTitle }
+          ))
+        : (schemaTitle = intl.formatMessage(
+            { id: 'SearchPage.schemaTitleNewWW' },
+            { uniqueCategory, article, searchAddress, siteTitle }
+          ));
+    }
+  });
 
   // SearchPage.schemaTitleStudios
   const schemaListings = listings.map((l, i) => {

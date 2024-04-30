@@ -125,6 +125,8 @@ class CurrencyInputComponent extends Component {
         const price = getPrice(ensureDotSeparator(prevState.unformattedValue), currencyConfig);
         onBlur(price);
       }
+      console.log(prevState.formattedValue);
+      console.log(currencyConfig);
       return {
         value: prevState.formattedValue,
       };

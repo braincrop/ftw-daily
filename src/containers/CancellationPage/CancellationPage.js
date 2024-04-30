@@ -77,7 +77,7 @@ const CancellationPage = () => {
               rescheduled if mutually agreed upon. This must be agreed upon in a time period that complies
               with the Booking Cancellation Policy.</p>
               <h2 id="cancellation-policy-exemptions">Cancellation Policy Exemptions</h2>
-              <p>When approved by both parties and HotPatch, the cancellation Platformolicy fees may be waived. We
+              <p>When approved by both parties and HotPatch, the cancellation Platform policy fees may be waived. We
               encourage parties in booking agreements to communicate and work through any potential
               scheduling issues or cancellations directly and immediately.</p>
             </div>

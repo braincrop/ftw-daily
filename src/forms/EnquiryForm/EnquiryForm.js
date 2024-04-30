@@ -39,16 +39,15 @@ const EnquiryFormComponent = props => (
         },
         { authorDisplayName }
       );
-      const messageRequiredMessage = intl.formatMessage({id: 'EnquiryForm.messageRequired',});
+      const messageRequiredMessage = intl.formatMessage({ id: 'EnquiryForm.messageRequired' });
 
       const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
 
       // message warning
 
-      const firstWarning = intl.formatMessage({id: 'TransactionPage.warningNotification1'});
-      const secondWarning = intl.formatMessage({id: 'TransactionPage.warningNotification2'});
-      const thirdWarning = intl.formatMessage({id: 'TransactionPage.warningNotification3'});
-
+      const firstWarning = intl.formatMessage({ id: 'TransactionPage.warningNotification1' });
+      const secondWarning = intl.formatMessage({ id: 'TransactionPage.warningNotification2' });
+      const thirdWarning = intl.formatMessage({ id: 'TransactionPage.warningNotification3' });
 
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
@@ -58,7 +57,10 @@ const EnquiryFormComponent = props => (
         <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
           <IconEnquiry className={css.icon} />
           <h2 className={css.heading}>
-            <FormattedMessage id="EnquiryForm.heading" values={{ listingTitle, authorDisplayName}} />
+            <FormattedMessage
+              id="EnquiryForm.heading"
+              values={{ listingTitle, authorDisplayName }}
+            />
           </h2>
           <FieldTextInput
             className={css.field}

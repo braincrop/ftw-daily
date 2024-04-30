@@ -8,7 +8,12 @@ import { withRouter } from 'react-router-dom';
 import config from '../../config';
 import routeConfiguration from '../../routeConfiguration';
 import { findOptionsForSelectFilter } from '../../util/search';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes, HOURLY_PRICE } from '../../util/types';
+import {
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_CLOSED,
+  propTypes,
+  HOURLY_PRICE,
+} from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -25,7 +30,7 @@ import {
   ensureUser,
   userDisplayNameAsString,
   getLowestPrice,
-  getSelectedCategories
+  getSelectedCategories,
 } from '../../util/data';
 import { timestampToDate, calculateQuantityFromHours } from '../../util/dates';
 import { richText } from '../../util/richText';
@@ -51,7 +56,7 @@ import {
   loadData,
   setInitialValues,
   fetchTimeSlotsTime,
-  fetchTransactionLineItems
+  fetchTransactionLineItems,
 } from './ListingPage.duck';
 import SectionImages from './SectionImages';
 import SectionAvatar from './SectionAvatar';
@@ -67,13 +72,17 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionCapacity from './SectionCapacity';
 import SectionSeats from './SectionSeats';
 import css from './ListingPage.module.css';
+import Swal from 'sweetalert2';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
 const { UUID, Money } = sdkTypes;
 
 const priceData = (price, intl) => {
-  if (price && (price.currency === config.currency || price.currency === config.additionalCurrency)) {
+  if (
+    price &&
+    (price.currency === config.currency || price.currency === config.additionalCurrency)
+  ) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };
   } else if (price) {
@@ -87,9 +96,9 @@ const priceData = (price, intl) => {
 
 const categoryLabel = (categories, key) => {
   const cats = getSelectedCategories(key, categories);
-  const categoryOptionsToSelect = categories && categories.filter(item => cats.includes(item.key))
+  const categoryOptionsToSelect = categories && categories.filter(item => cats.includes(item.key));
 
-  return [...new Set(categoryOptionsToSelect.map(({ label }) => label))].join(' | ')
+  return [...new Set(categoryOptionsToSelect.map(({ label }) => label))].join(' | ');
 };
 
 export class ListingPageComponent extends Component {
@@ -101,19 +110,18 @@ export class ListingPageComponent extends Component {
       pageClassNames: [],
       imageCarouselOpen: false,
       enquiryModalOpen: enquiryModalOpenForListingId === params.id,
-      bookingType: null
+      bookingType: null,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onContactUser = this.onContactUser.bind(this);
     this.onSubmitEnquiry = this.onSubmitEnquiry.bind(this);
     this.toggleBookingType = this.toggleBookingType.bind(this);
-
   }
 
-  updateDiscount = (val) => {
-    this.setState({ promocode: val })
-  }
+  updateDiscount = val => {
+    this.setState({ promocode: val });
+  };
   toggleBookingType(bookingType) {
     this.setState({ bookingType });
   }
@@ -131,8 +139,20 @@ export class ListingPageComponent extends Component {
     const listing = getListing(listingId);
 
     const { bookingStartTime, bookingEndTime, bookingDates, ...restOfValues } = values;
-    const bookingStart = bookingType === HOURLY_PRICE ? timestampToDate(bookingStartTime) : moment.utc(bookingDates.startDate).startOf('day').toDate();
-    const bookingEnd = bookingType === HOURLY_PRICE ? timestampToDate(bookingEndTime) : moment.utc(bookingDates.endDate).startOf('day').toDate();
+    const bookingStart =
+      bookingType === HOURLY_PRICE
+        ? timestampToDate(bookingStartTime)
+        : moment
+            .utc(bookingDates.startDate)
+            .startOf('day')
+            .toDate();
+    const bookingEnd =
+      bookingType === HOURLY_PRICE
+        ? timestampToDate(bookingEndTime)
+        : moment
+            .utc(bookingDates.endDate)
+            .startOf('day')
+            .toDate();
     const promocode = this.state.promocode;
 
     const bookingData = {
@@ -175,7 +195,15 @@ export class ListingPageComponent extends Component {
   }
 
   onContactUser() {
-    const { currentUser, history, callSetInitialValues, params, location, getOwnListing, getListing} = this.props;
+    const {
+      currentUser,
+      history,
+      callSetInitialValues,
+      params,
+      location,
+      getOwnListing,
+      getListing,
+    } = this.props;
 
     // const listingId = new UUID(params.id);
     // const isPendingApprovalVariant = params.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
@@ -187,9 +215,8 @@ export class ListingPageComponent extends Component {
 
     // var data = currentListing?.attributes?.title
     // var patchId = currentListing?.id?.uuid;
-  
+
     // var url = "https://share.hsforms.com/1Zq6xDjz7RCG8gjdC1vBbgA57edm?patch_name=" + encodeURIComponent(JSON.stringify(data)) + "&patch_url=https://www.hotpatch.com/l/" + encodeURIComponent(patchId);
-  
 
     if (!currentUser) {
       const state = { from: `${location.pathname}${location.search}${location.hash}` };
@@ -201,10 +228,10 @@ export class ListingPageComponent extends Component {
 
       // signup and return back to listingPage.
       history.push(createResourceLocatorString('SignupPage', routeConfiguration(), {}, {}), state);
+    } else {
+      console.log('user is loged in but enquirey modal is not opening');
+      this.setState({ enquiryModalOpen: true });
     }
-    //  else {
-    //   this.setState({ enquiryModalOpen: true });
-    // }
   }
 
   onSubmitEnquiry(values, unitType) {
@@ -212,8 +239,34 @@ export class ListingPageComponent extends Component {
     const routes = routeConfiguration();
     const listingId = new UUID(params.id);
     const { message } = values;
+    let modifiedMessage = message;
 
-    onSendEnquiry(listingId, message.trim(), unitType)
+    //! Remove comments to apply regex functionality on messages
+    // const hideEmail = text =>
+    //   text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'HIDDEN');
+    // const hidePhone = text =>
+    //   text.replace(/(\+?\d{0,2}\s?)?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{4}/g, 'HIDDEN');
+    // const hideWebsite = text =>
+    //   text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, 'HIDDEN');
+    // modifiedMessage = hideEmail(modifiedMessage);
+    // modifiedMessage = hidePhone(modifiedMessage);
+    // modifiedMessage = hideWebsite(modifiedMessage);
+
+    // console.log('regex,', modifiedMessage, !modifiedMessage.includes('HIDDEN'));
+    // if (!modifiedMessage.includes('HIDDEN')) {
+    //   Swal.fire({
+    //     title: "Hold your horses! We can't hit that send button just yet",
+    //     text: `Contact info can't be shared until a booking is confirmed.
+    //        To send the message, please remove the contact info.`,
+    //     confirmButtonText: 'Edit Message',
+    //     confirmButtonColor: '#5cbfcc',
+    //   }).then(() => {
+    //     return;
+    //   });
+    //   return;
+    // }
+
+    onSendEnquiry(listingId, modifiedMessage.trim(), unitType)
       .then(txId => {
         this.setState({ enquiryModalOpen: false });
 
@@ -315,12 +368,13 @@ export class ListingPageComponent extends Component {
 
     const planSubtitle = {
       'availability-plan/day': 'days',
-      'availability-plan/time': 'hours'
+      'availability-plan/time': 'hours',
     };
-    const subtitle = availabilityPlan
-      ? planSubtitle[availabilityPlan.type]
-      : '';
-    const bookingSubTitle = intl.formatMessage({ id: 'ListingPage.bookingSubTitle' }, { availabilityPlan: subtitle });
+    const subtitle = availabilityPlan ? planSubtitle[availabilityPlan.type] : '';
+    const bookingSubTitle = intl.formatMessage(
+      { id: 'ListingPage.bookingSubTitle' },
+      { availabilityPlan: subtitle }
+    );
 
     const topbar = <TopbarContainer />;
 
@@ -334,7 +388,7 @@ export class ListingPageComponent extends Component {
       const errorTitle = intl.formatMessage({
         id: 'ListingPage.errorLoadingListingTitle',
       });
-//temp
+      //temp
       return (
         <Page title={errorTitle} scrollingDisabled={scrollingDisabled}>
           <LayoutSingleColumn className={css.pageRoot}>
@@ -396,10 +450,15 @@ export class ListingPageComponent extends Component {
     // banned or deleted display names for the function
     const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
 
-    const { key: priceType, value: { amount, currency } } = getLowestPrice(currentListing);
+    const {
+      key: priceType,
+      value: { amount, currency },
+    } = getLowestPrice(currentListing);
 
-    const { formattedPrice, priceTitle } = priceData(amount && currency ? new Money(amount, currency) : null, intl);
-
+    const { formattedPrice, priceTitle } = priceData(
+      amount && currency ? new Money(amount, currency) : null,
+      intl
+    );
 
     const handleBookingSubmit = values => {
       const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
@@ -460,13 +519,16 @@ export class ListingPageComponent extends Component {
       ) : null;
 
     const hasImages = currentListing.images && currentListing.images.length > 0;
-    const firstImage = hasImages && currentListing.images[0].attributes.variants ? currentListing.images[0].attributes.variants["landscape-crop2x"].url : null;
+    const firstImage =
+      hasImages && currentListing.images[0].attributes.variants
+        ? currentListing.images[0].attributes.variants['landscape-crop2x'].url
+        : null;
 
     const listingLink = typeof window === 'undefined' ? '' : window.location.href;
     const emailMessageForSharing = intl.formatMessage(
-      { id: "ListingPage.emailMessageForSharing" },
-      { listingLink: listingLink, listingName: currentListing.attributes.title });
-
+      { id: 'ListingPage.emailMessageForSharing' },
+      { listingLink: listingLink, listingName: currentListing.attributes.title }
+    );
 
     return (
       <Page
@@ -524,8 +586,9 @@ export class ListingPageComponent extends Component {
                     sendEnquiryError={sendEnquiryError}
                     sendEnquiryInProgress={sendEnquiryInProgress}
                     onSubmitEnquiry={params => {
-                      const { unitType = config.fallbackUnitType } = currentListing.attributes.publicData || {};
-                      this.onSubmitEnquiry(params, unitType)
+                      const { unitType = config.fallbackUnitType } =
+                        currentListing.attributes.publicData || {};
+                      this.onSubmitEnquiry(params, unitType);
                     }}
                     onManageDisableScrolling={onManageDisableScrolling}
                   />
@@ -535,16 +598,11 @@ export class ListingPageComponent extends Component {
                         alignment: 'left',
                         color: 'social',
                         enabled: true,
-                        networks: [
-                          'twitter',
-                          'facebook',
-                          'whatsapp',
-                          'email'
-                        ],
+                        networks: ['twitter', 'facebook', 'whatsapp', 'email'],
                         radius: 4,
                         size: 45,
 
-                        title: "Check out this listing on HotPatch!",
+                        title: 'Check out this listing on HotPatch!',
                         subject: 'Check out this listing on HotPatch!',
                         servicePopup: true,
                         message: emailMessageForSharing,
@@ -578,8 +636,9 @@ export class ListingPageComponent extends Component {
                     sendEnquiryError={sendEnquiryError}
                     sendEnquiryInProgress={sendEnquiryInProgress}
                     onSubmitEnquiry={params => {
-                      const { unitType = config.fallbackUnitType } = currentListing.attributes.publicData || {};
-                      this.onSubmitEnquiry(params, unitType)
+                      const { unitType = config.fallbackUnitType } =
+                        currentListing.attributes.publicData || {};
+                      this.onSubmitEnquiry(params, unitType);
                     }}
                     currentUser={currentUser}
                     onManageDisableScrolling={onManageDisableScrolling}
@@ -735,11 +794,12 @@ const mapDispatchToProps = dispatch => ({
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
-  onSendEnquiry: (listingId, message, unitType) => dispatch(sendEnquiry(listingId, message, unitType)),
+  onSendEnquiry: (listingId, message, unitType) =>
+    dispatch(sendEnquiry(listingId, message, unitType)),
   callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: (bookingData, listingId, isOwnListing) => {
-    return (dispatch(fetchTransactionLineItems(bookingData, listingId, isOwnListing)))
+    return dispatch(fetchTransactionLineItems(bookingData, listingId, isOwnListing));
   },
   onSendEnquiry: (listingId, message) => dispatch(sendEnquiry(listingId, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
@@ -755,10 +815,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const ListingPage = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   injectIntl
 )(ListingPageComponent);
 

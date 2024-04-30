@@ -17,7 +17,7 @@ class SearchFiltersMobileComponent extends Component {
     this.state = {
       isFiltersOpenOnMobile: false,
       initialQueryParams: null,
-      isCategoryFiltersOpenOnMobile: false,
+      isCategoryFiltersOpenOnMobile: true,
     };
 
     this.openFilters = this.openFilters.bind(this);
@@ -86,13 +86,16 @@ class SearchFiltersMobileComponent extends Component {
       intl,
       currentActiveCategory,
       filterConfig,
-      initialValues
+      initialValues,
+      isFromLandingPageSearch,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
     const categoryChildren = children.filter(c => c.props.isCategory);
 
-    const nonCategoryChildren = children.filter(c => (!c.props.isCategory && !c.props.isCategoryAmenities));
+    const nonCategoryChildren = children.filter(
+      c => !c.props.isCategory && !c.props.isCategoryAmenities
+    );
 
     const resultsFound = (
       <FormattedMessage id="SearchFiltersMobile.foundResults" values={{ count: resultsCount }} />
@@ -117,15 +120,17 @@ class SearchFiltersMobileComponent extends Component {
     //   && generalAmenitiesSelectedOptions
     //   && generalAmenitiesOptions.some(item => item.key === generalAmenitiesSelectedOptions?.[0])
 
-
     return (
       <div className={classes}>
-        <div className={css.searchResultSummary}>
+        <div
+          className={css.searchResultSummary}
+          style={isFromLandingPageSearch ? { display: 'none' } : {}}
+        >
           {listingsAreLoaded && resultsCount > 0 ? resultsFound : null}
           {listingsAreLoaded && resultsCount === 0 ? noResults : null}
           {searchInProgress ? loadingResults : null}
         </div>
-        <div className={css.buttons}>
+        <div className={css.buttons} style={isFromLandingPageSearch ? { display: 'none' } : {}}>
           <Button rootClassName={filtersButtonClasses} onClick={this.openFilters}>
             <FormattedMessage
               id="SearchFiltersMobile.filtersButtonLabel"
@@ -148,44 +153,65 @@ class SearchFiltersMobileComponent extends Component {
         >
           <div className={css.modalHeadingWrapper}>
             <span className={css.modalHeading}>{filtersHeading}</span>
-            <button className={css.resetAllButton} onClick={e => this.resetAll(e)}>
+            <button
+              style={isFromLandingPageSearch ? { display: 'none' } : {}}
+              className={css.resetAllButton}
+              onClick={e => this.resetAll(e)}
+            >
               <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
             </button>
           </div>
 
           {this.state.isFiltersOpenOnMobile ? (
             <>
-              <div className={classNames(css.filtersWrapperTitle, {[css.filtersWrapperTitleActive]: this.state.isCategoryFiltersOpenOnMobile})} onClick={this.openCategoryFilters}>
+              <div
+                className={classNames(css.filtersWrapperTitle, {
+                  [css.filtersWrapperTitleActive]: this.state.isCategoryFiltersOpenOnMobile,
+                })}
+                onClick={this.openCategoryFilters}
+              >
                 <FormattedMessage id={'FilterForm.patchCategoryMobile'} />
               </div>
               <div className={css.filtersWrapper}>
                 {this.state.isCategoryFiltersOpenOnMobile && (
                   <div className={css.categoryItemsHolder}>
                     {categoryChildren.map((category, i) => {
-
-                      const categoryAmenities = children.filter(item => item.props.filterConfig.idCategory === category.props.filterConfig.id)
+                      const categoryAmenities = children.filter(
+                        item =>
+                          item.props.filterConfig.idCategory === category.props.filterConfig.id
+                      );
                       const categoryItemClasses = classNames(
                         css.categoryItem,
-                        { [css.categoryItemActive]: category.props.filterConfig.id === currentActiveCategory },
-                        { [css.categoryItemNotActive]: !!currentActiveCategory && category.props.filterConfig.id !== currentActiveCategory },
+                        {
+                          [css.categoryItemActive]:
+                            category.props.filterConfig.id === currentActiveCategory,
+                        },
+                        {
+                          [css.categoryItemNotActive]:
+                            !!currentActiveCategory &&
+                            category.props.filterConfig.id !== currentActiveCategory,
+                        }
                         // { [css.generalAmenitiesFilterActive]: generalAmenitiesFilterActive }
-                      )
+                      );
 
                       return (
                         <div key={`category-${i}`} className={categoryItemClasses}>
                           {categoryAmenities}
                           {category}
                         </div>
-                      )
+                      );
                     })}
                   </div>
                 )}
-                {nonCategoryChildren}
+                {isFromLandingPageSearch || nonCategoryChildren}
               </div>
             </>
           ) : null}
 
-          <div className={css.showListingsContainer}>
+          <div
+            style={isFromLandingPageSearch ? { display: 'none' } : {}}
+            className={css.showListingsContainer}
+          >
             <Button className={css.showListingsButton} onClick={this.closeFilters}>
               {showListingsLabel}
             </Button>
@@ -203,6 +229,7 @@ SearchFiltersMobileComponent.defaultProps = {
   resultsCount: null,
   searchInProgress: false,
   selectedFiltersCount: 0,
+  isFromLandingPageSearch: false,
 };
 
 SearchFiltersMobileComponent.propTypes = {
@@ -213,6 +240,7 @@ SearchFiltersMobileComponent.propTypes = {
   listingsAreLoaded: bool.isRequired,
   resultsCount: number,
   searchInProgress: bool,
+  isFromLandingPageSearch: bool,
   showAsModalMaxWidth: number.isRequired,
   onMapIconClick: func.isRequired,
   onManageDisableScrolling: func.isRequired,

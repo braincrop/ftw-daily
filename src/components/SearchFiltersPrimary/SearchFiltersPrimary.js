@@ -2,7 +2,7 @@ import React from 'react';
 import { bool, func, node, number, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { OutsideClickHandler, IconCloseCustom } from '../../components';
+import { OutsideClickHandler, IconCloseCustom, InlineTextButton } from '../../components';
 
 import css from './SearchFiltersPrimary.module.css';
 import { Classnames } from 'react-alice-carousel';
@@ -22,7 +22,9 @@ const SearchFiltersPrimaryComponent = props => {
     onOpenCategoryFilter,
     onCloseCategoryFilter,
     isCategoryFilterOpen,
-    isCategoryFilterEnabled
+    isCategoryFilterEnabled,
+    isFromLandingPageSearch,
+    isFromLandingPageSearchMobile,
   } = props;
 
   const hasNoResult = listingsAreLoaded && resultsCount === 0;
@@ -33,7 +35,6 @@ const SearchFiltersPrimaryComponent = props => {
       ? css.searchFiltersPanelOpen
       : css.searchFiltersPanelClosed;
   const toggleSecondaryFiltersOpenButton = toggleSecondaryFiltersOpen ? (
-
     <button
       className={toggleSecondaryFiltersOpenButtonClasses}
       onClick={() => {
@@ -48,6 +49,7 @@ const SearchFiltersPrimaryComponent = props => {
     </button>
   ) : null;
 
+  // console.log('child: ', children);
   const nonCategoryChildren = children.filter(c => !c.props.isCategory);
   const categoryChildren = children.filter(c => c.props.isCategory);
   const categoriesText = (
@@ -59,7 +61,7 @@ const SearchFiltersPrimaryComponent = props => {
   );
 
   return (
-    <div className={classes}>
+    <div className={isFromLandingPageSearch ? css.rootLanding : classes}>
       <div className={css.searchOptions}>
         {listingsAreLoaded ? (
           <div className={css.searchResultSummary}>
@@ -73,15 +75,42 @@ const SearchFiltersPrimaryComponent = props => {
         ) : null}
 
         <div className={css.filters}>
-          <OutsideClickHandler onOutsideClick={isCategoryFilterOpen && onOpenCategoryFilter || onCloseCategoryFilter}>
-            <button className={classNames(css.searchFiltersPanelClosed, { [css.active]: isCategoryFilterEnabled })} onClick={onOpenCategoryFilter}>
+          <OutsideClickHandler
+            onOutsideClick={(isCategoryFilterOpen && onOpenCategoryFilter) || onCloseCategoryFilter}
+          >
+            <button
+              className={classNames(css.searchFiltersPanelClosed, {
+                [css.active]: isCategoryFilterEnabled,
+              })}
+              style={isFromLandingPageSearch ? { display: 'none' } : {}}
+              onClick={onOpenCategoryFilter}
+            >
               <FormattedMessage id="SearchFiltersPrimary.categoriesBtn" />
             </button>
             {isCategoryFilterOpen && (
-              <div className={css.categoryItemsWrapper}>
-                <div className={css.categoryItems}>
+              <div
+                className={
+                  isFromLandingPageSearchMobile
+                    ? (css.categoryItemsWrapperLanding, css.categoryItemsWrapperLandingMobile)
+                    : isFromLandingPageSearch
+                    ? css.categoryItemsWrapperLanding
+                    : css.categoryItemsWrapper
+                }
+              >
+                <div
+                  className={
+                    isFromLandingPageSearchMobile ? css.categoryItemsMobile : css.categoryItems
+                  }
+                >
                   <h3 className={css.categoryItemsTitle}>
                     <FormattedMessage id="SearchFiltersPrimary.categories" />
+                    {/* <button
+                      // style={props.isFromLandingPageSearch ? { display: 'none' } : {}}
+                      className={css.submitLandingSearchButton}
+                      onClick={isFromLandingPageSearch && getHandleChangedValueFn(true)}
+                    >
+                      Apply
+                    </button> */}
                     <div onClick={onCloseCategoryFilter}>
                       <IconCloseCustom />
                     </div>
@@ -89,11 +118,7 @@ const SearchFiltersPrimaryComponent = props => {
 
                   <div className={css.categoryItemsHolder}>
                     {categoryChildren.map((category, i) => {
-                      return (
-                        <React.Fragment key={`category-${i}`}>
-                          {category}
-                        </React.Fragment>
-                      )
+                      return <React.Fragment key={`category-${i}`}>{category}</React.Fragment>;
                     })}
                   </div>
                 </div>
@@ -102,11 +127,10 @@ const SearchFiltersPrimaryComponent = props => {
           </OutsideClickHandler>
         </div>
 
-        {nonCategoryChildren}
-        {toggleSecondaryFiltersOpenButton}
-        {sortByComponent}
+        {isFromLandingPageSearch || nonCategoryChildren}
+        {isFromLandingPageSearch || toggleSecondaryFiltersOpenButton}
+        {isFromLandingPageSearch || sortByComponent}
       </div>
-
 
       {hasNoResult ? (
         <div className={css.noSearchResults}>
@@ -132,6 +156,9 @@ SearchFiltersPrimaryComponent.defaultProps = {
   toggleSecondaryFiltersOpen: null,
   selectedSecondaryFiltersCount: 0,
   sortByComponent: null,
+  getHandleChangedValueFn: null,
+  isFromLandingPageSearch: false,
+  isFromLandingPageSearchMobile: false,
 };
 
 SearchFiltersPrimaryComponent.propTypes = {
@@ -144,6 +171,9 @@ SearchFiltersPrimaryComponent.propTypes = {
   toggleSecondaryFiltersOpen: func,
   selectedSecondaryFiltersCount: number,
   sortByComponent: node,
+  isFromLandingPageSearch: bool,
+  isFromLandingPageSearchMobile: bool,
+  getHandleChangedValueFn: func,
 };
 
 const SearchFiltersPrimary = SearchFiltersPrimaryComponent;

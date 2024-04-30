@@ -61,7 +61,7 @@ class SearchFiltersSecondaryComponent extends Component {
     const classes = classNames(rootClassName || css.root, className);
 
     return (
-      <div  className={classes}>
+      <div className={classes}>
         <div className={css.filtersWrapper}>{children}</div>
         <div className={css.footer}>
           <InlineTextButton rootClassName={css.resetAllButton} onClick={this.resetAll}>

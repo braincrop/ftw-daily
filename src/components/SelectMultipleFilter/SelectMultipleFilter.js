@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { array, arrayOf, func, node, number, object, string } from 'prop-types';
+import { array, arrayOf, bool, func, node, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import { parseSelectFilterOptions } from '../../util/search';
@@ -12,14 +12,7 @@ import css from './SelectMultipleFilter.module.css';
 // TODO: Live edit didn't work with FieldCheckboxGroup
 //       There's a mutation problem: formstate.dirty is not reliable with it.
 const GroupOfFieldCheckboxes = props => {
-  const {
-    id,
-    className,
-    name,
-    options,
-    isCategory,
-    subCategoryImage,
-  } = props;
+  const { id, className, name, options, isCategory, subCategoryImage } = props;
 
   //NOTE v2s1 filterupdate -- customizations removed in v5 update
   // const item = option => {
@@ -144,6 +137,7 @@ class SelectMultipleFilter extends Component {
       currentActiveCategory,
       isMobileLayout,
       setSelectedCategoriesLength,
+      isFromLandingPageSearch,
       ...rest
     } = this.props;
 
@@ -167,30 +161,41 @@ class SelectMultipleFilter extends Component {
       }
     }
 
-    const selectedItemsCounter = filterConfig.config.options.map(e => e.key).filter(v => selectedOptions.includes(v)).length || filterConfig.config.options.map(e => e.value).filter(v => selectedOptions.includes(v)).length
+    const selectedItemsCounter =
+      filterConfig.config.options.map(e => e.key).filter(v => selectedOptions.includes(v)).length ||
+      filterConfig.config.options.map(e => e.value).filter(v => selectedOptions.includes(v)).length;
 
-    const labelText = isMobileLayout ? !!labelMobile ? labelMobile : label : label
+    const labelText = isMobileLayout ? (!!labelMobile ? labelMobile : label) : label;
 
-    const labelForPopup = hasInitialValues && !isCategory && !!selectedItemsCounter
-      ? intl.formatMessage(
-        { id: 'SelectMultipleFilter.labelSelected' },
-        { labelText: filterConfig.label, count: selectedItemsCounter }
-      )
-      : label;
+    const labelForPopup =
+      hasInitialValues && !isCategory && !!selectedItemsCounter
+        ? intl.formatMessage(
+            { id: 'SelectMultipleFilter.labelSelected' },
+            { labelText: filterConfig.label, count: selectedItemsCounter }
+          )
+        : label;
 
-    const labelForPlain = hasInitialValues && !!selectedItemsCounter
-      ? intl.formatMessage(
-        { id: 'SelectMultipleFilterPlainForm.labelSelected' },
-        { labelText: (isMobileLayout && filterConfig.labelMobile) || filterConfig.label, count: selectedItemsCounter }
-      )
-      : labelText;
+    const labelForPlain =
+      hasInitialValues && !!selectedItemsCounter
+        ? intl.formatMessage(
+            { id: 'SelectMultipleFilterPlainForm.labelSelected' },
+            {
+              labelText: (isMobileLayout && filterConfig.labelMobile) || filterConfig.label,
+              count: selectedItemsCounter,
+            }
+          )
+        : labelText;
 
     const filterConfigArr = {
       id: filterConfig.idCategory || filterConfig.id,
-      options: filterConfig.config.options
-    }
+      options: filterConfig.config.options,
+    };
 
-    const selectedValuePresent = filterConfigArr.options.some(item => item.key === filterConfig.config.options.map(e => e.key).filter(v => selectedOptions.includes(v))[0])
+    const selectedValuePresent = filterConfigArr.options.some(
+      item =>
+        item.key ===
+        filterConfig.config.options.map(e => e.key).filter(v => selectedOptions.includes(v))[0]
+    );
 
     const contentStyle = this.positionStyleForContent();
 
@@ -198,12 +203,10 @@ class SelectMultipleFilter extends Component {
     // they can be passed to the correct field
     const namedInitialValues = { [name]: selectedOptions };
 
-    const handleSubmit = (values) => {
+    const handleSubmit = values => {
       const usedValue = values ? values[name] : values;
       onSubmit(format(usedValue, queryParamName, searchMode), filterConfigId);
     };
-
-  
 
     return showAsPopup ? (
       <FilterPopup
@@ -226,6 +229,7 @@ class SelectMultipleFilter extends Component {
         onOpenCategoryFilter={onOpenCategoryFilter}
         isCategoryFilterEnabled={isCategoryFilterEnabled}
         setSelectedCategoriesLength={setSelectedCategoriesLength}
+        isFromLandingPageSearch={isFromLandingPageSearch}
         {...rest}
       >
         <GroupOfFieldCheckboxes
@@ -282,6 +286,7 @@ SelectMultipleFilter.defaultProps = {
   rootClassName: null,
   className: null,
   initialValues: null,
+  isFromLandingPageSearch: false,
   contentPlacementOffset: 0,
 };
 
@@ -297,6 +302,7 @@ SelectMultipleFilter.propTypes = {
   options: array.isRequired,
   initialValues: object,
   contentPlacementOffset: number,
+  isFromLandingPageSearch: bool,
 
   // form injectIntl
   intl: intlShape.isRequired,
