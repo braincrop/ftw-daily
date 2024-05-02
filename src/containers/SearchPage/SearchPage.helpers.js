@@ -181,19 +181,17 @@ export const createSearchResultSchema = (listings, address, intl, pub_category, 
   let schemaTitle;
   if (address === 'World Wide') {
     schemaTitle = intl.formatMessage({ id: 'SearchPage.schemaTitleWW' }, { address, siteTitle });
-    console.log('helpers1: ', searchAddress, address);
+    // console.log('helpers1: ', searchAddress, address);
   } else if (searchAddress == 'United Kingdom' && address !== 'World Wide') {
     schemaTitle = intl.formatMessage(
       { id: 'SearchPage.schemaTitleUK' },
       { searchAddress, siteTitle }
     );
-    console.log('helpers2: ', searchAddress, address);
   } else {
     schemaTitle = intl.formatMessage(
       { id: 'SearchPage.schemaTitle' },
       { searchAddress, siteTitle }
     );
-    console.log('helpers3: ', searchAddress, address);
   }
   let firstThreeCategoryTitle;
 
@@ -236,6 +234,7 @@ export const createSearchResultSchema = (listings, address, intl, pub_category, 
     ];
 
     const cat = e.config.catKeys.split(',');
+    // console.log('helpers3: ', cat, arrayCategory);
 
     if (!!filt && filt.sort().join(',') === cat.sort().join(',') && filt.includes('hair-stylist')) {
       firstThreeCategoryTitle = intl.formatMessage(

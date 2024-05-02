@@ -73,6 +73,7 @@ const SectionHero = props => {
   });
 
   let selectedCategoriesLength = null;
+  // console.log('Section Hero', selectedCategoriesLength);
   //! Search Bar Working
 
   const primaryFilters = filterConfig.filter(f => f.group === 'primary');
@@ -434,7 +435,7 @@ const SectionHero = props => {
   const handleSearchLanding = () => {
     const { history } = props;
     const { address, bounds, pub_category } = SearchQueryData;
-    console.log('handleSearchLanding', SearchQueryData);
+    // console.log('handleSearchLanding', SearchQueryData);
 
     if (pub_category == '') {
       swal.fire({
