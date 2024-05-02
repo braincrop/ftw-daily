@@ -277,12 +277,7 @@ class MainPanel extends Component {
           const searchParams = this.state.currentQueryParams;
           const { isMobileLayout } = this.props;
           const search = cleanSearchFromConflictingParams(searchParams, sortConfig, filterConfig);
-          console.log(
-            'panel: ',
-            this.state.selectedCategoriesLength == 0,
-            !!search?.pub_category,
-            this.state.selectedCategoriesLength == null
-          );
+
           !isMobileLayout &&
             history.push(
               createResourceLocatorString(
@@ -418,7 +413,7 @@ class MainPanel extends Component {
     const isAmenitiesFilterEnabled =
       searchParamsForPagination && !!searchParamsForPagination.pub_amenities;
 
-    console.log('main panel', this.state.selectedCategoriesLength);
+    // console.log('main panel', this.state.selectedCategoriesLength);
     return (
       <div className={classes}>
         <h1 className={css.h1}>{h1}</h1>

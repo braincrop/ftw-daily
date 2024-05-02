@@ -73,7 +73,7 @@ const SectionHero = props => {
   });
 
   let selectedCategoriesLength = null;
-  console.log('Section Hero', selectedCategoriesLength);
+  // console.log('Section Hero', selectedCategoriesLength);
   //! Search Bar Working
 
   const primaryFilters = filterConfig.filter(f => f.group === 'primary');
