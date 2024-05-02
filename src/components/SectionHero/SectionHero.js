@@ -352,16 +352,15 @@ const SectionHero = props => {
           const _selectedMainCat = primaryFilters.find(
             c => c.config.isCategory && _pubCat.pub_category === c.id
           );
-          if (search.pub_category !== undefined) {
-            // console.log('search if:', search.pub_category);
-
+          if (search.pub_category !== undefined && search.pub_category !== null) {
+            // console.log('search if:', search);
             setSearchQueryData(prev => ({
               ...prev,
               pub_category: search.pub_category,
             }));
           } else {
             const _def_pubCat = `${_selectedMainCat.config.searchMode}:${_selectedMainCat.config.catKeys}`;
-            // console.log('search else:', _def_pubCat);
+            // console.log('_def_pubCat', _def_pubCat);
 
             setSearchQueryData(prev => ({
               ...prev,
@@ -390,6 +389,7 @@ const SectionHero = props => {
       callback();
     };
   }
+  console.log('setSearchQueryData', SearchQueryData);
 
   function onOpenCategoryFilter() {
     setIsCategoryFilterOpen(!isCategoryFilterOpen);
