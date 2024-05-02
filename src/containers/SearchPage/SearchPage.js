@@ -30,8 +30,7 @@ import {
 import MainPanel from './MainPanel';
 import css from './SearchPage.module.css';
 
-import categoryImages from "./filterImages"
-
+import categoryImages from './filterImages';
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is initiated.
@@ -43,7 +42,7 @@ export class SearchPageComponent extends Component {
     this.state = {
       isSearchMapOpenOnMobile: props.tab === 'map',
       isMobileModalOpen: false,
-      isCategoryFilterOpen: false
+      isCategoryFilterOpen: false,
     };
 
     this.searchMapListingsInProgress = false;
@@ -60,13 +59,14 @@ export class SearchPageComponent extends Component {
   onMapMoveEnd(viewportBoundsChanged, data) {
     const { viewportBounds, viewportCenter } = data;
 
-    const boundsValid = viewportBounds.ne.lat !== viewportBounds.sw.lat &&
-    viewportBounds.ne.lng !== viewportBounds.sw.lng;
-    
+    const boundsValid =
+      viewportBounds.ne.lat !== viewportBounds.sw.lat &&
+      viewportBounds.ne.lng !== viewportBounds.sw.lng;
+
     const priceFilterMaybe = search => {
       const activePriceFilter = currentSearchFilter(search);
       return activePriceFilter ? { [activePriceFilter]: search[activePriceFilter] } : {};
-    }
+    };
 
     const routes = routeConfiguration();
     const searchPagePath = pathByRouteName('SearchPage', routes);
@@ -87,7 +87,6 @@ export class SearchPageComponent extends Component {
       const { address, bounds, mapSearch, ...rest } = parse(location.search, {
         latlng: ['origin'],
         latlngBounds: ['bounds'],
-
       });
 
       //const viewportMapCenter = SearchMap.getMapCenter(map);
@@ -117,7 +116,6 @@ export class SearchPageComponent extends Component {
   onCloseMobileModal() {
     this.setState({ isMobileModalOpen: false });
   }
-
 
   onOpenCategoryFilter() {
     this.setState({ isCategoryFilterOpen: !this.state.isCategoryFilterOpen });
@@ -151,7 +149,6 @@ export class SearchPageComponent extends Component {
       latlngBounds: ['bounds'],
     });
 
-
     const pub_category = this.props.searchParams.pub_category;
     // urlQueryParams doesn't contain page specific url params
     // like mapSearch, page or origin (origin depends on config.sortSearchByDistance)
@@ -176,11 +173,15 @@ export class SearchPageComponent extends Component {
     };
 
     const { address, bounds, origin } = searchInURL || {};
-    const { title, description, schema } = createSearchResultSchema(listings, address, intl, pub_category, filterConfig);
+    const { title, description, schema } = createSearchResultSchema(
+      listings,
+      address,
+      intl,
+      pub_category,
+      filterConfig
+    );
 
-
-
-    const h1 = title.replace(`- ${config.siteTitle}`, "");
+    const h1 = title.replace(`- ${config.siteTitle}`, '');
     // Set topbar class based on if a modal is open in
     // a child component
     const topbarClasses = this.state.isMobileModalOpen
@@ -197,6 +198,8 @@ export class SearchPageComponent extends Component {
       { id: 'SearchPage.schemaMetaTitle' },
       { searchAddress, siteTitle }
     );
+
+    // console.log('listing: ', listings);
 
     return (
       <Page
@@ -351,10 +354,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const SearchPage = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   injectIntl
 )(SearchPageComponent);
 
