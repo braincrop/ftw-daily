@@ -352,7 +352,7 @@ const SectionHero = props => {
           const _selectedMainCat = primaryFilters.find(
             c => c.config.isCategory && _pubCat.pub_category === c.id
           );
-          if (search.pub_category !== undefined && search.pub_category !== null) {
+          if (!!search.pub_category) {
             // console.log('search if:', search);
             setSearchQueryData(prev => ({
               ...prev,
