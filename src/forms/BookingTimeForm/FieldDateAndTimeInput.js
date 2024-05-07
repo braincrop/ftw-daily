@@ -419,6 +419,7 @@ class FieldDateAndTimeInput extends Component {
       minBookingType,
     } = this.props;
 
+    const _minBookingCountErrorText = minBookingCount || '0.5';
     const classes = classNames(rootClassName || css.root, className);
 
     const textForMinBook = discountTypes.filter(el => el.key === minBookingType)[0] || '';
@@ -537,7 +538,9 @@ class FieldDateAndTimeInput extends Component {
               navPrev={<Prev currentMonth={this.state.currentMonth} timeZone={timeZone} />}
               useMobileMargins
               showErrorMessage={true}
-              validate={bookingDateRequired('• Minimum 0.5 Hours booking required')}
+              validate={bookingDateRequired(
+                `• Minimum ${_minBookingCountErrorText} Hours booking required`
+              )}
             />
           </div>
         </div>

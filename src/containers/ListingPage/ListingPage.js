@@ -353,6 +353,7 @@ export class ListingPageComponent extends Component {
       publicData,
     } = currentListing.attributes;
 
+    // console.log('currentListing', currentListing.attributes.publicData.minBooking);
     const richTitle = (
       <span>
         {richText(title, {
