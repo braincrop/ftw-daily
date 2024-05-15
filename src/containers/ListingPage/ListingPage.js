@@ -253,7 +253,7 @@ export class ListingPageComponent extends Component {
     modifiedMessage = hidePhone(modifiedMessage);
     modifiedMessage = hideWebsite(modifiedMessage);
 
-    console.log('regex,', modifiedMessage, !modifiedMessage.includes('HIDDEN'));
+    // console.log('regex,', modifiedMessage, !modifiedMessage.includes('HIDDEN'));
     if (modifiedMessage.includes('HIDDEN')) {
       Swal.fire({
         title: "Hold your horses! We can't hit that send button just yet",
@@ -354,7 +354,7 @@ export class ListingPageComponent extends Component {
       publicData,
     } = currentListing.attributes;
 
-    // console.log('currentListing', currentListing.attributes.publicData.minBooking);
+    // console.log('currentListing', currentListing);
     const richTitle = (
       <span>
         {richText(title, {

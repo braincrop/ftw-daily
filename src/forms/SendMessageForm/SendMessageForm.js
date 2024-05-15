@@ -68,6 +68,7 @@ class SendMessageFormComponent extends Component {
             form,
             formId,
             intl,
+            bookingStatus,
           } = formRenderProps;
 
           const classes = classNames(rootClassName || css.root, className);
@@ -82,8 +83,8 @@ class SendMessageFormComponent extends Component {
             <Form
               className={classes}
               onSubmit={values => {
-                console.log(form);
-                handleSubmit(values, form);
+                // console.log('booking', bookingStatus);
+                handleSubmit(values, form, bookingStatus);
               }}
             >
               <FieldTextInput
@@ -150,6 +151,7 @@ SendMessageFormComponent.propTypes = {
   onFocus: func,
   onBlur: func,
   sendMessageError: propTypes.error,
+  bookingStatus: bool,
 
   // from injectIntl
   intl: intlShape.isRequired,
