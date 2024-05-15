@@ -11,6 +11,7 @@ export const apiBaseUrl = () => {
   const useDevApiServer = process.env.NODE_ENV === 'development' && !!port;
 
   // In development, the dev API server is running in a different port
+
   if (useDevApiServer) {
     return `http://localhost:${port}`;
   }

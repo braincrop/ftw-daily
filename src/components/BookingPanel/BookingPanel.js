@@ -15,17 +15,13 @@ import {
   WEEKLY_PRICE,
   MONTHLY_PRICE,
 } from '../../util/types';
-import {
-  getTypeDuration,
-  getLowestPrice
-} from '../../util/data';
+import { getTypeDuration, getLowestPrice } from '../../util/data';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import config from '../../config';
 import { ModalInMobile, Button, BookingTypes } from '../../components';
 import { BookingDatesForm, BookingTimeForm } from '../../forms';
 import { types as sdkTypes } from '../../util/sdkLoader';
-
 
 import css from './BookingPanel.module.css';
 
@@ -35,7 +31,10 @@ const TODAY = new Date();
 const { Money } = sdkTypes;
 
 const priceData = (price, intl) => {
-  if (price && (price.currency === config.currency || price.currency === config.additionalCurrency)) {
+  if (
+    price &&
+    (price.currency === config.currency || price.currency === config.additionalCurrency)
+  ) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };
   } else if (price) {
@@ -93,33 +92,33 @@ const BookingPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     bookingType,
-    toggleBookingType
+    toggleBookingType,
   } = props;
 
-  const {
-    price,
-    availabilityPlan,
-    state,
-    publicData
-  } = listing.attributes;
+  const { price, availabilityPlan, state, publicData } = listing.attributes;
 
   const { discount, minimumLength, minBooking } = publicData || {};
-  const { minBookingCount, minBookingType } = minBooking || {}
+  const { minBookingCount, minBookingType } = minBooking || {};
   const timeZone = availabilityPlan && availabilityPlan.timezone;
   const isClosed = state && state === LISTING_STATE_CLOSED;
   const showClosedListingHelpText = listing.id && isClosed;
   // const { formattedPrice, priceTitle } = priceData(price, intl);
 
- const {key: priceType, value: {amount, currency}} = getLowestPrice(listing);
+  const {
+    key: priceType,
+    value: { amount, currency },
+  } = getLowestPrice(listing);
 
-  const { formattedPrice, priceTitle } = priceData(amount && currency ? new Money(amount, currency) : null, intl);
+  const { formattedPrice, priceTitle } = priceData(
+    amount && currency ? new Money(amount, currency) : null,
+    intl
+  );
   const unitTranslationKey = `BookingPanel.${priceType}`;
   const isBook = !!parse(location.search).book;
 
   const showBookingForm = !!state && !isClosed;
   const showBookingTimeForm = showBookingForm && availabilityPlan && bookingType === HOURLY_PRICE;
   const showBookingDatesForm = showBookingForm && availabilityPlan && !showBookingTimeForm;
-
 
   // const subTitleMinLengthText = (
   //   showBookingDatesForm &&
@@ -128,8 +127,8 @@ const BookingPanel = props => {
   // ) ? ` Minimum booking length is ${minimumLength} days.` : '';
 
   const subTitleText = !!subTitle
-    // ? subTitle + subTitleMinLengthText
-    ? subTitle
+    ? // ? subTitle + subTitleMinLengthText
+      subTitle
     : showClosedListingHelpText
     ? intl.formatMessage({ id: 'BookingPanel.subTitleClosedListing' })
     : null;
@@ -152,7 +151,7 @@ const BookingPanel = props => {
   const titleClasses = classNames(titleClassName || css.bookingTitle);
 
   const getMinLength = bookingType => {
-    switch(bookingType){
+    switch (bookingType) {
       case WEEKLY_PRICE:
         return 7;
       case MONTHLY_PRICE:
@@ -160,9 +159,16 @@ const BookingPanel = props => {
       default:
         return null;
     }
-  }
+  };
 
-  const seats = listing && listing.attributes && listing.attributes.publicData && listing.attributes.publicData.seats || 1;
+  const seats =
+    (listing &&
+      listing.attributes &&
+      listing.attributes.publicData &&
+      listing.attributes.publicData.seats) ||
+    1;
+
+  // console.log('Booking Panel', props);
 
   return (
     <div className={classes}>
@@ -186,11 +192,7 @@ const BookingPanel = props => {
           {subTitleText ? <div className={css.bookingHelp}>{subTitleText}</div> : null}
         </div>
 
-        <BookingTypes
-          intl={intl}
-          listing={listing}
-          onChange={toggleBookingType}
-        />
+        <BookingTypes intl={intl} listing={listing} onChange={toggleBookingType} />
 
         {showBookingDatesForm ? (
           <BookingDatesForm
@@ -246,11 +248,10 @@ const BookingPanel = props => {
             minBookingType={minBookingType}
           />
         ) : null}
-
       </ModalInMobile>
       <div className={css.openBookingForm}>
         <div className={css.priceContainer}>
-        <p className={css.perUnit}>from</p>
+          <p className={css.perUnit}>from</p>
           <div className={css.priceValue} title={priceTitle}>
             {formattedPrice}
           </div>
@@ -305,7 +306,6 @@ BookingPanel.propTypes = {
   onFetchTimeSlots: func.isRequired,
   monthlyTimeSlots: object,
 
-
   timeSlots: arrayOf(propTypes.timeSlot),
   fetchTimeSlotsError: propTypes.error,
   onFetchTransactionLineItems: func.isRequired,
@@ -325,7 +325,4 @@ BookingPanel.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default compose(
-  withRouter,
-  injectIntl
-)(BookingPanel);
+export default compose(withRouter, injectIntl)(BookingPanel);
