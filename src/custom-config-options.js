@@ -300,7 +300,7 @@ export const coworkingAmenitiesOptions = [
 
 export const musicAndArtsOptions = [
   {
-    key: 'music-podcast-studio',
+    key: 'music-studio',
     label: 'Music & Podcast Studio',
     metaLabel: 'Music & Podcast Studio',
     labelImg: 'musicStudio',
