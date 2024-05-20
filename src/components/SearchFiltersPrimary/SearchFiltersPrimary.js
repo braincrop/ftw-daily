@@ -60,6 +60,7 @@ const SearchFiltersPrimaryComponent = props => {
     </div>
   );
 
+  // console.log('SearchFilterPrimary', nonCategoryChildren);
   return (
     <div className={isFromLandingPageSearch ? css.rootLanding : classes}>
       <div className={css.searchOptions}>

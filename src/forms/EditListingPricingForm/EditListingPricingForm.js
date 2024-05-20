@@ -184,9 +184,9 @@ export const EditListingPricingFormComponent = props => (
           form.change('minBookingCount', null);
         }
         if (values.minBookingType === HOURLY_BOOKING) {
-          setStep(0.5);
+          setStep(1);
           setMaxStep(24);
-          form.change('minBookingCount', 0.5);
+          form.change('minBookingCount', 1);
         }
         if (values.minBookingType === DAILY_BOOKING) {
           setMaxStep(daysInMonth(new Date().getMonth(), new Date().getFullYear()));
@@ -202,7 +202,7 @@ export const EditListingPricingFormComponent = props => (
         }
       }, [values.minBookingType]);
 
-      const [step, setStep] = useState(0.5);
+      const [step, setStep] = useState(1);
       const [maxStep, setMaxStep] = useState(24);
 
       return (

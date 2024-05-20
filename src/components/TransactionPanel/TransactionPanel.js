@@ -145,7 +145,7 @@ export class TransactionPanelComponent extends Component {
     this.setState({ sendMessageFormFocused: false });
   }
 
-  onMessageSubmit(values, form) {
+  onMessageSubmit(values, form, bookingStatus) {
     let message = values.message ? values.message.trim() : null;
     const { transaction, onSendMessage } = this.props;
     const ensuredTransaction = ensureTransaction(transaction);
@@ -154,39 +154,49 @@ export class TransactionPanelComponent extends Component {
       return;
     }
     //! Remove comments to apply regex functionality on messages
+    if (bookingStatus) {
+      onSendMessage(ensuredTransaction.id, message)
+        .then(messageId => {
+          form.reset();
+          this.scrollToMessage(messageId);
+        })
+        .catch(e => {
+          // Ignore, Redux handles the error
+        });
+    } else {
+      const hideEmail = text =>
+        text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'HIDDEN');
+      const hidePhone = text =>
+        text.replace(/(\+?\d{0,2}\s?)?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{4}/g, 'HIDDEN');
+      const hideWebsite = text =>
+        text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, 'HIDDEN');
 
-    // const hideEmail = text =>
-    //   text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'HIDDEN');
-    // const hidePhone = text =>
-    //   text.replace(/(\+?\d{0,2}\s?)?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{4}/g, 'HIDDEN');
-    // const hideWebsite = text =>
-    //   text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, 'HIDDEN');
+      message = hideEmail(message);
+      message = hidePhone(message);
+      message = hideWebsite(message);
 
-    // message = hideEmail(message);
-    // message = hidePhone(message);
-    // message = hideWebsite(message);
+      if (message.includes('HIDDEN')) {
+        Swal.fire({
+          title: "Hold your horses! We can't hit that send button just yet",
+          text: `Contact info can't be shared until a booking is confirmed.
+           To send the message, please remove the contact info.`,
+          confirmButtonText: 'Edit Message',
+          confirmButtonColor: '#5cbfcc',
+        }).then(() => {
+          return;
+        });
+        return;
+      }
 
-    // if (message.includes('HIDDEN')) {
-    //   Swal.fire({
-    //     title: "Hold your horses! We can't hit that send button just yet",
-    //     text: `Contact info can't be shared until a booking is confirmed.
-    //        To send the message, please remove the contact info.`,
-    //     confirmButtonText: 'Edit Message',
-    //     confirmButtonColor: '#5cbfcc',
-    //   }).then(() => {
-    //     return;
-    //   });
-    //   return;
-    // }
-
-    onSendMessage(ensuredTransaction.id, message)
-      .then(messageId => {
-        form.reset();
-        this.scrollToMessage(messageId);
-      })
-      .catch(e => {
-        // Ignore, Redux handles the error
-      });
+      onSendMessage(ensuredTransaction.id, message)
+        .then(messageId => {
+          form.reset();
+          this.scrollToMessage(messageId);
+        })
+        .catch(e => {
+          // Ignore, Redux handles the error
+        });
+    }
   }
 
   scrollToMessage(messageId) {
@@ -241,6 +251,8 @@ export class TransactionPanelComponent extends Component {
       toggleBookingTypeOnPanel,
     } = this.props;
 
+    const lastTrasaction = transaction.attributes.lastTransition || 'nil';
+    const _bookingCompleted = lastTrasaction === 'transition/accept';
     const currentTransaction = ensureTransaction(transaction);
     const currentListing = ensureListing(currentTransaction.listing);
     const currentProvider = ensureUser(currentTransaction.provider);
@@ -480,7 +492,8 @@ export class TransactionPanelComponent extends Component {
                 sendMessageError={sendMessageError}
                 onFocus={this.onSendMessageFormFocus}
                 onBlur={this.onSendMessageFormBlur}
-                onSubmit={this.onMessageSubmit}
+                onSubmit={(values, form) => this.onMessageSubmit(values, form, _bookingCompleted)}
+                bookingStatus={_bookingCompleted}
               />
             ) : (
               <div className={css.sendingMessageNotAllowed}>{sendingMessageNotAllowed}</div>
