@@ -432,29 +432,35 @@ const SectionHero = props => {
 
   // console.log('SearchQueryData:', filterConfig);
 
+  const handleSearchLandingAll = () => {
+    const { history } = props;
+
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}));
+  };
   const handleSearchLanding = () => {
     const { history } = props;
     const { address, bounds, pub_category } = SearchQueryData;
     // console.log('handleSearchLanding', SearchQueryData);
 
     if (pub_category == '') {
-      swal.fire({
-        title: 'Please select Category.',
-        showClass: {
-          popup: `
-            animate__animated
-            animate__fadeInUp
-            animate__faster
-          `,
-        },
-        hideClass: {
-          popup: `
-            animate__animated
-            animate__fadeOutDown
-            animate__faster
-          `,
-        },
-      });
+      history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}));
+      // swal.fire({
+      //   title: 'Please select Category.',
+      //   showClass: {
+      //     popup: `
+      //       animate__animated
+      //       animate__fadeInUp
+      //       animate__faster
+      //     `,
+      //   },
+      //   hideClass: {
+      //     popup: `
+      //       animate__animated
+      //       animate__fadeOutDown
+      //       animate__faster
+      //     `,
+      //   },
+      // });
     } else {
       history.push(
         createResourceLocatorString('SearchPage', routeConfiguration(), {}, SearchQueryData)
@@ -510,7 +516,9 @@ const SectionHero = props => {
               Search
             </button>
           </div>
-
+          <button onClick={() => handleSearchLandingAll()} className={css.searchAllPatchBtn}>
+            Click to browse all Patches
+          </button>
           <SearchFiltersPrimary
             className={css.searchFiltersPrimary}
             sortByComponent={sortBy('desktop')}
