@@ -25,6 +25,7 @@ import { TopbarSearchForm } from '../../forms';
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
 import css from './Topbar.module.css';
+import PubCategoryContext from '../../context/pubCategoryContext';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 
@@ -96,6 +97,7 @@ class TopbarComponent extends Component {
   }
 
   handleSubmit(values) {
+    const { selectedPubCat } = this.context;
     const { currentSearchParams } = this.props;
     const { search, selectedPlace } = values.location;
     const { categories } = values;
@@ -110,7 +112,10 @@ class TopbarComponent extends Component {
     };
     if (categories) {
       searchParams['pub_category'] = categories;
+    } else if (selectedPubCat !== '') {
+      searchParams['pub_category'] = selectedPubCat;
     }
+
     history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams));
   }
 
@@ -290,6 +295,8 @@ class TopbarComponent extends Component {
     );
   }
 }
+
+TopbarComponent.contextType = PubCategoryContext;
 
 TopbarComponent.defaultProps = {
   className: null,
