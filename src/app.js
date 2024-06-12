@@ -94,6 +94,7 @@ export const ClientApp = props => {
       messages={{ ...localeMessages, ...hostedTranslations }}
       textComponent="span"
     >
+      {/* provider */}
       <PubCategoryProvider>
         <Provider store={store}>
           <HelmetProvider>
