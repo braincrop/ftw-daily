@@ -1,6 +1,8 @@
 import React, { createContext, useState } from 'react';
 const PubCategoryContext = createContext();
 
+//context for pub categories
+
 export const PubCategoryProvider = ({ children }) => {
   const [selectedPubCat, setSelectedPubCat] = useState('');
 
