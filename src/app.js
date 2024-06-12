@@ -18,7 +18,6 @@ import routeConfiguration from './routeConfiguration';
 import Routes from './Routes';
 import config from './config';
 
-
 // Flex template application uses English translations as default.
 import defaultMessages from './translations/en.json';
 
@@ -40,6 +39,7 @@ import defaultMessages from './translations/en.json';
 // Step 3:
 // If you are using a non-english locale, point `messagesInLocale` to correct .json file
 import messagesInLocale from './translations/en.json';
+import { PubCategoryProvider } from './context/pubCategoryContext';
 
 // If translation key is missing from `messagesInLocale` (e.g. fr.json),
 // corresponding key will be added to messages from `defaultMessages` (en.json)
@@ -47,10 +47,10 @@ import messagesInLocale from './translations/en.json';
 const addMissingTranslations = (sourceLangTranslations, targetLangTranslations) => {
   const sourceKeys = Object.keys(sourceLangTranslations);
   const targetKeys = Object.keys(targetLangTranslations);
-    // if there's no translations defined for target language, return source translations
-    if (targetKeys.length === 0) {
-      return sourceLangTranslations;
-    }
+  // if there's no translations defined for target language, return source translations
+  if (targetKeys.length === 0) {
+    return sourceLangTranslations;
+  }
   const missingKeys = difference(sourceKeys, targetKeys);
 
   const addMissingTranslation = (translations, missingKey) => ({
@@ -93,13 +93,15 @@ export const ClientApp = props => {
       messages={{ ...localeMessages, ...hostedTranslations }}
       textComponent="span"
     >
-      <Provider store={store}>
-        <HelmetProvider>
-          <BrowserRouter>
-            <Routes routes={routeConfiguration()} />
-          </BrowserRouter>
-        </HelmetProvider>
-      </Provider>
+      <PubCategoryProvider>
+        <Provider store={store}>
+          <HelmetProvider>
+            <BrowserRouter>
+              <Routes routes={routeConfiguration()} />
+            </BrowserRouter>
+          </HelmetProvider>
+        </Provider>
+      </PubCategoryProvider>
     </IntlProvider>
   );
 };
