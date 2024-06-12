@@ -556,6 +556,7 @@ class MainPanel extends Component {
   }
 }
 
+//type
 MainPanel.contextType = PubCategoryContext;
 
 MainPanel.defaultProps = {

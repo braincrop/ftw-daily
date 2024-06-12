@@ -295,7 +295,7 @@ class TopbarComponent extends Component {
     );
   }
 }
-
+//type
 TopbarComponent.contextType = PubCategoryContext;
 
 TopbarComponent.defaultProps = {

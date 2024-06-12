@@ -276,6 +276,8 @@ export class SearchPageComponent extends Component {
   }
 }
 
+//type
+
 SearchPageComponent.contextType = PubCategoryContext;
 
 SearchPageComponent.defaultProps = {
