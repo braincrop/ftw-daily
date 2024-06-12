@@ -31,7 +31,6 @@ import MainPanel from './MainPanel';
 import css from './SearchPage.module.css';
 
 import categoryImages from './filterImages';
-import PubCategoryContext from '../../context/pubCategoryContext';
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is initiated.
@@ -125,12 +124,7 @@ export class SearchPageComponent extends Component {
   onCloseCategoryFilter() {
     this.setState({ isCategoryFilterOpen: false });
   }
-  componentDidMount() {
-    const { setSelectedPubCat } = this.context;
 
-    setSelectedPubCat(this.props.searchParams.pub_category);
-    // console.log('listing: ', this.props.searchParams.pub_category);
-  }
   render() {
     const {
       intl,
@@ -205,6 +199,8 @@ export class SearchPageComponent extends Component {
       { searchAddress, siteTitle }
     );
 
+    // console.log('listing: ', listings);
+
     return (
       <Page
         scrollingDisabled={scrollingDisabled}
@@ -275,8 +271,6 @@ export class SearchPageComponent extends Component {
     );
   }
 }
-
-SearchPageComponent.contextType = PubCategoryContext;
 
 SearchPageComponent.defaultProps = {
   listings: [],

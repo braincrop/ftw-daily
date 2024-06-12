@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { object, oneOf, shape, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
@@ -30,7 +30,6 @@ import { createResourceLocatorString } from '../../util/routes';
 import routeConfiguration from '../../routeConfiguration';
 import { isAnyFilterActive } from '../../util/search';
 import { TopbarSearchForm } from '../../forms';
-import PubCategoryContext from '../../context/pubCategoryContext';
 
 const expertArr = [hotPatch4, hotPatch1, hotPatch5, hotPatch3, hotPatch2];
 const mobileExpertArr = [
@@ -54,7 +53,6 @@ let defaultLocation = {
 const SectionHero = props => {
   const { rootClassName, className } = props;
   const { categories } = config.custom;
-  const { setSelectedPubCat } = useContext(PubCategoryContext);
 
   const filterConfig = props.filterConfig;
   const { ...searchInURL } = parse(defaultLocation.search, {
@@ -119,9 +117,8 @@ const SectionHero = props => {
     };
     if (categories) {
       searchParams['pub_category'] = categories;
-      setSelectedPubCat(categories);
     }
-    console.log('search landing:', searchParams, SearchQueryData);
+    // console.log('search Location:', searchParams);
 
     setSearchQueryData(prev => ({
       ...prev,
