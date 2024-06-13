@@ -20,7 +20,7 @@ import FilterComponent from './FilterComponent';
 import { validFilterParams } from './SearchPage.helpers';
 
 import css from './SearchPage.module.css';
-import PubCategoryContext from '../../context/pubCategoryContext';
+// import PubCategoryContext from '../../context/pubCategoryContext';
 
 // Primary filters have their content in dropdown-popup.
 // With this offset we move the dropdown to the left a few pixels on desktop layout.
@@ -280,8 +280,8 @@ class MainPanel extends Component {
           const search = cleanSearchFromConflictingParams(searchParams, sortConfig, filterConfig);
 
           if (search.pub_category) {
-            const { setSelectedPubCat } = this.context;
-            setSelectedPubCat(search.pub_category);
+            // const { setSelectedPubCat } = this.context;
+            // setSelectedPubCat(search.pub_category);
           }
 
           !isMobileLayout &&
@@ -557,7 +557,7 @@ class MainPanel extends Component {
 }
 
 //type
-MainPanel.contextType = PubCategoryContext;
+// MainPanel.contextType = PubCategoryContext;
 
 MainPanel.defaultProps = {
   className: null,

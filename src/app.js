@@ -40,7 +40,7 @@ import defaultMessages from './translations/en.json';
 // If you are using a non-english locale, point `messagesInLocale` to correct .json file
 import messagesInLocale from './translations/en.json';
 //context
-import { PubCategoryProvider } from './context/pubCategoryContext';
+// import { PubCategoryProvider } from './context/pubCategoryContext';
 
 // If translation key is missing from `messagesInLocale` (e.g. fr.json),
 // corresponding key will be added to messages from `defaultMessages` (en.json)
@@ -95,15 +95,15 @@ export const ClientApp = props => {
       textComponent="span"
     >
       {/* provider */}
-      <PubCategoryProvider>
-        <Provider store={store}>
-          <HelmetProvider>
-            <BrowserRouter>
-              <Routes routes={routeConfiguration()} />
-            </BrowserRouter>
-          </HelmetProvider>
-        </Provider>
-      </PubCategoryProvider>
+      {/* <PubCategoryProvider> */}
+      <Provider store={store}>
+        <HelmetProvider>
+          <BrowserRouter>
+            <Routes routes={routeConfiguration()} />
+          </BrowserRouter>
+        </HelmetProvider>
+      </Provider>
+      {/* </PubCategoryProvider> */}
     </IntlProvider>
   );
 };
