@@ -32,7 +32,7 @@ import { isAnyFilterActive } from '../../util/search';
 import { TopbarSearchForm } from '../../forms';
 
 //context
-import PubCategoryContext from '../../context/pubCategoryContext';
+// import PubCategoryContext from '../../context/pubCategoryContext';
 
 const expertArr = [hotPatch4, hotPatch1, hotPatch5, hotPatch3, hotPatch2];
 const mobileExpertArr = [
@@ -56,7 +56,7 @@ let defaultLocation = {
 const SectionHero = props => {
   const { rootClassName, className } = props;
   const { categories } = config.custom;
-  const { setSelectedPubCat } = useContext(PubCategoryContext);
+  // const { setSelectedPubCat } = useContext(PubCategoryContext);
 
   const filterConfig = props.filterConfig;
   const { ...searchInURL } = parse(defaultLocation.search, {
@@ -121,7 +121,7 @@ const SectionHero = props => {
     };
     if (categories) {
       searchParams['pub_category'] = categories;
-      setSelectedPubCat(categories);
+      // setSelectedPubCat(categories);
     }
     console.log('search landing:', searchParams, SearchQueryData);
 

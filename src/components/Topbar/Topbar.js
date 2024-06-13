@@ -97,7 +97,7 @@ class TopbarComponent extends Component {
   }
 
   handleSubmit(values) {
-    const { selectedPubCat } = this.context;
+    // const { selectedPubCat } = this.context;
     const { currentSearchParams } = this.props;
     const { search, selectedPlace } = values.location;
     const { categories } = values;
@@ -112,9 +112,10 @@ class TopbarComponent extends Component {
     };
     if (categories) {
       searchParams['pub_category'] = categories;
-    } else if (selectedPubCat !== '') {
-      searchParams['pub_category'] = selectedPubCat;
     }
+    // else if (selectedPubCat !== '') {
+    //   searchParams['pub_category'] = selectedPubCat;
+    // }
 
     history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams));
   }
@@ -296,7 +297,7 @@ class TopbarComponent extends Component {
   }
 }
 //type
-TopbarComponent.contextType = PubCategoryContext;
+// TopbarComponent.contextType = PubCategoryContext;
 
 TopbarComponent.defaultProps = {
   className: null,
