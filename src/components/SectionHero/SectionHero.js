@@ -72,8 +72,8 @@ const SectionHero = props => {
   const [selectedMainCategory, setSelectedMainCategory] = useState(null);
   const [SearchQueryData, setSearchQueryData] = useState({
     pub_category: '',
-    address: 'World Wide',
-    bounds: {},
+    address: 'United Kingdom',
+    bounds: '61.5471111,9.5844157,47.5554486,-18.5319589',
   });
 
   let selectedCategoriesLength = null;
@@ -123,7 +123,7 @@ const SectionHero = props => {
       searchParams['pub_category'] = categories;
       // setSelectedPubCat(categories);
     }
-    console.log('search landing:', searchParams, SearchQueryData);
+    // console.log('search landing:', searchParams, SearchQueryData);
 
     setSearchQueryData(prev => ({
       ...prev,
@@ -394,7 +394,7 @@ const SectionHero = props => {
       callback();
     };
   }
-  console.log('setSearchQueryData', SearchQueryData);
+  // console.log('setSearchQueryData', SearchQueryData);
 
   function onOpenCategoryFilter() {
     setIsCategoryFilterOpen(!isCategoryFilterOpen);
@@ -443,12 +443,15 @@ const SectionHero = props => {
     history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}));
   };
   const handleSearchLanding = () => {
+    // console.log('search without values:');
     const { history } = props;
     const { address, bounds, pub_category } = SearchQueryData;
     // console.log('handleSearchLanding', SearchQueryData);
 
     if (pub_category == '') {
-      history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}));
+      history.push(
+        createResourceLocatorString('SearchPage', routeConfiguration(), {}, SearchQueryData)
+      );
       // swal.fire({
       //   title: 'Please select Category.',
       //   showClass: {
