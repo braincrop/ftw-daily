@@ -440,7 +440,9 @@ const SectionHero = props => {
   const handleSearchLandingAll = () => {
     const { history } = props;
 
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}));
+    history.push(
+      createResourceLocatorString('SearchPage', routeConfiguration(), {}, SearchQueryData)
+    );
   };
   const handleSearchLanding = () => {
     // console.log('search without values:');
