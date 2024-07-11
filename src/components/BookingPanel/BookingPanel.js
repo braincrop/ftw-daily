@@ -168,7 +168,7 @@ const BookingPanel = props => {
       listing.attributes.publicData.seats) ||
     1;
 
-  // console.log('Booking Panel', props);
+  // console.log('Booking Panel', lineItems);
 
   return (
     <div className={classes}>

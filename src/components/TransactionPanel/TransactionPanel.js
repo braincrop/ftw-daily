@@ -251,6 +251,7 @@ export class TransactionPanelComponent extends Component {
       toggleBookingTypeOnPanel,
     } = this.props;
 
+    console.log('transactionPanel', transaction);
     const lastTrasaction = transaction.attributes.lastTransition || 'nil';
     const _bookingCompleted = lastTrasaction === 'transition/accept';
     const currentTransaction = ensureTransaction(transaction);

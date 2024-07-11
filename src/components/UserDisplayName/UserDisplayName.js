@@ -39,7 +39,7 @@ const UserDisplayName = props => {
     : null;
 
   const classes = classNames(rootClassName, className);
-  console.log('USER DISPLAY PAGE: ', classes, className, rootClassName);
+  // console.log('USER DISPLAY PAGE: ', classes, className, rootClassName);
   return <span>{displayName}</span>;
 };
 
