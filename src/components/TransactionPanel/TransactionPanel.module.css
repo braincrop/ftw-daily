@@ -480,3 +480,38 @@
   margin-top: 0;
   margin-bottom: 1px;
 }
+
+.customBreakDownDateTimeMain {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  width: 100%; /* Ensure the container takes the full width */
+  border-bottom: 1px solid rgba(178, 177, 177, 0.363);
+}
+
+.customBreakDownDateTimeMain div {
+  flex: 1;
+}
+
+.customBreakDownDateTimeMain div:nth-child(1) {
+  text-align: left;
+}
+
+.customBreakDownDateTimeMain div:nth-child(2) {
+  text-align: right;
+}
+.feeInfo {
+  @apply --marketplaceTinyFontStyles;
+  flex-shrink: 0;
+  margin: 0;
+  color: var(--matterColorAnti);
+  padding-top: 4px;
+  padding-bottom: 14px;
+  font-size: 12px !important;
+  @media (--viewportMedium) {
+    /* padding-top: 11px;
+    padding-bottom: 21px; */
+    padding: 11px 25px 21px 25px;
+  }
+}

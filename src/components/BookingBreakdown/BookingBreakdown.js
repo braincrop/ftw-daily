@@ -11,7 +11,7 @@ import {
   propTypes,
   LINE_ITEM_CUSTOMER_COMMISSION,
   LINE_ITEM_PROVIDER_COMMISSION,
-  LINE_ITEM_DISCOUNT
+  LINE_ITEM_DISCOUNT,
 } from '../../util/types';
 
 import LineItemBookingPeriod from './LineItemBookingPeriod';
@@ -41,11 +41,12 @@ export const BookingBreakdownComponent = props => {
     intl,
     dateType,
     timeZone,
-    promocode
+    promocode,
   } = props;
 
   const isDaily = dateType === DATE_TYPE_DATE;
-  const transactionType = transaction &&
+  const transactionType =
+    transaction &&
     transaction.attributes &&
     transaction.attributes.protectedData &&
     transaction.attributes.protectedData.type;
@@ -58,6 +59,8 @@ export const BookingBreakdownComponent = props => {
   });
 
   const classes = classNames(rootClassName || css.root, className);
+
+  console.log('breakdown');
   /**
    * BookingBreakdown contains different line items:
    *
@@ -105,9 +108,20 @@ export const BookingBreakdownComponent = props => {
         isDaily={isDaily}
         transactionType={transactionType}
       />
-      <LineItemUnitsMaybe transaction={transaction} unitType={unitType} isDaily={isDaily} transactionType={transactionType} />
+      <LineItemUnitsMaybe
+        transaction={transaction}
+        unitType={unitType}
+        isDaily={isDaily}
+        transactionType={transactionType}
+      />
 
-      <LineItemBasePriceMaybe transaction={transaction} unitType={unitType} intl={intl} isDaily={isDaily} transactionType={transactionType} />
+      <LineItemBasePriceMaybe
+        transaction={transaction}
+        unitType={unitType}
+        intl={intl}
+        isDaily={isDaily}
+        transactionType={transactionType}
+      />
       <LineItemUnknownItemsMaybe transaction={transaction} isProvider={isProvider} intl={intl} />
 
       <LineItemSubTotalMaybe
@@ -144,8 +158,12 @@ export const BookingBreakdownComponent = props => {
         intl={intl}
       />
 
-
-      <LineItemTotalPrice transaction={transaction} promocode={promocode} isProvider={isProvider} intl={intl} />
+      <LineItemTotalPrice
+        transaction={transaction}
+        promocode={promocode}
+        isProvider={isProvider}
+        intl={intl}
+      />
       {/* <LineItemTotalPriceWithDiscount result={result} transaction={transaction} intl={intl} isProvider={isProvider} /> */}
 
       {hasCommissionLineItem ? (
@@ -161,7 +179,7 @@ BookingBreakdownComponent.defaultProps = {
   rootClassName: null,
   className: null,
   dateType: null,
-  timeZone: null
+  timeZone: null,
 };
 
 BookingBreakdownComponent.propTypes = {

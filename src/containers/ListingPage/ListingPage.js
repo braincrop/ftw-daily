@@ -111,6 +111,8 @@ export class ListingPageComponent extends Component {
       imageCarouselOpen: false,
       enquiryModalOpen: enquiryModalOpenForListingId === params.id,
       bookingType: null,
+      enquiryDateTimeData: null,
+      enquiryDateTimeDataError: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -119,11 +121,17 @@ export class ListingPageComponent extends Component {
     this.toggleBookingType = this.toggleBookingType.bind(this);
   }
 
+  updateEnquiryDateTimeError = val => {
+    this.setState({ enquiryDateTimeDataError: false });
+  };
+  updateEnquiryDateTime = val => {
+    this.setState({ enquiryDateTimeData: val });
+  };
   updateDiscount = val => {
     this.setState({ promocode: val });
   };
   toggleBookingType(bookingType) {
-    this.setState({ bookingType });
+    // this.setState({ bookingType });
   }
 
   handleSubmit(values) {
@@ -183,15 +191,16 @@ export class ListingPageComponent extends Component {
     // Clear previous Stripe errors from store if there is any
     onInitializeCardPaymentData();
 
+    console.log('submit booking =>', initialValues);
     // Redirect to CheckoutPage
-    history.push(
-      createResourceLocatorString(
-        'CheckoutPage',
-        routes,
-        { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
-        {}
-      )
-    );
+    // history.push(
+    //   createResourceLocatorString(
+    //     'CheckoutPage',
+    //     routes,
+    //     { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
+    //     {}
+    //   )
+    // );
   }
 
   onContactUser() {
@@ -233,52 +242,80 @@ export class ListingPageComponent extends Component {
       this.setState({ enquiryModalOpen: true });
     }
   }
+  formatDateString(isoString) {
+    const date = new Date(isoString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so we add 1
+    const day = String(date.getDate()).padStart(2, '0');
 
-  onSubmitEnquiry(values, unitType) {
+    return `${year}-${month}-${day}`;
+  }
+
+  onSubmitEnquiry(values, unitType, currentListing, lineItems) {
     const { history, params, onSendEnquiry } = this.props;
     const routes = routeConfiguration();
     const listingId = new UUID(params.id);
     const { message } = values;
     let modifiedMessage = message;
+    if (!!this.state.enquiryDateTimeData) {
+      this.setState({ enquiryDateTimeDataError: false });
+      const protectedData = {
+        startTime: parseInt(this.state.enquiryDateTimeData.bookingStartTime),
+        endTime: parseInt(this.state.enquiryDateTimeData.bookingEndTime),
+        displayStartDate: this.formatDateString(
+          this.state.enquiryDateTimeData.bookingStartDate.date
+        ),
+        displayEndDate: this.formatDateString(this.state.enquiryDateTimeData.bookingEndDate.date),
+      };
 
-    //! Remove comments to apply regex functionality on messages
+      console.log(
+        'onSubmitEnquiry',
+        currentListing,
+        unitType,
+        lineItems,
+        this.state.enquiryDateTimeData
+      );
+      //! Remove comments to apply regex functionality on messages
 
-    const hideEmail = text =>
-      text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'HIDDEN');
-    const hidePhone = text =>
-      text.replace(/(\+?\d{0,2}\s?)?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{4}/g, 'HIDDEN');
-    const hideWebsite = text =>
-      text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, 'HIDDEN');
-    modifiedMessage = hideEmail(modifiedMessage);
-    modifiedMessage = hidePhone(modifiedMessage);
-    modifiedMessage = hideWebsite(modifiedMessage);
+      const hideEmail = text =>
+        text.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, 'HIDDEN');
+      const hidePhone = text =>
+        text.replace(/(\+?\d{0,2}\s?)?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{4}/g, 'HIDDEN');
+      const hideWebsite = text =>
+        text.replace(/(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/\S*)?/g, 'HIDDEN');
+      modifiedMessage = hideEmail(modifiedMessage);
+      modifiedMessage = hidePhone(modifiedMessage);
+      modifiedMessage = hideWebsite(modifiedMessage);
 
-    // console.log('regex,', modifiedMessage, !modifiedMessage.includes('HIDDEN'));
-    if (modifiedMessage.includes('HIDDEN')) {
-      Swal.fire({
-        title: "Hold your horses! We can't hit that send button just yet",
-        text: `Contact info can't be shared until a booking is confirmed.
+      // console.log('regex,', modifiedMessage, !modifiedMessage.includes('HIDDEN'));
+      if (modifiedMessage.includes('HIDDEN')) {
+        Swal.fire({
+          title: "Hold your horses! We can't hit that send button just yet",
+          text: `Contact info can't be shared until a booking is confirmed.
            To send the message, please remove the contact info.`,
-        confirmButtonText: 'Edit Message',
-        confirmButtonColor: '#5cbfcc',
-      }).then(() => {
+          confirmButtonText: 'Edit Message',
+          confirmButtonColor: '#5cbfcc',
+        }).then(() => {
+          return;
+        });
         return;
-      });
-      return;
+      }
+
+      onSendEnquiry(listingId, modifiedMessage.trim(), unitType, protectedData)
+        .then(txId => {
+          this.setState({ enquiryModalOpen: false });
+
+          // Redirect to OrderDetailsPage
+          history.push(
+            createResourceLocatorString('OrderDetailsPage', routes, { id: txId.uuid }, {})
+          );
+        })
+        .catch(() => {
+          // Ignore, error handling in duck file
+        });
+    } else {
+      this.setState({ enquiryDateTimeDataError: true });
     }
-
-    onSendEnquiry(listingId, modifiedMessage.trim(), unitType)
-      .then(txId => {
-        this.setState({ enquiryModalOpen: false });
-
-        // Redirect to OrderDetailsPage
-        history.push(
-          createResourceLocatorString('OrderDetailsPage', routes, { id: txId.uuid }, {})
-        );
-      })
-      .catch(() => {
-        // Ignore, error handling in duck file
-      });
   }
 
   render() {
@@ -319,6 +356,7 @@ export class ListingPageComponent extends Component {
 
     const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
     const params = { slug: listingSlug, ...rawParams };
+    console.log('Listing Page =>', currentListing);
 
     const listingType = isDraftVariant
       ? LISTING_PAGE_PARAM_TYPE_DRAFT
@@ -640,10 +678,30 @@ export class ListingPageComponent extends Component {
                     onSubmitEnquiry={params => {
                       const { unitType = config.fallbackUnitType } =
                         currentListing.attributes.publicData || {};
-                      this.onSubmitEnquiry(params, unitType);
+                      this.onSubmitEnquiry(params, unitType, currentListing, lineItems);
                     }}
                     currentUser={currentUser}
                     onManageDisableScrolling={onManageDisableScrolling}
+                    updateDiscount={this.updateDiscount}
+                    promocode={this.state.promocode}
+                    className={css.bookingPanel}
+                    isOwnListing={isOwnListing}
+                    unitType={unitType}
+                    onSubmit={handleBookingSubmit}
+                    subTitle={bookingSubTitle}
+                    timeSlots={timeSlots}
+                    fetchTimeSlotsError={fetchTimeSlotsError}
+                    monthlyTimeSlots={monthlyTimeSlots}
+                    onFetchTimeSlots={onFetchTimeSlots}
+                    onFetchTransactionLineItems={onFetchTransactionLineItems}
+                    lineItems={lineItems}
+                    fetchLineItemsInProgress={fetchLineItemsInProgress}
+                    fetchLineItemsError={fetchLineItemsError}
+                    bookingType={this.state.bookingType}
+                    toggleBookingType={this.toggleBookingType}
+                    updateEnquiryDateTime={this.updateEnquiryDateTime}
+                    updateEnquiryDateTimeError={this.updateEnquiryDateTimeError}
+                    enquiryDateTimeDataError={this.state.enquiryDateTimeDataError}
                   />
                 </div>
                 <BookingPanel
@@ -796,14 +854,15 @@ const mapDispatchToProps = dispatch => ({
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
-  onSendEnquiry: (listingId, message, unitType) =>
-    dispatch(sendEnquiry(listingId, message, unitType)),
+  onSendEnquiry: (listingId, message, unitType, protectedData) =>
+    dispatch(sendEnquiry(listingId, message, unitType, protectedData)),
   callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: (bookingData, listingId, isOwnListing) => {
     return dispatch(fetchTransactionLineItems(bookingData, listingId, isOwnListing));
   },
-  onSendEnquiry: (listingId, message) => dispatch(sendEnquiry(listingId, message)),
+  // onSendEnquiry: (listingId, message, protectedData) =>
+  //   dispatch(sendEnquiry(listingId, message, protectedData)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlotsTime(listingId, start, end, timeZone)),

@@ -55,6 +55,7 @@ export class BookingTimeFormComponent extends Component {
       price: unitPrice,
       promocode,
       updateDiscount,
+      isFromEnquiry,
       ...rest
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
@@ -78,6 +79,7 @@ export class BookingTimeFormComponent extends Component {
     //   );
     // }
 
+    // console.log('lineitems,', this.props.lineItems);
     return (
       <FinalForm
         {...rest}
@@ -137,7 +139,7 @@ export class BookingTimeFormComponent extends Component {
 
           const showEstimatedBreakdown =
             bookingData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
-console.log('EstimatedBreakdownMaybe', promocode, bookingData, lineItems);
+
           const bookingInfoMaybe = showEstimatedBreakdown ? (
             <div className={css.priceBreakdownContainer}>
               <h3 className={css.priceBreakdownTitle}>
@@ -204,24 +206,32 @@ console.log('EstimatedBreakdownMaybe', promocode, bookingData, lineItems);
                 />
               ) : null}
 
-              {bookingInfoMaybe}
-              {loadingSpinnerMaybe}
-              {bookingInfoErrorMaybe}
-
-              <p className={css.smallPrint}>
-                <FormattedMessage
-                  id={
-                    isOwnListing
-                      ? 'BookingTimeForm.ownListing'
-                      : 'BookingTimeForm.youWontBeChargedInfo'
-                  }
-                />
-              </p>
-              <div className={submitButtonClasses}>
-                <PrimaryButton type="submit">
-                  <FormattedMessage id="BookingTimeForm.requestToBook" />
-                </PrimaryButton>
-              </div>
+              {isFromEnquiry || bookingInfoMaybe}
+              {isFromEnquiry || loadingSpinnerMaybe}
+              {isFromEnquiry || bookingInfoErrorMaybe}
+              {isFromEnquiry || (
+                <>
+                  <p className={css.smallPrint}>
+                    <FormattedMessage
+                      id={
+                        isOwnListing
+                          ? 'BookingTimeForm.ownListing'
+                          : 'BookingTimeForm.youWontBeChargedInfo'
+                      }
+                    />
+                  </p>
+                  <div className={submitButtonClasses}>
+                    <PrimaryButton type="submit">
+                      <FormattedMessage id="BookingTimeForm.requestToBook" />
+                    </PrimaryButton>
+                  </div>
+                </>
+              )}
+              {isFromEnquiry && (
+                <div className={submitButtonClasses}>
+                  <PrimaryButton type="submit">Select Date/Time</PrimaryButton>
+                </div>
+              )}
             </Form>
           );
         }}
@@ -240,6 +250,7 @@ BookingTimeFormComponent.defaultProps = {
   startDatePlaceholder: null,
   endDatePlaceholder: null,
   monthlyTimeSlots: null,
+  isFromEnquiry: false,
 };
 
 BookingTimeFormComponent.propTypes = {
@@ -254,6 +265,7 @@ BookingTimeFormComponent.propTypes = {
   listingId: propTypes.uuid,
   monthlyTimeSlots: object,
   onFetchTimeSlots: func.isRequired,
+  isFromEnquiry: bool,
 
   // from injectIntl
   intl: intlShape.isRequired,
