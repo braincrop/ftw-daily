@@ -43,8 +43,8 @@ const SectionHostMaybe = props => {
     bookingType,
     toggleBookingType,
     updateEnquiryDateTime,
+    planType,
     enquiryDateTimeDataError,
-    updateEnquiryDateTimeError,
   } = props;
 
   if (!listing.author) {
@@ -105,8 +105,8 @@ const SectionHostMaybe = props => {
           toggleBookingType={toggleBookingType}
           listing={listing}
           updateEnquiryDateTime={updateEnquiryDateTime}
+          currentPlanType={planType}
           enquiryDateTimeDataError={enquiryDateTimeDataError}
-          updateEnquiryDateTimeError={updateEnquiryDateTimeError}
         />
       </Modal>
     </div>

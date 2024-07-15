@@ -65,7 +65,11 @@ const BreakdownMaybe = props => {
       const options = { weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: true };
       return date.toLocaleTimeString('en-US', options);
     };
-
+    function formatDateDaily(dateString) {
+      const date = new Date(dateString);
+      const options = { month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
     const formatDay = timestamp => {
       const date = new Date(timestamp);
       return date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -90,8 +94,72 @@ const BreakdownMaybe = props => {
       const differenceInHours = differenceInMillis / (1000 * 60 * 60);
       return differenceInHours;
     };
+    const calculateDays = (startDay, endDay) => {
+      const startDate = new Date(startDay);
+      const endDate = new Date(endDay);
+      const differenceInMillis = endDate - startDate;
+      const differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24);
+      return differenceInDays;
+    };
+    const calculateWeeks = (startDay, endDay) => {
+      const startDate = new Date(startDay);
+      const endDate = new Date(endDay);
+      const differenceInMillis = endDate - startDate;
+      const differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24);
+      const differenceInWeeks = differenceInDays / 7;
+      const roundedWeeks = parseFloat(differenceInWeeks.toFixed(1));
+      return roundedWeeks;
+    };
+    const calculateMonths = (startDay, endDay) => {
+      const startDate = new Date(startDay);
+      const endDate = new Date(endDay);
 
-    const _numberOfHours = calculateHours(startTime, endTime);
+      // Calculate the total difference in months
+      let totalMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+      totalMonths -= startDate.getMonth();
+      totalMonths += endDate.getMonth();
+
+      // Calculate the number of days in the start and end months
+      const daysInStartMonth = new Date(
+        startDate.getFullYear(),
+        startDate.getMonth() + 1,
+        0
+      ).getDate();
+      const daysInEndMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
+
+      // Calculate the number of days from the start date to the end of the start month
+      const daysFromStart = daysInStartMonth - startDate.getDate();
+
+      // Calculate the number of days from the beginning of the end month to the end date
+      const daysToEnd = endDate.getDate();
+
+      // Calculate the total number of days in the time period
+      const differenceInDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+      // Calculate the number of days in the month of the start date
+      const daysInMonth = (daysInStartMonth + daysInEndMonth) / 2;
+
+      // Calculate the fraction of the month
+      const fractionalMonths = differenceInDays / daysInMonth;
+
+      // Add the fractional months to the total months
+      totalMonths += fractionalMonths;
+
+      // Round to one decimal place
+      const roundedMonths = parseFloat(totalMonths.toFixed(1));
+
+      return roundedMonths;
+    };
+
+    // const _numberOfHours = calculateDays(displayStartDate, displayEndDate);
+    const _numberOfHours =
+      planType === 'hourly'
+        ? calculateHours(startTime, endTime)
+        : planType === 'daily'
+        ? calculateDays(displayStartDate, displayEndDate)
+        : planType === 'monthly'
+        ? calculateMonths(displayStartDate, displayEndDate)
+        : calculateWeeks(displayStartDate, displayEndDate);
     let pricePerHour = null;
     let _currencyType = null;
     let _currencySymbol = '£';
@@ -99,13 +167,13 @@ const BreakdownMaybe = props => {
     if (planType === 'hourly') {
       pricePerHour = transaction?.listing?.attributes?.price?.amount / 100;
       _currencyType = transaction?.listing?.attributes?.price?.currency;
-    } else if (planType === 'weekly') {
+    } else if (planType === 'daily') {
       _currencyType = transaction?.listing?.attributes?.publicData?.pricePerDay?.currency;
       pricePerHour = transaction?.listing?.attributes?.publicData?.pricePerDay?.amount / 100;
     } else if (planType === 'monthly') {
       _currencyType = transaction?.listing?.attributes?.publicData?.pricePerMonth?.currency;
       pricePerHour = transaction?.listing?.attributes?.publicData?.pricePerMonth?.amount / 100;
-    } else if (planType === 'daily') {
+    } else if (planType === 'weekly') {
       _currencyType = transaction?.listing?.attributes?.publicData?.pricePerWeek?.currency;
       pricePerHour = transaction?.listing?.attributes?.publicData?.pricePerWeek?.amount / 100;
     }
@@ -124,7 +192,7 @@ const BreakdownMaybe = props => {
       'breakdown maybe =>',
       transaction?.attributes?.protectedData,
       transaction,
-      transactionRole
+      _numberOfHours
     );
 
     return (
@@ -132,13 +200,25 @@ const BreakdownMaybe = props => {
         <div className={css.customBreakDownDateTimeMain}>
           <div>
             <h5 style={{ margin: 3 }}>Booking start</h5>
-            <h4 style={{ fontWeight: 'bold', margin: 3 }}>{startTimeFormatted}</h4>
-            <h4 style={{ margin: 3 }}>{startMonthDayFormatted}</h4>
+            <h4
+              style={
+                planType === 'hourly' ? { fontWeight: 'bold', margin: 3 } : { display: 'none' }
+              }
+            >
+              {startTimeFormatted}
+            </h4>
+            <h4 style={{ margin: 3 }}>{formatDateDaily(displayStartDate)}</h4>
           </div>
           <div>
             <h5 style={{ margin: 3 }}>Booking end</h5>
-            <h4 style={{ fontWeight: 'bold', margin: 3 }}>{endTimeFormatted}</h4>
-            <h4 style={{ margin: 3 }}>{endMonthDayFormatted}</h4>
+            <h4
+              style={
+                planType === 'hourly' ? { fontWeight: 'bold', margin: 3 } : { display: 'none' }
+              }
+            >
+              {endTimeFormatted}
+            </h4>
+            <h4 style={{ margin: 3 }}>{formatDateDaily(displayEndDate)}</h4>
           </div>
         </div>
         <div className={css.customBreakDownDateTimeMain}>
@@ -155,7 +235,14 @@ const BreakdownMaybe = props => {
             </h4>
             <h4 style={{ margin: 3 }}>
               {_currencySymbol}
-              {transaction?.listing?.attributes?.price?.amount / 100} * {_numberOfHours}{' '}
+              {planType === 'hourly'
+                ? transaction?.listing?.attributes?.price?.amount / 100
+                : planType === 'weekly'
+                ? transaction?.listing?.attributes?.publicData?.pricePerWeekFilter
+                : planType === 'monthly'
+                ? transaction?.listing?.attributes?.publicData?.pricePerMonthFilter
+                : transaction?.listing?.attributes?.publicData?.pricePerDayFilter}{' '}
+              * {_numberOfHours}{' '}
               {planType === 'hourly'
                 ? 'hour(s)'
                 : planType === 'weekly'

@@ -36,13 +36,32 @@
 .containerWarningMessage {
   text-align: center;
   & p {
-  margin: 0;
-  font-family: var(--fontFamilySofiapro);
+    margin: 0;
+    font-family: var(--fontFamilySofiapro);
     font-size: 14px;
     font-weight: var(--fontWeightBold);
     line-height: 16px;
   }
-    & p:last-of-type {
-        margin-bottom: 20px;
-      }
+  & p:last-of-type {
+    margin-bottom: 20px;
+  }
+}
+
+.formRow {
+  display: flex;
+  margin: 10px 0;
+}
+.lineBetween {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  margin: 0 10px;
+}
+.fieldDate {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  width: 100%;
+}
+.fieldTime {
+  width: 100%;
 }

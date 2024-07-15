@@ -48,7 +48,7 @@ import {
   Footer,
   BookingPanel,
 } from '../../components';
-import moment from 'moment';
+import moment, { relativeTimeRounding } from 'moment';
 import { TopbarContainer, NotFoundPage } from '../../containers';
 
 import {
@@ -111,8 +111,14 @@ export class ListingPageComponent extends Component {
       imageCarouselOpen: false,
       enquiryModalOpen: enquiryModalOpenForListingId === params.id,
       bookingType: null,
-      enquiryDateTimeData: null,
       enquiryDateTimeDataError: false,
+      enquiryDateTimeData: {
+        StartDate: '',
+        EndDate: '',
+        StartTime: '',
+        EndTime: '',
+        planType: '',
+      },
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -121,11 +127,8 @@ export class ListingPageComponent extends Component {
     this.toggleBookingType = this.toggleBookingType.bind(this);
   }
 
-  updateEnquiryDateTimeError = val => {
-    this.setState({ enquiryDateTimeDataError: false });
-  };
-  updateEnquiryDateTime = val => {
-    this.setState({ enquiryDateTimeData: val });
+  updateEnquiryDateTime = (target, val) => {
+    this.setState({ enquiryDateTimeData: { ...this.state.enquiryDateTimeData, [target]: val } });
   };
   updateDiscount = val => {
     this.setState({ promocode: val });
@@ -213,7 +216,6 @@ export class ListingPageComponent extends Component {
       getOwnListing,
       getListing,
     } = this.props;
-
     // const listingId = new UUID(params.id);
     // const isPendingApprovalVariant = params.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
     // const isDraftVariant = params.variant === LISTING_PAGE_DRAFT_VARIANT;
@@ -242,39 +244,60 @@ export class ListingPageComponent extends Component {
       this.setState({ enquiryModalOpen: true });
     }
   }
-  formatDateString(isoString) {
-    const date = new Date(isoString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so we add 1
-    const day = String(date.getDate()).padStart(2, '0');
+  formatTimeString(StartTime, EndTime, SDate, EDate) {
+    const [startHour, startMinute] = StartTime.split(':').map(Number);
+    const [endHour, endMinute] = EndTime.split(':').map(Number);
 
-    return `${year}-${month}-${day}`;
+    // Create new Date objects for the start and end times
+    const startDateTime = new Date(SDate);
+    startDateTime.setHours(startHour);
+    startDateTime.setMinutes(startMinute);
+
+    const endDateTime = new Date(EDate);
+    endDateTime.setHours(endHour);
+    endDateTime.setMinutes(endMinute);
+
+    // Convert the Date objects to timestamps
+    return {
+      startTimestamp: startDateTime.getTime(),
+      endTimestamp: endDateTime.getTime(),
+    };
   }
 
   onSubmitEnquiry(values, unitType, currentListing, lineItems) {
     const { history, params, onSendEnquiry } = this.props;
+    const { EndDate, EndTime, StartDate, StartTime, planType } = this.state.enquiryDateTimeData;
     const routes = routeConfiguration();
     const listingId = new UUID(params.id);
     const { message } = values;
     let modifiedMessage = message;
-    if (!!this.state.enquiryDateTimeData) {
+    var startTimestamp = null;
+    var endTimestamp = null;
+
+    if (planType === 'hourly' && (EndTime === '' || StartDate === '' || StartTime === '')) {
+      this.setState({ enquiryDateTimeDataError: true });
+    } else if (planType !== 'hourly' && (EndDate === '' || StartDate === '')) {
+      this.setState({ enquiryDateTimeDataError: true });
+    } else {
       this.setState({ enquiryDateTimeDataError: false });
+
+      const _EndDate = planType === 'hourly' ? StartDate : EndDate; // if hourly, end date is same as start date
+
+      if (planType === 'hourly') {
+        const timeStampData = this.formatTimeString(StartTime, EndTime, StartDate, _EndDate);
+        startTimestamp = timeStampData.startTimestamp;
+        endTimestamp = timeStampData.endTimestamp;
+      }
+
       const protectedData = {
-        startTime: parseInt(this.state.enquiryDateTimeData.bookingStartTime),
-        endTime: parseInt(this.state.enquiryDateTimeData.bookingEndTime),
-        displayStartDate: this.formatDateString(
-          this.state.enquiryDateTimeData.bookingStartDate.date
-        ),
-        displayEndDate: this.formatDateString(this.state.enquiryDateTimeData.bookingEndDate.date),
+        startTime: startTimestamp || null,
+        endTime: endTimestamp || null,
+        displayStartDate: new Date(StartDate).toISOString().split('T')[0],
+        displayEndDate: new Date(_EndDate).toISOString().split('T')[0],
+        planType: planType,
       };
 
-      console.log(
-        'onSubmitEnquiry',
-        currentListing,
-        unitType,
-        lineItems,
-        this.state.enquiryDateTimeData
-      );
+      console.log('onSubmitEnquiry', protectedData, this.state.enquiryDateTimeData);
       //! Remove comments to apply regex functionality on messages
 
       const hideEmail = text =>
@@ -313,8 +336,6 @@ export class ListingPageComponent extends Component {
         .catch(() => {
           // Ignore, error handling in duck file
         });
-    } else {
-      this.setState({ enquiryDateTimeDataError: true });
     }
   }
 
@@ -356,7 +377,7 @@ export class ListingPageComponent extends Component {
 
     const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
     const params = { slug: listingSlug, ...rawParams };
-    console.log('Listing Page =>', currentListing);
+    console.log('Listing Page =>', this.state.enquiryDateTimeData);
 
     const listingType = isDraftVariant
       ? LISTING_PAGE_PARAM_TYPE_DRAFT
@@ -700,7 +721,7 @@ export class ListingPageComponent extends Component {
                     bookingType={this.state.bookingType}
                     toggleBookingType={this.toggleBookingType}
                     updateEnquiryDateTime={this.updateEnquiryDateTime}
-                    updateEnquiryDateTimeError={this.updateEnquiryDateTimeError}
+                    planType={this.state.enquiryDateTimeData.planType}
                     enquiryDateTimeDataError={this.state.enquiryDateTimeDataError}
                   />
                 </div>
