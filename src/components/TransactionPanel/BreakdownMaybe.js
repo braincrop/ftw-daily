@@ -114,7 +114,7 @@ const BreakdownMaybe = props => {
       const startDate = new Date(startDay);
       const endDate = new Date(endDay);
 
-      // Calculate the total difference in months
+      // Calculate the total difference in full months
       let totalMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12;
       totalMonths -= startDate.getMonth();
       totalMonths += endDate.getMonth();
@@ -128,22 +128,26 @@ const BreakdownMaybe = props => {
       const daysInEndMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
 
       // Calculate the number of days from the start date to the end of the start month
-      const daysFromStart = daysInStartMonth - startDate.getDate();
+      const daysFromStart = daysInStartMonth - startDate.getDate() + 1;
 
       // Calculate the number of days from the beginning of the end month to the end date
       const daysToEnd = endDate.getDate();
 
-      // Calculate the total number of days in the time period
-      const differenceInDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+      // Calculate the fraction of the first month
+      const fractionOfStartMonth = daysFromStart / daysInStartMonth;
 
-      // Calculate the number of days in the month of the start date
-      const daysInMonth = (daysInStartMonth + daysInEndMonth) / 2;
+      // Calculate the fraction of the last month
+      const fractionOfEndMonth = daysToEnd / daysInEndMonth;
 
-      // Calculate the fraction of the month
-      const fractionalMonths = differenceInDays / daysInMonth;
-
-      // Add the fractional months to the total months
-      totalMonths += fractionalMonths;
+      // If the start and end dates are in the same month, we need to adjust the total months calculation
+      if (
+        startDate.getFullYear() === endDate.getFullYear() &&
+        startDate.getMonth() === endDate.getMonth()
+      ) {
+        totalMonths = fractionOfStartMonth;
+      } else {
+        totalMonths = totalMonths - 1 + fractionOfStartMonth + fractionOfEndMonth;
+      }
 
       // Round to one decimal place
       const roundedMonths = parseFloat(totalMonths.toFixed(1));
