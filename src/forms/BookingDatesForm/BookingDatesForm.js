@@ -15,6 +15,7 @@ import { WEEKLY_PRICE, MONTHLY_PRICE } from '../../util/types';
 import { getTypeDuration } from '../../util/data';
 
 import css from './BookingDatesForm.module.css';
+import { value } from 'lodash/seq';
 
 const identity = v => v;
 
@@ -92,6 +93,8 @@ export class BookingDatesFormComponent extends Component {
       discount,
       promocode,
       updateDiscount,
+      isFromEnquiry,
+      enquiryOnChangeDates,
       ...rest
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
@@ -242,10 +245,11 @@ export class BookingDatesFormComponent extends Component {
                 subscription={{ values: true }}
                 onChange={values => {
                   this.handleOnChange(values);
+                  isFromEnquiry && enquiryOnChangeDates(values);
                 }}
               />
               <FieldDateRangeInput
-                className={css.bookingDates}
+                className={isFromEnquiry ? css.bookingDatesEnquiry : css.bookingDates}
                 name="bookingDates"
                 unitType={unitType}
                 minimumLength={minimumLength}
@@ -272,24 +276,28 @@ export class BookingDatesFormComponent extends Component {
                 bookingType={bookingType}
               />
 
-              {bookingInfoMaybe}
-              {loadingSpinnerMaybe}
-              {bookingInfoErrorMaybe}
+              {!isFromEnquiry && (
+                <>
+                  {bookingInfoMaybe}
+                  {loadingSpinnerMaybe}
+                  {bookingInfoErrorMaybe}
 
-              <p className={css.smallPrint}>
-                <FormattedMessage
-                  id={
-                    isOwnListing
-                      ? 'BookingDatesForm.ownListing'
-                      : 'BookingDatesForm.youWontBeChargedInfo'
-                  }
-                />
-              </p>
-              <div className={submitButtonClasses}>
-                <PrimaryButton type="submit">
-                  <FormattedMessage id="BookingDatesForm.requestToBook" />
-                </PrimaryButton>
-              </div>
+                  <p className={css.smallPrint}>
+                    <FormattedMessage
+                      id={
+                        isOwnListing
+                          ? 'BookingDatesForm.ownListing'
+                          : 'BookingDatesForm.youWontBeChargedInfo'
+                      }
+                    />
+                  </p>
+                  <div className={submitButtonClasses}>
+                    <PrimaryButton type="submit">
+                      <FormattedMessage id="BookingDatesForm.requestToBook" />
+                    </PrimaryButton>
+                  </div>
+                </>
+              )}
             </Form>
           );
         }}
@@ -309,6 +317,7 @@ BookingDatesFormComponent.defaultProps = {
   timeSlots: null,
   lineItems: null,
   fetchLineItemsError: null,
+  isFromEnquiry: false,
 };
 
 BookingDatesFormComponent.propTypes = {
@@ -320,6 +329,7 @@ BookingDatesFormComponent.propTypes = {
   price: propTypes.money,
   isOwnListing: bool,
   timeSlots: arrayOf(propTypes.timeSlot),
+  isFromEnquiry: bool,
   promocode: bool,
   onFetchTransactionLineItems: func.isRequired,
   lineItems: array,

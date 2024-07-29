@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { DATE_TYPE_DATE, DATE_TYPE_DATETIME, LINE_ITEM_DAY, HOURLY_PRICE } from '../../util/types';
 import { ensureListing } from '../../util/data';
-import { BookingBreakdown } from '../../components';
+import { BookingBreakdown, PrimaryButton } from '../../components';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import css from './TransactionPanel.module.css';
+import { FormattedMessage } from 'react-intl';
+import LineItemDiscountMaybe from '../BookingBreakdown/LineItemDiscountMaybe';
+import FieldDiscount from '../../forms/BookingTimeForm/FiledDiscount';
 
 // Functional component as a helper to build BookingBreakdown
 const BreakdownMaybe = props => {
@@ -16,27 +19,42 @@ const BreakdownMaybe = props => {
     transactionRole,
     unitType,
     promocode,
+    intl,
+    onSumbitBookingRequestEnquiry,
   } = props;
   const [planType, setPlanType] = useState(null);
+  const [result, setResult] = React.useState({
+    _sdkType: 'Money',
+    amount: 0,
+    currency: 'GBP',
+  });
+  var dataToSend = {};
 
   useEffect(() => {
-    const _publicDataPlan = transaction?.listing?.attributes || null;
-    if (_publicDataPlan) {
-      if (_publicDataPlan?.price == null) {
-        if (_publicDataPlan?.publicData?.pricePerDay) {
-          setPlanType('daily');
-        } else if (_publicDataPlan?.publicData?.pricePerMonth) {
-          setPlanType('monthly');
-        } else if (_publicDataPlan?.publicData?.pricePerWeek) {
-          setPlanType('weekly');
-        }
-      } else {
-        setPlanType('hourly');
-      }
+    const _publicDataPlan = transaction?.attributes?.protectedData.planType || null;
+    setPlanType(_publicDataPlan);
+    if (_publicDataPlan !== 'price') {
+      dataToSend = {
+        bookingDates: {
+          startDate: new Date(startDate),
+          endDate: new Date(endDate),
+        },
+        enquirybookingType: _publicDataPlan,
+        fromWhere: 'enquiry',
+      };
+    } else if (_publicDataPlan === 'price') {
+      dataToSend = {
+        enquirybookingType: _publicDataPlan,
+        fromWhere: 'enquiry',
+        bookingStartDate: { date: new Date(startDate) },
+        bookingEndDate: { date: new Date(endDate) },
+        bookingStartTime: startTime?.toString(),
+        bookingEndTime: endTime?.toString(),
+      };
     }
   }, [transaction]);
 
-  const { startTime, endTime, displayStartDate, displayEndDate } =
+  const { startTime, endTime, displayStartDate, displayEndDate, startDate, endDate } =
     transaction?.attributes?.protectedData || {};
   const loaded = transaction && transaction.id && transaction.booking && transaction.booking.id;
   const listingAttributes = ensureListing(transaction.listing).attributes;
@@ -57,8 +75,8 @@ const BreakdownMaybe = props => {
 
   if (
     transaction?.attributes?.lastTransition &&
-    transaction.attributes.lastTransition === 'transition/enquire' &&
-    transactionRole === 'provider'
+    transaction.attributes.lastTransition === 'transition/enquire'
+    // && transactionRole === 'provider'
   ) {
     const formatDate = timestamp => {
       const date = new Date(timestamp);
@@ -99,7 +117,7 @@ const BreakdownMaybe = props => {
       const endDate = new Date(endDay);
       const differenceInMillis = endDate - startDate;
       const differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24);
-      return differenceInDays;
+      return differenceInDays; // Adding 1 to include both start and end date
     };
     const calculateWeeks = (startDay, endDay) => {
       const startDate = new Date(startDay);
@@ -157,27 +175,27 @@ const BreakdownMaybe = props => {
 
     // const _numberOfHours = calculateDays(displayStartDate, displayEndDate);
     const _numberOfHours =
-      planType === 'hourly'
+      planType === 'price'
         ? calculateHours(startTime, endTime)
-        : planType === 'daily'
+        : planType === 'pricePerDay'
         ? calculateDays(displayStartDate, displayEndDate)
-        : planType === 'monthly'
+        : planType === 'pricePerMonth'
         ? calculateMonths(displayStartDate, displayEndDate)
         : calculateWeeks(displayStartDate, displayEndDate);
     let pricePerHour = null;
     let _currencyType = null;
     let _currencySymbol = '£';
 
-    if (planType === 'hourly') {
+    if (planType === 'price') {
       pricePerHour = transaction?.listing?.attributes?.price?.amount / 100;
       _currencyType = transaction?.listing?.attributes?.price?.currency;
-    } else if (planType === 'daily') {
+    } else if (planType === 'pricePerDay') {
       _currencyType = transaction?.listing?.attributes?.publicData?.pricePerDay?.currency;
       pricePerHour = transaction?.listing?.attributes?.publicData?.pricePerDay?.amount / 100;
-    } else if (planType === 'monthly') {
+    } else if (planType === 'pricePerMonth') {
       _currencyType = transaction?.listing?.attributes?.publicData?.pricePerMonth?.currency;
       pricePerHour = transaction?.listing?.attributes?.publicData?.pricePerMonth?.amount / 100;
-    } else if (planType === 'weekly') {
+    } else if (planType === 'pricePerWeek') {
       _currencyType = transaction?.listing?.attributes?.publicData?.pricePerWeek?.currency;
       pricePerHour = transaction?.listing?.attributes?.publicData?.pricePerWeek?.amount / 100;
     }
@@ -190,14 +208,17 @@ const BreakdownMaybe = props => {
 
     const _hourlyPrice = (pricePerHour * _numberOfHours).toFixed(2);
     const _serviceFee = (_hourlyPrice / 10).toFixed(2);
-    const _totalPrice = (_hourlyPrice - _serviceFee).toFixed(2);
+    const _totalPrice =
+      transactionRole === 'provider'
+        ? (_hourlyPrice - _serviceFee).toFixed(2)
+        : (+_hourlyPrice + +_serviceFee).toFixed(2);
 
-    console.log(
-      'breakdown maybe =>',
-      transaction?.attributes?.protectedData,
-      transaction,
-      _numberOfHours
-    );
+    const _bookerCustomerPriceLabel =
+      transactionRole === 'provider' ? "You'll make" : 'Total price';
+    console.log('breakdown maybe =>', transactionRole);
+    const updateResult = data => {
+      setResult(data);
+    };
 
     return (
       <div>
@@ -205,9 +226,7 @@ const BreakdownMaybe = props => {
           <div>
             <h5 style={{ margin: 3 }}>Booking start</h5>
             <h4
-              style={
-                planType === 'hourly' ? { fontWeight: 'bold', margin: 3 } : { display: 'none' }
-              }
+              style={planType === 'price' ? { fontWeight: 'bold', margin: 3 } : { display: 'none' }}
             >
               {startTimeFormatted}
             </h4>
@@ -216,9 +235,7 @@ const BreakdownMaybe = props => {
           <div>
             <h5 style={{ margin: 3 }}>Booking end</h5>
             <h4
-              style={
-                planType === 'hourly' ? { fontWeight: 'bold', margin: 3 } : { display: 'none' }
-              }
+              style={planType === 'price' ? { fontWeight: 'bold', margin: 3 } : { display: 'none' }}
             >
               {endTimeFormatted}
             </h4>
@@ -229,29 +246,29 @@ const BreakdownMaybe = props => {
           <div>
             <h4 style={{ margin: 3 }}>
               Number of{' '}
-              {planType === 'hourly'
+              {planType === 'price'
                 ? 'hours'
-                : planType === 'weekly'
+                : planType === 'pricePerWeek'
                 ? 'weeks'
-                : planType === 'monthly'
+                : planType === 'pricePerMonth'
                 ? 'months'
                 : 'days'}
             </h4>
             <h4 style={{ margin: 3 }}>
               {_currencySymbol}
-              {planType === 'hourly'
+              {planType === 'price'
                 ? transaction?.listing?.attributes?.price?.amount / 100
-                : planType === 'weekly'
+                : planType === 'pricePerWeek'
                 ? transaction?.listing?.attributes?.publicData?.pricePerWeekFilter
-                : planType === 'monthly'
+                : planType === 'pricePerMonth'
                 ? transaction?.listing?.attributes?.publicData?.pricePerMonthFilter
                 : transaction?.listing?.attributes?.publicData?.pricePerDayFilter}{' '}
               * {_numberOfHours}{' '}
-              {planType === 'hourly'
+              {planType === 'price'
                 ? 'hour(s)'
-                : planType === 'weekly'
+                : planType === 'pricePerWeek'
                 ? 'week(s)'
-                : planType === 'monthly'
+                : planType === 'pricePerMonth'
                 ? 'month(s)'
                 : 'day(s)'}
             </h4>
@@ -259,11 +276,11 @@ const BreakdownMaybe = props => {
           <div>
             <h4 style={{ margin: 3 }}>
               {_numberOfHours}{' '}
-              {planType === 'hourly'
+              {planType === 'price'
                 ? 'hour(s)'
-                : planType === 'weekly'
+                : planType === 'pricePerWeek'
                 ? 'week(s)'
-                : planType === 'monthly'
+                : planType === 'pricePerMonth'
                 ? 'month(s)'
                 : 'day(s)'}
             </h4>
@@ -276,7 +293,7 @@ const BreakdownMaybe = props => {
         <div className={css.customBreakDownDateTimeMain}>
           <div>
             <h4 style={{ fontWeight: 'bold', margin: 3 }}>Subtotal</h4>
-            <h5 style={{ margin: 3 }}>Service Fees *</h5>
+            <h5 style={{ margin: 3 }}>Service Fees*</h5>
           </div>
           <div>
             <h4 style={{ margin: 3 }}>
@@ -284,14 +301,15 @@ const BreakdownMaybe = props => {
               {_hourlyPrice}
             </h4>
             <h5 style={{ margin: 3 }}>
-              -{_currencySymbol}
+              {transactionRole === 'provider' && '-'}
+              {_currencySymbol}
               {_serviceFee}
             </h5>
           </div>
         </div>
         <div className={css.customBreakDownDateTimeMain}>
           <div>
-            <h3 style={{ margin: 3 }}>You'll make</h3>
+            <h3 style={{ margin: 3 }}>{_bookerCustomerPriceLabel}</h3>
           </div>
           <div>
             <h3 style={{ margin: 3 }}>
@@ -303,6 +321,28 @@ const BreakdownMaybe = props => {
         <p className={css.feeInfo}>
           * The fee helps us run the platform and provide the best possible service to you!
         </p>
+        {transactionRole === 'customer' && (
+          <>
+            <div className={css.fieldDiscount}>
+              <FieldDiscount
+                promo={props.promocode}
+                updateDiscount={props.updateDiscount}
+                updateResult={updateResult}
+                result={result}
+                isProvider={transactionRole === 'provider'}
+                transaction={transaction}
+                intl={intl}
+              />
+              <p className={css.wontChargeInfo}>You won't be charged yet </p>
+            </div>
+
+            <div className={css.submitButtonClasses}>
+              <PrimaryButton onClick={() => onSumbitBookingRequestEnquiry(dataToSend)}>
+                Request to book
+              </PrimaryButton>
+            </div>
+          </>
+        )}
       </div>
     );
   }

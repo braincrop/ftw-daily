@@ -134,7 +134,7 @@ export class ListingPageComponent extends Component {
     this.setState({ promocode: val });
   };
   toggleBookingType(bookingType) {
-    // this.setState({ bookingType });
+    this.setState({ bookingType });
   }
 
   handleSubmit(values) {
@@ -274,16 +274,16 @@ export class ListingPageComponent extends Component {
     var startTimestamp = null;
     var endTimestamp = null;
 
-    if (planType === 'hourly' && (EndTime === '' || StartDate === '' || StartTime === '')) {
+    if (planType === 'price' && (EndTime === '' || StartDate === '' || StartTime === '')) {
       this.setState({ enquiryDateTimeDataError: true });
-    } else if (planType !== 'hourly' && (EndDate === '' || StartDate === '')) {
+    } else if (planType !== 'price' && (EndDate === '' || StartDate === '')) {
       this.setState({ enquiryDateTimeDataError: true });
     } else {
       this.setState({ enquiryDateTimeDataError: false });
 
-      const _EndDate = planType === 'hourly' ? StartDate : EndDate; // if hourly, end date is same as start date
+      const _EndDate = planType === 'price' ? StartDate : EndDate; // if price, end date is same as start date
 
-      if (planType === 'hourly') {
+      if (planType === 'price') {
         const timeStampData = this.formatTimeString(StartTime, EndTime, StartDate, _EndDate);
         startTimestamp = timeStampData.startTimestamp;
         endTimestamp = timeStampData.endTimestamp;
@@ -294,10 +294,12 @@ export class ListingPageComponent extends Component {
         endTime: endTimestamp || null,
         displayStartDate: new Date(StartDate).toISOString().split('T')[0],
         displayEndDate: new Date(_EndDate).toISOString().split('T')[0],
+        startDate: StartDate.toString(),
+        endDate: _EndDate.toString(),
         planType: planType,
       };
 
-      console.log('onSubmitEnquiry', protectedData, this.state.enquiryDateTimeData);
+      console.log('onSubmitEnquiry', protectedData, StartDate, _EndDate);
       //! Remove comments to apply regex functionality on messages
 
       const hideEmail = text =>

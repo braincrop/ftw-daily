@@ -168,7 +168,17 @@ const BookingPanel = props => {
       listing.attributes.publicData.seats) ||
     1;
 
-  // console.log('Booking Panel', lineItems);
+  // console.log(
+  //   'Booking Panel',
+  //   { unitType },
+  //   { minimumLength },
+  //   { minimumLength },
+  //   { timeSlots },
+  //   { fetchLineItemsInProgress },
+  //   { minBookingCount },
+  //   { minBookingType },
+  //   { bookingType }
+  // );
 
   return (
     <div className={classes}>

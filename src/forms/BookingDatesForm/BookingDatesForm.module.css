@@ -12,6 +12,13 @@
   /* Ensure that calendar dropdown gets some stacking context relative to other form items below */
   z-index: 1;
 }
+.bookingDatesEnquiry {
+  flex-shrink: 0;
+  margin-bottom: 0px;
+
+  /* Ensure that calendar dropdown gets some stacking context relative to other form items below */
+  z-index: 1;
+}
 
 .priceBreakdownContainer {
   padding: 0 24px;
