@@ -206,32 +206,24 @@ export class BookingTimeFormComponent extends Component {
                 />
               ) : null}
 
-              {isFromEnquiry || bookingInfoMaybe}
-              {isFromEnquiry || loadingSpinnerMaybe}
-              {isFromEnquiry || bookingInfoErrorMaybe}
-              {isFromEnquiry || (
-                <>
-                  <p className={css.smallPrint}>
-                    <FormattedMessage
-                      id={
-                        isOwnListing
-                          ? 'BookingTimeForm.ownListing'
-                          : 'BookingTimeForm.youWontBeChargedInfo'
-                      }
-                    />
-                  </p>
-                  <div className={submitButtonClasses}>
-                    <PrimaryButton type="submit">
-                      <FormattedMessage id="BookingTimeForm.requestToBook" />
-                    </PrimaryButton>
-                  </div>
-                </>
-              )}
-              {isFromEnquiry && (
-                <div className={submitButtonClasses}>
-                  <PrimaryButton type="submit">Select Date/Time</PrimaryButton>
-                </div>
-              )}
+              {bookingInfoMaybe}
+              {loadingSpinnerMaybe}
+              {bookingInfoErrorMaybe}
+
+              <p className={css.smallPrint}>
+                <FormattedMessage
+                  id={
+                    isOwnListing
+                      ? 'BookingTimeForm.ownListing'
+                      : 'BookingTimeForm.youWontBeChargedInfo'
+                  }
+                />
+              </p>
+              <div className={submitButtonClasses}>
+                <PrimaryButton type="submit">
+                  <FormattedMessage id="BookingTimeForm.requestToBook" />
+                </PrimaryButton>
+              </div>
             </Form>
           );
         }}

@@ -166,16 +166,38 @@ export const TransactionPageComponent = props => {
 
   // Customer can create a booking, if the tx is in "enquiry" state.
   const handleSubmitBookingRequest = values => {
-    const { bookingStartTime, bookingEndTime, bookingDates, ...restOfValues } = values;
+    const {
+      bookingStartTime,
+      bookingEndTime,
+      bookingDates,
+      fromWhere,
+      enquirybookingType,
+      ...restOfValues
+    } = values;
+
     const bookingStart =
-      bookingType === HOURLY_PRICE
+      fromWhere === 'enquiry'
+        ? enquirybookingType === HOURLY_PRICE
+          ? timestampToDate(bookingStartTime)
+          : moment(bookingDates.startDate)
+              .tz('UTC')
+              .startOf('day')
+              .toDate()
+        : bookingType === HOURLY_PRICE
         ? timestampToDate(bookingStartTime)
         : moment(bookingDates.startDate)
             .tz('UTC')
             .startOf('day')
             .toDate();
     const bookingEnd =
-      bookingType === HOURLY_PRICE
+      fromWhere === 'enquiry'
+        ? enquirybookingType === HOURLY_PRICE
+          ? timestampToDate(bookingEndTime)
+          : moment(bookingDates.endDate)
+              .tz('UTC')
+              .startOf('day')
+              .toDate()
+        : bookingType === HOURLY_PRICE
         ? timestampToDate(bookingEndTime)
         : moment(bookingDates.endDate)
             .tz('UTC')
@@ -185,7 +207,7 @@ export const TransactionPageComponent = props => {
 
     const bookingData = {
       // quantity: calculateQuantityFromHours(bookingStart, bookingEnd),
-      bookingType,
+      bookingType: fromWhere === 'enquiry' ? enquirybookingType : bookingType,
       ...restOfValues,
     };
 
@@ -200,6 +222,7 @@ export const TransactionPageComponent = props => {
       },
       confirmPaymentError: null,
     };
+    console.log('booking =>', values, initialValues, currentListing);
 
     redirectToCheckoutPageWithInitialValues(initialValues, currentListing);
   };

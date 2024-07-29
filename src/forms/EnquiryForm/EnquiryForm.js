@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { string, bool } from 'prop-types';
+import React, { Component, useEffect, useState } from 'react';
+import { string, bool, func } from 'prop-types';
 import { compose } from 'redux';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 import {
   Form,
@@ -11,6 +10,8 @@ import {
   IconEnquiry,
   FieldDateInput,
   FieldSelect,
+  FieldRadioButton,
+  FieldDateRangeInput,
 } from '../../components';
 import * as validators from '../../util/validators';
 import { propTypes } from '../../util/types';
@@ -19,6 +20,79 @@ import css from './EnquiryForm.module.css';
 import BookingTimeForm from '../BookingTimeForm/BookingTimeForm';
 import { SingleDatePicker } from 'react-dates';
 import { timeOfDayFromLocalToTimeZone, timeOfDayFromTimeZoneToLocal } from '../../util/dates';
+
+import { Field, Form as FinalForm, FormSpy } from 'react-final-form';
+import { formatMoney } from '../../util/currency';
+import { types as sdkTypes } from '../../util/sdkLoader';
+import { getAvailablePrices, getLowestPrice, getTypeDuration } from '../../util/data';
+// import {
+//   HOURLY_PRICE,
+// } from '../../util/types';
+
+import _css from '../../components/BookingTypes/BookingTypes.module.css';
+import FieldRadioButtonComponentOnChange from '../../components/FieldRadioButton/FieldRadioButtonOnChange';
+import BookingDatesForm from '../BookingDatesForm/BookingDatesForm';
+
+const { Money } = sdkTypes;
+
+class BookingTypesEnquiry extends React.Component {
+  handleOnChange = values => {
+    console.log('handleOnChange', values.bookingTypeEnquiry);
+    this.props.onChange(values.bookingTypeEnquiry);
+  };
+
+  componentDidMount() {
+    if (this.props.bookingTypeRadio === null) {
+      const prices = getAvailablePrices(this.props.listing);
+      if (prices && prices.length > 0) {
+        console.log('componentDidMount', prices[0].key);
+        this.props.onChange(prices[0].key);
+      }
+    }
+  }
+
+  render() {
+    const { listing, intl } = this.props;
+    const prices = getAvailablePrices(listing);
+    const { key } = getLowestPrice(listing);
+    const initialValues = { bookingTypeEnquiry: key || null };
+
+    return (
+      <FinalForm
+        initialValues={initialValues}
+        onSubmit={() => {}} // empty submit function
+        render={({ handleSubmit, form }) => (
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+            }}
+          >
+            <FormSpy
+              subscription={{ values: true }}
+              onChange={({ values }) => this.handleOnChange(values)}
+            />
+            <div className={css.types}>
+              {prices.map(({ key, value }) => {
+                const { currency, amount } = value;
+                const price = formatMoney(intl, new Money(amount, currency));
+                return (
+                  <div className={css.sessionCheckboxItem} key={key}>
+                    <FieldRadioButtonComponentOnChange
+                      id={`bookingTypeEnquiry${key}`}
+                      name="bookingTypeEnquiry"
+                      label={intl.formatMessage({ id: `BookingTypes.${key}Label` }, { price })}
+                      value={key}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </form>
+        )}
+      />
+    );
+  }
+}
 
 const EnquiryFormComponent = props => {
   const {
@@ -56,33 +130,21 @@ const EnquiryFormComponent = props => {
 
   //! Enquiry Date/Time Form Configs
   const [planType, setPlanType] = useState(null);
+  const [bookingTypeRadio, setBookingTypeRadio] = useState(null);
 
   useEffect(() => {
-    const _publicDataPlan = listing?.attributes || null;
-    if (_publicDataPlan) {
-      if (_publicDataPlan?.price == null) {
-        if (_publicDataPlan?.publicData?.pricePerDay) {
-          setPlanType('daily');
-          if (currentPlanType !== 'daily') updateEnquiryDateTime('planType', 'daily');
-        } else if (_publicDataPlan?.publicData?.pricePerMonth) {
-          setPlanType('monthly');
-          if (currentPlanType !== 'monthly') updateEnquiryDateTime('planType', 'monthly');
-        } else if (_publicDataPlan?.publicData?.pricePerWeek) {
-          setPlanType('weekly');
-          if (currentPlanType !== 'weekly') updateEnquiryDateTime('planType', 'weekly');
-        }
-      } else {
-        setPlanType('hourly');
-        if (currentPlanType !== 'hourly') updateEnquiryDateTime('planType', 'hourly');
-      }
-    }
-  }, [listing]);
+    updateEnquiryDateTime('planType', bookingTypeRadio);
+  }, [bookingTypeRadio]);
 
   const [bookingStartDate, setBookingStartDate] = useState('');
   const [bookingEndDate, setBookEndDate] = useState('');
   const [bookingStartTime, setBookingStartTime] = useState('');
   const [bookingEndTime, setBookingEndTime] = useState('');
 
+  const onBookingTypeChange = e => {
+    toggleBookingType(e);
+    setBookingTypeRadio(e);
+  };
   const _timeStamp = [
     '00:00',
     '01:00',
@@ -111,22 +173,24 @@ const EnquiryFormComponent = props => {
     '24:00',
   ];
 
-  // console.log(
-  //   'onBookingStartTimeChange',
-  //   bookingStartDate,
-  //   bookingEndDate,
-  //   bookingStartTime,
-  //   bookingEndTime
-  // );
-  function onBookingStartDateChange(e) {
-    setBookingStartDate(e.date);
-    updateEnquiryDateTime('StartDate', e.date);
-    // updateEnquiryDateTime('planType', planType);
+  console.log('Enquiry', planType);
+
+  function onBookingDateChange(e) {
+    if (e.values.bookingDates) {
+      const { endDate, startDate } = e?.values?.bookingDates;
+      console.log('onBookingDateChange', endDate, startDate, e?.values?.bookingDates);
+      if (endDate) {
+        setBookEndDate(endDate);
+        updateEnquiryDateTime('EndDate', endDate);
+      } else {
+        setBookingStartDate(startDate);
+        updateEnquiryDateTime('StartDate', startDate);
+      }
+    }
   }
-  function onBookingEndDateChange(e) {
-    setBookEndDate(e.date);
-    updateEnquiryDateTime('EndDate', e.date);
-    // updateEnquiryDateTime('planType', planType);
+  function onBookingStartDateChange(startDate) {
+    setBookingStartDate(startDate.date);
+    updateEnquiryDateTime('StartDate', startDate.date);
   }
   function onBookingStartTimeChange(e) {
     setBookingStartTime(e);
@@ -154,7 +218,17 @@ const EnquiryFormComponent = props => {
   const { minBookingCount, minBookingType } = minBooking || {};
   const timeZone = availabilityPlan && availabilityPlan.timezone;
 
-  console.log('Enquiry Form', listing, planType);
+  // console.log(
+  //   'Enquiry Form',
+  //   { unitType },
+  //   { minimumLength },
+  //   { minimumLength },
+  //   { timeSlots },
+  //   { fetchLineItemsInProgress },
+  //   { minBookingCount },
+  //   { minBookingType },
+  //   { bookingType }
+  // );
 
   return (
     <FinalForm
@@ -212,49 +286,63 @@ const EnquiryFormComponent = props => {
                 values={{ listingTitle, authorDisplayName }}
               />
             </h2>
+            <BookingTypesEnquiry
+              intl={intl}
+              listing={listing}
+              bookingTypeRadio={bookingTypeRadio}
+              onChange={e => onBookingTypeChange(e)}
+            />
+
             <div className={css.formRow}>
-              <div className={classNames(css.field, css.fieldDate, css.startDate)}>
-                <FieldDateInput
-                  className={css.fieldDateInput}
-                  name="bookingStartDate"
-                  id={'bookingStartDate'}
-                  label={'Start Date'}
-                  placeholderText={'Start Date'}
-                  format={v =>
-                    v && v.date ? { date: timeOfDayFromTimeZoneToLocal(v.date, timeZone) } : v
-                  }
-                  parse={v =>
-                    v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v
-                  }
-                  onChange={onBookingStartDateChange}
-                  showErrorMessage={true}
+              {bookingTypeRadio === 'price' ? (
+                <div className={classNames(css.field, css.fieldDate, css.startDate)}>
+                  <FieldDateInput
+                    className={css.fieldDateInput}
+                    name="bookingStartDate"
+                    id={'bookingStartDate'}
+                    label={'Start Date'}
+                    placeholderText={'Start Date'}
+                    format={v =>
+                      v && v.date ? { date: timeOfDayFromTimeZoneToLocal(v.date, timeZone) } : v
+                    }
+                    parse={v =>
+                      v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v
+                    }
+                    onChange={onBookingStartDateChange}
+                    showErrorMessage={true}
+                  />
+                </div>
+              ) : (
+                <BookingDatesForm
+                  updateDiscount={updateDiscount}
+                  promocode={promocode}
+                  key={bookingType}
+                  className={css.bookingForm}
+                  formId="BookingPanel"
+                  submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
+                  unitType={unitType}
+                  minimumLength={getTypeDuration(bookingType)}
+                  onSubmit={onSubmit}
+                  price={price}
+                  discount={discount}
+                  listingId={listing.id}
+                  isOwnListing={isOwnListing}
+                  timeSlots={timeSlots}
+                  fetchTimeSlotsError={fetchTimeSlotsError}
+                  onFetchTransactionLineItems={onFetchTransactionLineItems}
+                  lineItems={lineItems}
+                  fetchLineItemsInProgress={fetchLineItemsInProgress}
+                  fetchLineItemsError={fetchLineItemsError}
+                  bookingType={bookingType}
+                  // seats={seats}
+                  minBookingCount={minBookingCount}
+                  minBookingType={minBookingType}
+                  isFromEnquiry={true}
+                  enquiryOnChangeDates={e => onBookingDateChange(e)}
                 />
-              </div>
-              {(planType === 'daily' || planType === 'weekly' || planType === 'monthly') && (
-                <>
-                  <div className={css.lineBetween}>-</div>
-                  <div className={classNames(css.field, css.fieldDate, css.startDate)}>
-                    <FieldDateInput
-                      className={css.fieldDateInput}
-                      name="bookingEndDate"
-                      id={'bookingEndDate'}
-                      label={'End Date'}
-                      placeholderText={'End Date'}
-                      format={v =>
-                        v && v.date ? { date: timeOfDayFromTimeZoneToLocal(v.date, timeZone) } : v
-                      }
-                      parse={v =>
-                        v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v
-                      }
-                      onChange={onBookingEndDateChange}
-                      showErrorMessage={true}
-                      minDate={bookingStartDate ? new Date(bookingStartDate) : null}
-                    />
-                  </div>
-                </>
               )}
             </div>
-            {planType === 'hourly' && (
+            {bookingTypeRadio === 'price' && (
               <div className={css.formRow}>
                 <div className={css.fieldTime}>
                   <FieldSelect
