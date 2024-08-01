@@ -47,6 +47,10 @@
   flex-shrink: 0;
   margin: 0 0 24px 0;
 }
+.receiptEnquiry {
+  flex-shrink: 0;
+  margin: 0;
+}
 
 .error {
   color: var(--failColor);

@@ -151,6 +151,7 @@ export class BookingTimeFormComponent extends Component {
                 promo={promocode}
                 bookingData={bookingData}
                 lineItems={lineItems}
+                isFromEnquiry={isFromEnquiry}
               />
             </div>
           ) : null;

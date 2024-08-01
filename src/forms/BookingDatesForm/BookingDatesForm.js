@@ -204,6 +204,7 @@ export class BookingDatesFormComponent extends Component {
                 bookingData={bookingData}
                 lineItems={lineItems}
                 bookingType={bookingType}
+                isFromEnquiry={isFromEnquiry}
               />
             </div>
           ) : null;
