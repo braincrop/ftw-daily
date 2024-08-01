@@ -210,7 +210,7 @@ export class BookingTimeFormComponent extends Component {
               {loadingSpinnerMaybe}
               {bookingInfoErrorMaybe}
 
-              <p className={css.smallPrint}>
+              <p className={isFromEnquiry ? css.smallPrintEnquiry : css.smallPrint}>
                 <FormattedMessage
                   id={
                     isOwnListing
@@ -219,11 +219,13 @@ export class BookingTimeFormComponent extends Component {
                   }
                 />
               </p>
-              <div className={submitButtonClasses}>
-                <PrimaryButton type="submit">
-                  <FormattedMessage id="BookingTimeForm.requestToBook" />
-                </PrimaryButton>
-              </div>
+              {!isFromEnquiry && (
+                <div className={submitButtonClasses}>
+                  <PrimaryButton type="submit">
+                    <FormattedMessage id="BookingTimeForm.requestToBook" />
+                  </PrimaryButton>
+                </div>
+              )}
             </Form>
           );
         }}

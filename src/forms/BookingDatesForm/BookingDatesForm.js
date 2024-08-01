@@ -276,27 +276,25 @@ export class BookingDatesFormComponent extends Component {
                 bookingType={bookingType}
               />
 
-              {!isFromEnquiry && (
-                <>
-                  {bookingInfoMaybe}
-                  {loadingSpinnerMaybe}
-                  {bookingInfoErrorMaybe}
+              {bookingInfoMaybe}
+              {loadingSpinnerMaybe}
+              {bookingInfoErrorMaybe}
 
-                  <p className={css.smallPrint}>
-                    <FormattedMessage
-                      id={
-                        isOwnListing
-                          ? 'BookingDatesForm.ownListing'
-                          : 'BookingDatesForm.youWontBeChargedInfo'
-                      }
-                    />
-                  </p>
-                  <div className={submitButtonClasses}>
-                    <PrimaryButton type="submit">
-                      <FormattedMessage id="BookingDatesForm.requestToBook" />
-                    </PrimaryButton>
-                  </div>
-                </>
+              <p className={isFromEnquiry ? css.smallPrintEnquiry : css.smallPrint}>
+                <FormattedMessage
+                  id={
+                    isOwnListing
+                      ? 'BookingDatesForm.ownListing'
+                      : 'BookingDatesForm.youWontBeChargedInfo'
+                  }
+                />
+              </p>
+              {!isFromEnquiry && (
+                <div className={submitButtonClasses}>
+                  <PrimaryButton type="submit">
+                    <FormattedMessage id="BookingDatesForm.requestToBook" />
+                  </PrimaryButton>
+                </div>
               )}
             </Form>
           );
