@@ -215,7 +215,12 @@ const BreakdownMaybe = props => {
 
     const _bookerCustomerPriceLabel =
       transactionRole === 'provider' ? "You'll make" : 'Total price';
-    console.log('breakdown maybe =>', transactionRole);
+
+    const _formattedDate = new Date(displayEndDate);
+    _formattedDate.setDate(_formattedDate.getDate() - 1);
+    let formattedDate1dayLessEndDate = _formattedDate.toISOString().split('T')[0];
+
+    console.log('breakdown maybe =>', formattedDate1dayLessEndDate);
     const updateResult = data => {
       setResult(data);
     };
@@ -239,7 +244,11 @@ const BreakdownMaybe = props => {
             >
               {endTimeFormatted}
             </h4>
-            <h4 style={{ margin: 3 }}>{formatDateDaily(displayEndDate)}</h4>
+            <h4 style={{ margin: 3 }}>
+              {planType === 'price'
+                ? formatDateDaily(displayEndDate)
+                : formatDateDaily(formattedDate1dayLessEndDate)}
+            </h4>
           </div>
         </div>
         <div className={css.customBreakDownDateTimeMain}>
