@@ -127,9 +127,12 @@ export class ListingPageComponent extends Component {
     this.toggleBookingType = this.toggleBookingType.bind(this);
   }
 
-  updateEnquiryDateTime = (target, val) => {
-    this.setState({ enquiryDateTimeData: { ...this.state.enquiryDateTimeData, [target]: val } });
+  updateEnquiryDateTime = data => {
+    this.setState({
+      enquiryDateTimeData: { ...this.state.enquiryDateTimeData, ...data },
+    });
   };
+
   updateDiscount = val => {
     this.setState({ promocode: val });
   };
@@ -271,8 +274,6 @@ export class ListingPageComponent extends Component {
     const listingId = new UUID(params.id);
     const { message } = values;
     let modifiedMessage = message;
-    var startTimestamp = null;
-    var endTimestamp = null;
 
     if (planType === 'price' && (EndTime === '' || StartDate === '' || StartTime === '')) {
       this.setState({ enquiryDateTimeDataError: true });
@@ -283,15 +284,9 @@ export class ListingPageComponent extends Component {
 
       const _EndDate = planType === 'price' ? StartDate : EndDate; // if price, end date is same as start date
 
-      if (planType === 'price') {
-        const timeStampData = this.formatTimeString(StartTime, EndTime, StartDate, _EndDate);
-        startTimestamp = timeStampData.startTimestamp;
-        endTimestamp = timeStampData.endTimestamp;
-      }
-
       const protectedData = {
-        startTime: startTimestamp || null,
-        endTime: endTimestamp || null,
+        startTime: StartTime || null,
+        endTime: EndTime || null,
         displayStartDate: new Date(StartDate).toISOString().split('T')[0],
         displayEndDate: new Date(_EndDate).toISOString().split('T')[0],
         startDate: StartDate.toString(),
@@ -299,7 +294,7 @@ export class ListingPageComponent extends Component {
         planType: planType,
       };
 
-      console.log('onSubmitEnquiry', protectedData, StartDate, _EndDate);
+      console.log('onSubmitEnquiry', protectedData);
       //! Remove comments to apply regex functionality on messages
 
       const hideEmail = text =>

@@ -56,6 +56,7 @@ export class BookingTimeFormComponent extends Component {
       promocode,
       updateDiscount,
       isFromEnquiry,
+      enquiryOnChangeDates,
       ...rest
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
@@ -79,7 +80,7 @@ export class BookingTimeFormComponent extends Component {
     //   );
     // }
 
-    // console.log('lineitems,', this.props.lineItems);
+    // console.log('enquiryOnChangeDates,', this.props.enquiryOnChangeDates);
     return (
       <FinalForm
         {...rest}
@@ -186,7 +187,10 @@ export class BookingTimeFormComponent extends Component {
             <Form onSubmit={handleSubmit} className={classes}>
               <FormSpy
                 subscription={{ values: true }}
-                onChange={values => this.handleOnChange(values)}
+                onChange={values => {
+                  this.handleOnChange(values);
+                  isFromEnquiry && enquiryOnChangeDates(values);
+                }}
               />
               {monthlyTimeSlots && timeZone ? (
                 <FieldDateAndTimeInput

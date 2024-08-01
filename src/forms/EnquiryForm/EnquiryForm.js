@@ -29,7 +29,6 @@ import { getAvailablePrices, getLowestPrice, getTypeDuration } from '../../util/
 //   HOURLY_PRICE,
 // } from '../../util/types';
 
-import _css from '../../components/BookingTypes/BookingTypes.module.css';
 import FieldRadioButtonComponentOnChange from '../../components/FieldRadioButton/FieldRadioButtonOnChange';
 import BookingDatesForm from '../BookingDatesForm/BookingDatesForm';
 
@@ -133,7 +132,9 @@ const EnquiryFormComponent = props => {
   const [bookingTypeRadio, setBookingTypeRadio] = useState(null);
 
   useEffect(() => {
-    updateEnquiryDateTime('planType', bookingTypeRadio);
+    updateEnquiryDateTime({
+      planType: bookingTypeRadio,
+    });
   }, [bookingTypeRadio]);
 
   const [bookingStartDate, setBookingStartDate] = useState('');
@@ -173,21 +174,46 @@ const EnquiryFormComponent = props => {
     '24:00',
   ];
 
-  console.log('Enquiry', planType);
+  // console.log('Enquiry', planType);
 
   function onBookingDateChange(e) {
     if (e.values.bookingDates) {
       const { endDate, startDate } = e?.values?.bookingDates;
-      console.log('onBookingDateChange', endDate, startDate, e?.values?.bookingDates);
+      console.log('onBookingDateChange', e?.values?.bookingDates);
+
       if (endDate) {
         setBookEndDate(endDate);
-        updateEnquiryDateTime('EndDate', endDate);
+        updateEnquiryDateTime({
+          EndDate: endDate,
+        });
       } else {
         setBookingStartDate(startDate);
-        updateEnquiryDateTime('StartDate', startDate);
+        updateEnquiryDateTime({
+          StartDate: startDate,
+        });
       }
+    } else if (
+      e.values.bookingStartDate &&
+      e.values.bookingEndDate &&
+      e.values.bookingEndTime &&
+      e.values.bookingStartTime
+    ) {
+      const { bookingEndDate, bookingEndTime, bookingStartDate, bookingStartTime } = e?.values;
+
+      setBookingStartDate(bookingStartDate.date);
+      setBookingEndTime(+bookingEndTime);
+      setBookingStartTime(+bookingStartTime);
+
+      // Update all values in a single function call
+      updateEnquiryDateTime({
+        EndTime: +bookingEndTime,
+        StartTime: +bookingStartTime,
+        StartDate: bookingStartDate.date,
+        EndDate: bookingEndDate.date,
+      });
     }
   }
+
   function onBookingStartDateChange(startDate) {
     setBookingStartDate(startDate.date);
     updateEnquiryDateTime('StartDate', startDate.date);
@@ -296,7 +322,7 @@ const EnquiryFormComponent = props => {
             <div className={css.formRow}>
               {bookingTypeRadio === 'price' ? (
                 <div className={classNames(css.field, css.fieldDate, css.startDate)}>
-                  <FieldDateInput
+                  {/* <FieldDateInput
                     className={css.fieldDateInput}
                     name="bookingStartDate"
                     id={'bookingStartDate'}
@@ -310,6 +336,32 @@ const EnquiryFormComponent = props => {
                     }
                     onChange={onBookingStartDateChange}
                     showErrorMessage={true}
+                  /> */}
+                  <BookingTimeForm
+                    updateDiscount={updateDiscount}
+                    promocode={promocode}
+                    key={bookingType}
+                    className={css.bookingForm}
+                    formId="BookingPanel"
+                    submitButtonWrapperClassName={css.submitButtonWrapper}
+                    unitType={unitType}
+                    onSubmit={onSubmit}
+                    price={price}
+                    isOwnListing={isOwnListing}
+                    listingId={listing.id}
+                    monthlyTimeSlots={monthlyTimeSlots}
+                    onFetchTimeSlots={onFetchTimeSlots}
+                    startDatePlaceholder={intl.formatDate(new Date(), dateFormattingOptions)}
+                    endDatePlaceholder={intl.formatDate(new Date(), dateFormattingOptions)}
+                    timeZone={timeZone}
+                    onFetchTransactionLineItems={onFetchTransactionLineItems}
+                    lineItems={lineItems}
+                    fetchLineItemsInProgress={fetchLineItemsInProgress}
+                    fetchLineItemsError={fetchLineItemsError}
+                    minBookingCount={minBookingCount}
+                    minBookingType={minBookingType}
+                    isFromEnquiry={true}
+                    enquiryOnChangeDates={e => onBookingDateChange(e)}
                   />
                 </div>
               ) : (
@@ -342,7 +394,7 @@ const EnquiryFormComponent = props => {
                 />
               )}
             </div>
-            {bookingTypeRadio === 'price' && (
+            {/* {bookingTypeRadio === 'price' && (
               <div className={css.formRow}>
                 <div className={css.fieldTime}>
                   <FieldSelect
@@ -380,7 +432,7 @@ const EnquiryFormComponent = props => {
                   </FieldSelect>
                 </div>
               </div>
-            )}
+            )} */}
             {enquiryDateTimeDataError && (
               <p style={{ color: '#ef7171', fontSize: 16, fontFamily: 'sofiapro', margin: 0 }}>
                 *Please select when you want to book
