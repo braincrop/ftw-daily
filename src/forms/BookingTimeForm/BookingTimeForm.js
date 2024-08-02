@@ -55,6 +55,8 @@ export class BookingTimeFormComponent extends Component {
       price: unitPrice,
       promocode,
       updateDiscount,
+      isFromEnquiry,
+      enquiryOnChangeDates,
       ...rest
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
@@ -78,6 +80,7 @@ export class BookingTimeFormComponent extends Component {
     //   );
     // }
 
+    // console.log('enquiryOnChangeDates,', this.props.enquiryOnChangeDates);
     return (
       <FinalForm
         {...rest}
@@ -148,6 +151,7 @@ export class BookingTimeFormComponent extends Component {
                 promo={promocode}
                 bookingData={bookingData}
                 lineItems={lineItems}
+                isFromEnquiry={isFromEnquiry}
               />
             </div>
           ) : null;
@@ -184,7 +188,10 @@ export class BookingTimeFormComponent extends Component {
             <Form onSubmit={handleSubmit} className={classes}>
               <FormSpy
                 subscription={{ values: true }}
-                onChange={values => this.handleOnChange(values)}
+                onChange={values => {
+                  this.handleOnChange(values);
+                  isFromEnquiry && enquiryOnChangeDates(values);
+                }}
               />
               {monthlyTimeSlots && timeZone ? (
                 <FieldDateAndTimeInput
@@ -208,7 +215,7 @@ export class BookingTimeFormComponent extends Component {
               {loadingSpinnerMaybe}
               {bookingInfoErrorMaybe}
 
-              <p className={css.smallPrint}>
+              <p className={isFromEnquiry ? css.smallPrintEnquiry : css.smallPrint}>
                 <FormattedMessage
                   id={
                     isOwnListing
@@ -217,11 +224,13 @@ export class BookingTimeFormComponent extends Component {
                   }
                 />
               </p>
-              <div className={submitButtonClasses}>
-                <PrimaryButton type="submit">
-                  <FormattedMessage id="BookingTimeForm.requestToBook" />
-                </PrimaryButton>
-              </div>
+              {!isFromEnquiry && (
+                <div className={submitButtonClasses}>
+                  <PrimaryButton type="submit">
+                    <FormattedMessage id="BookingTimeForm.requestToBook" />
+                  </PrimaryButton>
+                </div>
+              )}
             </Form>
           );
         }}
@@ -240,6 +249,7 @@ BookingTimeFormComponent.defaultProps = {
   startDatePlaceholder: null,
   endDatePlaceholder: null,
   monthlyTimeSlots: null,
+  isFromEnquiry: false,
 };
 
 BookingTimeFormComponent.propTypes = {
@@ -254,6 +264,7 @@ BookingTimeFormComponent.propTypes = {
   listingId: propTypes.uuid,
   monthlyTimeSlots: object,
   onFetchTimeSlots: func.isRequired,
+  isFromEnquiry: bool,
 
   // from injectIntl
   intl: intlShape.isRequired,

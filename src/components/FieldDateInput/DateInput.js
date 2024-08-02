@@ -167,6 +167,7 @@ class DateInputComponent extends Component {
       children,
       render,
       timeSlots,
+      minDate,
       ...datePickerProps
     } = this.props;
     /* eslint-enable no-unused-vars */
@@ -208,6 +209,9 @@ class DateInputComponent extends Component {
           placeholder={placeholder}
           screenReaderInputMessage={screenReaderInputText}
           phrases={{ closeDatePicker: closeDatePickerText, clearDate: clearDateText }}
+          isOutsideRange={day =>
+            minDate ? day.isBefore(minDate, 'day') : day.isBefore(new Date(), 'day')
+          }
         />
       </div>
     );
