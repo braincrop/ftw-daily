@@ -199,14 +199,14 @@ export class ListingPageComponent extends Component {
 
     console.log('submit booking =>', initialValues);
     // Redirect to CheckoutPage
-    // history.push(
-    //   createResourceLocatorString(
-    //     'CheckoutPage',
-    //     routes,
-    //     { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
-    //     {}
-    //   )
-    // );
+    history.push(
+      createResourceLocatorString(
+        'CheckoutPage',
+        routes,
+        { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
+        {}
+      )
+    );
   }
 
   onContactUser() {
