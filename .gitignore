@@ -40,7 +40,10 @@ yarn.lock
 /process/templates/review-by-provider-wanted/review-by-provider-wanted-subject.txt
 /.idea/vcs.xml
 /.idea
+<<<<<<< HEAD
 
 
 hotpatch-dev
 hotpatch-live
+=======
+>>>>>>> f16f94ce3982ad47f3dab1ee3c86806538b600b8
