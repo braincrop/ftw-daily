@@ -79,6 +79,9 @@ const BreakdownMaybe = props => {
   //   transaction.attributes.protectedData
   // );
 
+
+  // Check if it is enquiry form and protected data is available
+  
   if (
     transaction?.attributes?.lastTransition &&
     transaction.attributes.lastTransition === 'transition/enquire' &&
