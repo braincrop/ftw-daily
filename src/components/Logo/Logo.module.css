@@ -1,7 +1,0 @@
-@import '../../styles/propertySets.css';
-
-.logoMobile {
-  & path {
-    fill: var(--marketplaceColor);
-  }
-}
