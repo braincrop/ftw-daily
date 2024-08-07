@@ -1,0 +1,159 @@
+@import '../../styles/propertySets.css';
+
+:root {
+  /*
+    These variables are available in global scope through ":root"
+    element (<html> tag). Variables with the same names are going to
+    overwrite each other if CSS Properties' (PostCSS plugin)
+    configuration "preserve: true" is used - meaning that variables
+    are left to CSS bundle. We are planning to enable it in the future
+    since browsers support CSS Properties already.
+ */
+
+  --TopbarMobileMenu_topMargin: 96px;
+}
+
+.root {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: auto;
+
+  & [class*="Avatar_largeAvatar"] {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.content {
+  flex-grow: 1;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* 113 for footer and an extra 67 to get scrolling work in mobile safari */
+  margin-bottom: 280px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  padding: 16px 24px;
+  background-color: var(--matterColorLight);
+  box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.12);
+}
+
+.avatar {
+  /* Layout */
+  flex-shrink: 0;
+  margin: calc(var(--TopbarMobileMenu_topMargin) + 16px) 0 0 0;
+}
+
+.sizeAvatar {
+  width: 64px;
+  height: 64px;
+}
+
+.greeting {
+  /* Font */
+  @apply --marketplaceH1FontStyles;
+  font-weight: var(--fontWeightSemiBold);
+  line-height: 24px;
+  /*font-size: 24px;*/
+  padding-bottom: 0;
+  margin-bottom: 0;
+  margin-top: 8px;
+}
+
+.logoutButton {
+  @apply --marketplaceLinkStyles;
+  /* Logout font is smaller and gray since the action is not recommended. */
+  @apply --marketplaceH3FontStyles;
+  color: var(--matterColorAnti);
+  font-size: 18px;
+  font-weight: var(--fontWeightRegular);
+  /* Position component */
+  width: initial;
+  margin: 4px 0 6px 0;
+  padding: 0;
+}
+
+.inbox {
+  /* Font */
+  @apply --marketplaceH2FontStyles;
+  color: var(--marketplaceColor);
+  position: relative;
+  line-height: 24px;
+  margin-top: 72px;
+  margin-bottom: 24px;
+}
+
+.navigationLink {
+  /* Font */
+  @apply --marketplaceH2FontStyles;
+  color: var(--marketplaceColor);
+  line-height: 24px;
+  /* Layout */
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.currentPageLink {
+  color: var(--marketplaceColorDark);
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 4px;
+  right: -26px;
+
+  /* This is inside a link - remove underline */
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.createNewListingLink {
+  @apply --marketplaceButtonStyles;
+  min-height: 56px;
+  padding: 16px 0;
+  letter-spacing: -1px;
+}
+
+.authenticationGreeting {
+  /* Font */
+  @apply --marketplaceH1FontStyles;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 24px;
+  line-height: 24px;
+  margin-bottom: 24px;
+  margin-top: var(--TopbarMobileMenu_topMargin);
+}
+
+.authenticationLinks {
+  white-space: nowrap;
+}
+
+.signupLink {
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--marketplaceColor);
+}
+
+.loginLink {
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--marketplaceColor);
+}
+
+.currentPage {
+  color: var(--matterColorDark);
+
+  /* black left border */
+  border-left: 5px solid black;
+  margin-left: -24px;
+  padding-left: 19px;
+}
