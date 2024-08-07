@@ -73,11 +73,11 @@ const BreakdownMaybe = props => {
   const classes = classNames(rootClassName || css.breakdownMaybe, className);
   const breakdownClasses = classNames(breakdownClassName || css.breakdown);
 
-  console.log(
-    'breakdown maybe',
-    Object.keys(transaction.attributes.protectedData),
-    transaction.attributes.protectedData
-  );
+  // console.log(
+  //   'breakdown maybe',
+  //   Object.keys(transaction.attributes.protectedData),
+  //   transaction.attributes.protectedData
+  // );
 
   if (
     transaction?.attributes?.lastTransition &&
